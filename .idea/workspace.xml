@@ -5,10 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="44cf4788-4e8a-41e0-94f7-66610ecca41f" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/bntu/diploma/controller/Controller.class" afterPath="$PROJECT_DIR$/target/classes/bntu/diploma/controller/Controller.class" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/fxml/LoginPage.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/main/resources/fxml/MapPane.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/bntu/diploma/controller/Controller.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/bntu/diploma/controller/LoginController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/bntu/diploma/controller/MapController.class" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/fxml/LoginPage.fxml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/classes/fxml/MapPage.fxml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/bntu/diploma/utils/Utils.class" afterPath="$PROJECT_DIR$/target/classes/bntu/diploma/utils/Utils.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/Controller.java" afterPath="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/Controller.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/bntu/diploma/utils/Utils.java" afterPath="$PROJECT_DIR$/src/main/java/bntu/diploma/utils/Utils.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/fxml/view.fxml" afterPath="$PROJECT_DIR$/src/main/resources/fxml/view.fxml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/classes/fxml/view.fxml" afterPath="$PROJECT_DIR$/target/classes/fxml/view.fxml" />
     </list>
@@ -23,12 +31,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="view.fxml" pinned="false" current-in-tab="false">
+      <file leaf-file-name="view.fxml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/view.fxml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
-              <folding />
+            <state relative-caret-position="-134">
+              <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+              <folding>
+                <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+              </folding>
             </state>
           </provider>
           <provider editor-type-id="JavaFX-Scene-Builder">
@@ -48,66 +58,26 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LoginPage.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/LoginPage.fxml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-198">
-              <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="LoginController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="308">
-              <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#701#702#0" expanded="true" />
-                <element signature="e#761#762#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="236">
-              <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+            <state relative-caret-position="781">
+              <caret line="180" column="5" lean-forward="true" selection-start-line="180" selection-start-column="5" selection-end-line="180" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#7231#7232#0" expanded="true" />
+                <element signature="e#7291#7292#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MapPane.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/MapPane.fxml">
+      <file leaf-file-name="style.css" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="176">
-              <caret line="11" column="4" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="4" />
+            <state relative-caret-position="44">
+              <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="29" />
               <folding />
-            </state>
-          </provider>
-          <provider editor-type-id="JavaFX-Scene-Builder">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MapController.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-44">
-              <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -145,15 +115,16 @@
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/beans/StationInfo.java" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/classes/WeatherAPIWorker.java" />
         <option value="$PROJECT_DIR$/src/main/resources/fxml/MapPage.fxml" />
-        <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java" />
-        <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java" />
         <option value="$PROJECT_DIR$/src/main/resources/fxml/LoginPage.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/utils/Utils.java" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/observer/ControllersHandler.java" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/Main.java" />
-        <option value="$PROJECT_DIR$/src/main/resources/fxml/view.fxml" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/ControllerChild.java" />
+        <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/fxml/style.css" />
         <option value="$PROJECT_DIR$/src/main/java/bntu/diploma/controller/Controller.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/fxml/view.fxml" />
       </list>
     </option>
   </component>
@@ -450,12 +421,12 @@
       <workItem from="1523029734092" duration="13321000" />
       <workItem from="1523125063427" duration="354000" />
       <workItem from="1523127885727" duration="19000" />
-      <workItem from="1523804930539" duration="8923000" />
+      <workItem from="1523804930539" duration="12736000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="24283000" />
+    <option name="totallyTimeSpent" value="28096000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -467,7 +438,7 @@
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2619565" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.26086956" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -501,7 +472,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="924">
           <caret line="118" column="31" lean-forward="false" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -524,6 +497,8 @@
           <caret line="149" column="29" lean-forward="false" selection-start-line="149" selection-start-column="29" selection-end-line="149" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -540,7 +515,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="924">
           <caret line="118" column="31" lean-forward="false" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -563,6 +540,8 @@
           <caret line="149" column="29" lean-forward="false" selection-start-line="149" selection-start-column="29" selection-end-line="149" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -579,7 +558,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="924">
           <caret line="118" column="31" lean-forward="false" selection-start-line="118" selection-start-column="31" selection-end-line="118" selection-end-column="31" />
-          <folding />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -602,6 +583,8 @@
           <caret line="149" column="29" lean-forward="false" selection-start-line="149" selection-start-column="29" selection-end-line="149" selection-end-column="29" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -620,6 +603,8 @@
           <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -638,7 +623,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="154">
           <caret line="7" column="24" lean-forward="false" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
-          <folding />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -666,6 +653,8 @@
           <caret line="2" column="13" lean-forward="false" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -674,7 +663,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="66">
           <caret line="3" column="11" lean-forward="false" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
-          <folding />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
       <provider editor-type-id="JavaFX-Scene-Builder">
@@ -770,16 +761,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-44">
-          <caret line="22" column="9" lean-forward="true" selection-start-line="22" selection-start-column="9" selection-end-line="22" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/beans/StationInfo.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="396">
@@ -856,10 +837,45 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/MapPane.fxml">
+    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/ControllerChild.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="176">
-          <caret line="11" column="4" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="11" selection-end-column="4" />
+          <caret line="8" column="4" lean-forward="false" selection-start-line="8" selection-start-column="4" selection-end-line="8" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/LoginPage.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="14" column="33" lean-forward="true" selection-start-line="14" selection-start-column="33" selection-end-line="14" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/MapController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/MapPane.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="14" column="12" lean-forward="true" selection-start-line="14" selection-start-column="12" selection-end-line="14" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -877,56 +893,37 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/view.fxml">
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="30" lean-forward="true" selection-start-line="10" selection-start-column="30" selection-end-line="10" selection-end-column="30" />
+        <state relative-caret-position="44">
+          <caret line="2" column="29" lean-forward="false" selection-start-line="2" selection-start-column="22" selection-end-line="2" selection-end-column="29" />
           <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/LoginPage.fxml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="15" column="0" lean-forward="true" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="JavaFX-Scene-Builder">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/ControllerChild.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/LoginController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="308">
-          <caret line="14" column="9" lean-forward="true" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#701#702#0" expanded="true" />
-            <element signature="e#761#762#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/bntu/diploma/controller/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="236">
-          <caret line="16" column="5" lean-forward="true" selection-start-line="16" selection-start-column="5" selection-end-line="16" selection-end-column="5" />
+        <state relative-caret-position="781">
+          <caret line="180" column="5" lean-forward="true" selection-start-line="180" selection-start-column="5" selection-end-line="180" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#7231#7232#0" expanded="true" />
+            <element signature="e#7291#7292#0" expanded="true" />
           </folding>
         </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/fxml/view.fxml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-134">
+          <caret line="25" column="0" lean-forward="false" selection-start-line="25" selection-start-column="0" selection-end-line="25" selection-end-column="0" />
+          <folding>
+            <element signature="n#AnchorPane#0;n#StackPane#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="JavaFX-Scene-Builder">
+        <state />
       </provider>
     </entry>
   </component>
