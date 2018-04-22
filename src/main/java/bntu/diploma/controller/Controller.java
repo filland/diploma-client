@@ -1,28 +1,40 @@
 package bntu.diploma.controller;
 
-import bntu.diploma.Main;
 import bntu.diploma.beans.StationInfo;
 import bntu.diploma.beans.StationWeatherInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 
+import javax.xml.stream.EventFilter;
+import javax.xml.stream.events.XMLEvent;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.EventListener;
 import java.util.List;
 
 
 /**
  *
  *
- * TODO:
+ * TODO: make tables resize once the win size is changed
  *
  *
  *
@@ -41,35 +53,44 @@ public class Controller {
     private AnchorPane loginPane;
     @FXML
     private SplitPane mainSplitPane;
+    @FXML
+    private AnchorPane mainSplitPane_leftAnchorPane;
+    @FXML
+    private AnchorPane mainSplitPane_rightAnchorPane;
     // --------------------- STRUCTURE -----------------------
 
 
 
     @FXML
-    private ScrollPane rightMenu_upperScrollPane;
-    @FXML
-    private ScrollPane rightMenu_lowerScrollPane;
-    @FXML
     private MenuBar menuBar;
+    @FXML
+    private Group group;
     @FXML
     private Canvas canvas;
     @FXML
     private SplitPane rightSplitPane;
     @FXML
-    private AnchorPane rightMenu_upperPane;
+    private AnchorPane rightMenu_SplitPane_upperAnchorPane;
     @FXML
-    private AnchorPane rightMenu_lowerPane;
+    private AnchorPane rightMenu_SplitPane_lowerAnchorPane;
+
 
     // -----------------------------------------------------------------------------------------------
+    private GraphicsContext graphicsContext;
+    private Image imageRect;
+    private ImageView imageView;
 
     private TableView<StationWeatherInfo> rightMenu_upperPane_detailedInfoTable;
     private TableView<StationInfo> rightMenu_lowerPane_allStationsTable;
 
     private Menu menuFile;
 
-    private double rootPaneWidth = 0;
+    // ------------- CONSTANTS -----------------------------------------
+    private final String LINK_TO_MAP = "map.png";
+    // ------------- CONSTANTS -----------------------------------------
 
-    public Controller(){
+
+    public Controller() {
 
         // RIGHT UPPER PANE
         rightMenu_upperPane_detailedInfoTable = new TableView<>();
@@ -80,41 +101,136 @@ public class Controller {
         // MENU
         menuFile = new Menu("File");
 
+
     }
 
     @FXML
     public void initialize(){
 
         populateMenuBar();
-        rootPane.widthProperty().addListener((w) -> resizeComponents());
-        rootPane.heightProperty().addListener(h -> resizeComponents());
+
+        initMap();
+        initListeners();
+
 
         List<StationWeatherInfo> sysList = new ArrayList<>();
-        sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(2.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(3.1, 2.2, 10.1, 10.11, 12));
+        sysList.add(new StationWeatherInfo(4.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(5.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(6.1, 2.2, 10.1, 10.11, 12));
+        sysList.add(new StationWeatherInfo(7.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(8.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(9.1, 2.2, 10.1, 10.11, 12));
+        sysList.add(new StationWeatherInfo(10.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(11.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.11, 12));
+        sysList.add(new StationWeatherInfo(13.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(12342.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new StationWeatherInfo(14444442.1, 2.2, 10.1, 10.11, 12));
+        sysList.add(new StationWeatherInfo(1333333332.1, 2.2, 10.1, 10.1, 12));
         sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.1, 12));
         sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.11, 12));
         populateRightMenu_upperPane_detailedInfoTable(sysList);
 
         List<StationInfo> sysList2 = new ArrayList<>();
-        sysList2.add(new StationInfo("asdf", new Date(2017, 3, 15),"asdf", "123"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 2, 15),"asdf", "123"));
         sysList2.add(new StationInfo("asdf", new Date(2017, 3, 15),"asdf","asdf"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 3, 15),"asdf","asdf"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 4, 15),"asdf","asdf"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 5, 15),"asdf", "123"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 6, 15),"asdf","asdf"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 7, 15),"asdf","asdf"));
+        sysList2.add(new StationInfo("asdf", new Date(2017, 8, 15),"asdf", "123"));
         populateRightMenu_lowerPane_allStationsTable(sysList2);
+
+
+        // resize all elements
+        rightMenu_SplitPane_upperAnchorPaneHeightChanged();
+        mainSplitPane_leftAnchorPaneResized();
+        rightAnchorPaneResized();
+    }
+
+    private void initMap(){
+
+        graphicsContext = canvas.getGraphicsContext2D();
+
+        imageRect = new Image(LINK_TO_MAP);
+        imageView = new ImageView(imageRect);
+
+        imageView.setPreserveRatio(true);
+        group.getChildren().add(imageView);
 
     }
 
-    public void populateMenuBar(){
+    private void initListeners(){
+
+        rootPane.widthProperty().addListener((w) -> rooPaneWidthChanged());
+        rootPane.heightProperty().addListener(h -> rooPaneHeightChanged());
+
+        mainSplitPane_leftAnchorPane.widthProperty().addListener(w -> mainSplitPane_leftAnchorPaneResized());
+        mainSplitPane_leftAnchorPane.heightProperty().addListener(h -> mainSplitPane_leftAnchorPaneResized());
+
+        mainSplitPane_rightAnchorPane.widthProperty().addListener(w -> rightAnchorPaneResized());
+        //mainSplitPane_rightAnchorPane.heightProperty().addListener(h -> rightAnchorPaneResized());
+
+        rightMenu_SplitPane_upperAnchorPane.heightProperty().addListener(h -> rightMenu_SplitPane_upperAnchorPaneHeightChanged());
+
+        // -------------------- map ------------------
+        imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClicked);
+        // -------------------- map ------------------
+
+    }
+
+    private EventHandler<MouseEvent> imageClicked = event -> {
+
+        // when left button pressed and released
+        if (event.getButton() == MouseButton.PRIMARY){
+
+            System.out.println("X: "+event.getSceneX()+"\n"+
+                    "Y: "+ event.getSceneY());
+        }
+    };
+
+
+    private void populateMenuBar(){
 
         MenuItem menuItemExportData = new MenuItem("Export");
         MenuItem menuItemPrint = new MenuItem("Print");
         MenuItem menuItemExit = new MenuItem("Exit");
+
         menuFile.getItems().addAll(menuItemExportData, menuItemPrint, menuItemExit);
         menuBar.getMenus().add(menuFile);
 
+        menuItemExportData.setOnAction(x -> menuItemExportDataClicked());
+        menuItemPrint.setOnAction(x -> menuItemPrintClicked());
+        menuItemExit.setOnAction(x -> menuItemExitClicked());
+    }
+
+    private void menuItemExportDataClicked() {
+
+    }
+
+    private void menuItemPrintClicked() {
+        group.getChildren().clear();
+    }
+
+    private void menuItemExitClicked() {
+        //graphicsContext.setFill(Color.RED);
+        //graphicsContext.fillRect(100, 100, 100, 100);
+
+        Circle circle1 = new Circle( 300, 300, 50);
+        circle1.setStroke(Color.ORANGE);
+        circle1.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
+        circle1.setOnMouseClicked(c -> circle1.setFill(Color.GREEN));
+
+        group.getChildren().add(circle1);
+        circle1.toFront();
     }
 
 
-    public void populateRightMenu_upperPane_detailedInfoTable(List<StationWeatherInfo> list){
+
+    private void populateRightMenu_upperPane_detailedInfoTable(List<StationWeatherInfo> list){
 
         // make columns to take all available space
         rightMenu_upperPane_detailedInfoTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -146,11 +262,11 @@ public class Controller {
         // adding data
         rightMenu_upperPane_detailedInfoTable.setItems(data);
 
-        rightMenu_upperScrollPane.setContent(rightMenu_upperPane_detailedInfoTable);
+        rightMenu_SplitPane_upperAnchorPane.getChildren().add(rightMenu_upperPane_detailedInfoTable);
     }
 
 
-    public void populateRightMenu_lowerPane_allStationsTable(List<StationInfo> list){
+    private void populateRightMenu_lowerPane_allStationsTable(List<StationInfo> list){
 
         // make columns to take all available space
         rightMenu_lowerPane_allStationsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -159,13 +275,13 @@ public class Controller {
         TableColumn<StationInfo, String> name = new TableColumn<>("name");
         name.setCellValueFactory(
                 new PropertyValueFactory<>("name"));
-        TableColumn<StationInfo, String> nearestTown = new TableColumn<>("nearestTown");
+        TableColumn<StationInfo, String> nearestTown = new TableColumn<>("nearest");
         nearestTown.setCellValueFactory(
                 new PropertyValueFactory<>("nearestTown"));
-        TableColumn<StationInfo, String> creationDate = new TableColumn<>("creationDate");
+        TableColumn<StationInfo, String> creationDate = new TableColumn<>("date");
         creationDate.setCellValueFactory(
                 new PropertyValueFactory<>("creationDate"));
-        TableColumn<StationInfo, String> coordinates = new TableColumn<>("coordinates");
+        TableColumn<StationInfo, String> coordinates = new TableColumn<>("coord");
         coordinates.setCellValueFactory(
                 new PropertyValueFactory<>("coordinates"));
 
@@ -176,17 +292,45 @@ public class Controller {
         // adding data
         rightMenu_lowerPane_allStationsTable.setItems(data);
 
-        rightMenu_lowerPane.getChildren().add(rightMenu_lowerPane_allStationsTable);
+        rightMenu_SplitPane_lowerAnchorPane.getChildren().add(rightMenu_lowerPane_allStationsTable);
 
     }
 
 
-    private void resizeComponents(){
+    // -------------------------- Listeners' methods ------------------------------------------------------------------------------
+    // changes height of upper and lower tables to fit the panes they are wrapped in
+    private void rightMenu_SplitPane_upperAnchorPaneHeightChanged() {
 
-        System.out.println("mainSplitPane.getDividers() size -- " + mainSplitPane.getDividers().size());
+        rightMenu_lowerPane_allStationsTable.setPrefHeight(rightMenu_SplitPane_lowerAnchorPane.getHeight());
+        rightMenu_upperPane_detailedInfoTable.setPrefHeight(rightMenu_SplitPane_upperAnchorPane.getHeight());
+    }
+
+
+    // changes the size of canvas to fit the anchor it is wrapped in
+    private void mainSplitPane_leftAnchorPaneResized() {
+        canvas.setHeight(mainSplitPane_leftAnchorPane.getHeight());
+        canvas.setWidth(mainSplitPane_leftAnchorPane.getWidth());
+
+        imageView.setFitWidth(mainSplitPane_leftAnchorPane.getWidth());
+        imageView.setFitHeight(mainSplitPane_leftAnchorPane.getHeight());
+    }
+
+    // changes width of upped and lower tables to fit the panes they are wrapped in
+    private void rightAnchorPaneResized() {
+        rightMenu_lowerPane_allStationsTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
+        rightMenu_upperPane_detailedInfoTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
+    }
+
+    private void rooPaneWidthChanged(){
 
     }
 
+    private void rooPaneHeightChanged(){
+
+
+
+    }
+    // -------------------------- Listeners' methods ------------------------------------------------------------------------------
 
 
 

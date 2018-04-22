@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.Group?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -8,7 +10,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,48 +17,48 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane fx:id="rootPane" minHeight="400.0" minWidth="500.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bntu.diploma.controller.Controller">
+<StackPane fx:id="rootPane" minHeight="550.0" minWidth="1200.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bntu.diploma.controller.Controller">
 
-    <BorderPane fx:id="rootBorderPane" disable="true" visible="false" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <BorderPane fx:id="rootBorderPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
         <center>
             <SplitPane fx:id="mainSplitPane" dividerPositions="0.6036789297658863" prefHeight="160.0" prefWidth="200.0">
                 <items>
-                    <AnchorPane minHeight="0.0" minWidth="0.0">
+                    <AnchorPane fx:id="mainSplitPane_leftAnchorPane" minHeight="0.0" minWidth="0.0">
                         <children>
                             <BorderPane prefHeight="398.0" prefWidth="469.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <center>
-                                    <Pane prefHeight="375.0" prefWidth="410.0" BorderPane.alignment="CENTER">
-                                        <children>
-                                            <Canvas fx:id="canvas" height="274.0" width="393.0" />
-                                        </children>
-                                    </Pane>
-                                </center>
+                        <center>
+                           <AnchorPane BorderPane.alignment="CENTER">
+                              <BorderPane.margin>
+                                 <Insets />
+                              </BorderPane.margin>
+                              <children>
+                                 <Group fx:id="group" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <children>
+                                                  <Canvas fx:id="canvas" height="274.0" nodeOrientation="INHERIT" width="393.0" />
+                                    </children>
+                                 </Group>
+                              </children>
+                              <opaqueInsets>
+                                 <Insets />
+                              </opaqueInsets>
+                              <cursor>
+                                 <Cursor fx:constant="DEFAULT" />
+                              </cursor>
+                           </AnchorPane>
+                        </center>
                             </BorderPane>
                         </children>
                     </AnchorPane>
-                    <AnchorPane minHeight="0.0" minWidth="0.0">
+                    <AnchorPane fx:id="mainSplitPane_rightAnchorPane" minHeight="0.0" minWidth="0.0">
                         <children>
                             <SplitPane fx:id="rightSplitPane" dividerPositions="0.5" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                 <items>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                                        <children>
-                                            <ScrollPane fx:id="rightMenu_upperScrollPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                        </children>
-                                    </AnchorPane>
-                                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-                                        <children>
-                                            <ScrollPane fx:id="rightMenu_lowerScrollPane" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                <content>
-                                                    <AnchorPane fx:id="rightMenu_lowerPane" />
-                                                </content>
-                                            </ScrollPane>
-                                        </children>
-                                    </AnchorPane>
+                                    <AnchorPane fx:id="rightMenu_SplitPane_upperAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+                                    <AnchorPane fx:id="rightMenu_SplitPane_lowerAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
                                 </items>
                             </SplitPane>
                         </children>
@@ -72,7 +73,7 @@
 
 
 
-    <AnchorPane fx:id="loginPane" prefHeight="400.0" prefWidth="600.0"  xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+    <AnchorPane fx:id="loginPane" prefHeight="400.0" prefWidth="600.0" visible="false" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
 
         <children>
             <GridPane alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
