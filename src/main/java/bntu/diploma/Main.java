@@ -14,6 +14,10 @@ public class Main extends Application {
 
         primaryStage.setTitle("WeatherTower");
         primaryStage.setScene(new Scene(root));
+
+        primaryStage.setMinWidth(1100);
+        primaryStage.setMinHeight(700);
+
         primaryStage.show();
     }
 

@@ -5,8 +5,10 @@ import java.util.Date;
 
 public class Utils {
 
+    private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("dd/MM/yyyy");
+
     public static String formatDate(Date date){
-        return new SimpleDateFormat("dd/MM/yyyy").format(date);
+        return DATE_FORMATTER.format(date);
     }
 
 }

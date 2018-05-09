@@ -8,7 +8,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -23,20 +22,19 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import javax.xml.stream.EventFilter;
-import javax.xml.stream.events.XMLEvent;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.EventListener;
 import java.util.List;
 
 
 /**
  *
  *
- * TODO: make tables resize once the win size is changed
+ * TODO: ...
  *
  *
+ *  DONE:
+ *  1. make tables resize once the win size is changed
  *
  * */
 
@@ -83,7 +81,8 @@ public class Controller {
     private TableView<StationWeatherInfo> rightMenu_upperPane_detailedInfoTable;
     private TableView<StationInfo> rightMenu_lowerPane_allStationsTable;
 
-    private Menu menuFile;
+    private Menu menuStation;
+    private Menu menuReport;
 
     // ------------- CONSTANTS -----------------------------------------
     private final String LINK_TO_MAP = "map.png";
@@ -97,21 +96,14 @@ public class Controller {
 
         // RIGHT LOWER PANE
         rightMenu_lowerPane_allStationsTable = new TableView<>();
-
-        // MENU
-        menuFile = new Menu("File");
-
-
     }
 
     @FXML
     public void initialize(){
 
-        populateMenuBar();
-
+        initMenuBar();
         initMap();
         initListeners();
-
 
         List<StationWeatherInfo> sysList = new ArrayList<>();
         sysList.add(new StationWeatherInfo(1.1, 2.2, 10.1, 10.1, 12));
@@ -193,26 +185,30 @@ public class Controller {
     };
 
 
-    private void populateMenuBar(){
+    private void initMenuBar(){
 
-        MenuItem menuItemExportData = new MenuItem("Export");
-        MenuItem menuItemPrint = new MenuItem("Print");
-        MenuItem menuItemExit = new MenuItem("Exit");
+        // MENU
+        menuStation = new Menu("Станция");
+        menuReport = new Menu("Отчет");
 
-        menuFile.getItems().addAll(menuItemExportData, menuItemPrint, menuItemExit);
-        menuBar.getMenus().add(menuFile);
+        MenuItem menuItemAddNewStation = new MenuItem("Добавить новую станцию");
+        menuStation.getItems().addAll(menuItemAddNewStation);
+        menuBar.getMenus().add(menuStation);
 
-        menuItemExportData.setOnAction(x -> menuItemExportDataClicked());
-        menuItemPrint.setOnAction(x -> menuItemPrintClicked());
-        menuItemExit.setOnAction(x -> menuItemExitClicked());
+        MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
+        menuReport.getItems().addAll(menuItemHTMLReport);
+        menuBar.getMenus().add(menuReport);
+
+        menuItemAddNewStation.setOnAction(x -> menuItemExportDataClicked());
+        menuItemHTMLReport.setOnAction(x -> menuItemHTMLReportClicked());
     }
 
     private void menuItemExportDataClicked() {
-
+        System.out.println("menuItemExportDataClicked");
     }
 
-    private void menuItemPrintClicked() {
-        group.getChildren().clear();
+    private void menuItemHTMLReportClicked() {
+        System.out.println("menuItemHTMLReportClicked");
     }
 
     private void menuItemExitClicked() {
