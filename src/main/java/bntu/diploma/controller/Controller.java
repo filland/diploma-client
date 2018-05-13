@@ -264,6 +264,8 @@ public class Controller {
 
     private void populateRightMenu_lowerPane_allStationsTable(List<StationInfo> list){
 
+        // TODO how to add big GridPane to a ScrollPane
+
         // make columns to take all available space
         rightMenu_lowerPane_allStationsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 

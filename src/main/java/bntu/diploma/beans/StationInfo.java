@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import java.util.Date;
 
-// TODO replace this class with the one from Server project
+// TODO replace this class with the Station class
 public class StationInfo {
 
     private StringProperty name;

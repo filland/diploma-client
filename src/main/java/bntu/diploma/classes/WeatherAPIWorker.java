@@ -1,5 +1,6 @@
 package bntu.diploma.classes;
 
+import bntu.diploma.beans.Station;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -21,7 +22,7 @@ import java.util.Map;
 /**
  *
  * This API worker allows to query meteodata from the server.
- * The document which describes available API calls is named
+ * The document which describes available API requests is named
  * "Название раздела из твоего диплома, который описывает АПИ сервера"
  *
  *
@@ -48,15 +49,17 @@ public class WeatherAPIWorker {
 
     /**
      *
-     * @param key a secret key for authentication
+     * @param token a secret key for authentication
      * @param from - beginning date (format - ddmmyyyy)
      * @param to - ending date (format - ddmmyyyy)
+     * @param scale specifies the scale of
+     *
      *
      * */
-    public String getWeatherData(String from, String to, String scale, String key){
+    public String getWeatherData(String from, String to, String scale, String token){
 
         Map<String, String> params = new HashMap<>();
-        params.put("key", key);
+        params.put("key", token);
         params.put("from", from);
         params.put("to", to);
         params.put("scale", scale);
@@ -75,9 +78,29 @@ public class WeatherAPIWorker {
     }
 
 
+    /**
+     *
+     * @return session token for accessing server API
+     *
+     * */
     public String singin(String login, String pass){
 
         // todo !!!!
+
+        return "whatever";
+    }
+
+
+    public String addNewStation(Station station){
+
+        // TODO
+
+        return null;
+    }
+
+    public String changeStationInfo(Long stationID, Station station){
+
+        // TODO
 
         return null;
     }
