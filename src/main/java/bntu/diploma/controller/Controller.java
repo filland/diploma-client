@@ -1,12 +1,14 @@
 package bntu.diploma.controller;
 
-import bntu.diploma.beans.StationInfo;
-import bntu.diploma.beans.StationWeatherInfo;
+import bntu.diploma.model.Station;
+import bntu.diploma.model.WeatherInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,12 +20,12 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -39,8 +41,6 @@ import java.util.List;
  * */
 
 public class Controller {
-
-
 
     // --------------------- STRUCTURE -----------------------
     @FXML
@@ -69,8 +69,11 @@ public class Controller {
     private SplitPane rightSplitPane;
     @FXML
     private AnchorPane rightMenu_SplitPane_upperAnchorPane;
+
     @FXML
     private AnchorPane rightMenu_SplitPane_lowerAnchorPane;
+    @FXML
+    private GridPane stationInfoGrid;
 
 
     // -----------------------------------------------------------------------------------------------
@@ -78,8 +81,8 @@ public class Controller {
     private Image imageRect;
     private ImageView imageView;
 
-    private TableView<StationWeatherInfo> rightMenu_upperPane_detailedInfoTable;
-    private TableView<StationInfo> rightMenu_lowerPane_allStationsTable;
+    private TableView<WeatherInfo> rightMenu_upperPane_detailedInfoTable;
+    //private TableView<WeatherInfo> rightMenu_lowerPane_allStationsTable;
 
     private Menu menuStation;
     private Menu menuReport;
@@ -95,7 +98,7 @@ public class Controller {
         rightMenu_upperPane_detailedInfoTable = new TableView<>();
 
         // RIGHT LOWER PANE
-        rightMenu_lowerPane_allStationsTable = new TableView<>();
+        //rightMenu_lowerPane_allStationsTable = new TableView<>();
     }
 
     @FXML
@@ -105,36 +108,28 @@ public class Controller {
         initMap();
         initListeners();
 
-        List<StationWeatherInfo> sysList = new ArrayList<>();
-        sysList.add(new StationWeatherInfo(1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(2.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(3.1, 2.2, 10.1, 10.11, 12));
-        sysList.add(new StationWeatherInfo(4.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(5.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(6.1, 2.2, 10.1, 10.11, 12));
-        sysList.add(new StationWeatherInfo(7.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(8.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(9.1, 2.2, 10.1, 10.11, 12));
-        sysList.add(new StationWeatherInfo(10.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(11.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.11, 12));
-        sysList.add(new StationWeatherInfo(13.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(12342.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(14444442.1, 2.2, 10.1, 10.11, 12));
-        sysList.add(new StationWeatherInfo(1333333332.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new StationWeatherInfo(12.1, 2.2, 10.1, 10.11, 12));
+        List<WeatherInfo> sysList = new ArrayList<>();
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
+        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
         populateRightMenu_upperPane_detailedInfoTable(sysList);
 
-        List<StationInfo> sysList2 = new ArrayList<>();
-        sysList2.add(new StationInfo("asdf", new Date(2017, 2, 15),"asdf", "123"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 3, 15),"asdf","asdf"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 4, 15),"asdf","asdf"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 5, 15),"asdf", "123"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 6, 15),"asdf","asdf"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 7, 15),"asdf","asdf"));
-        sysList2.add(new StationInfo("asdf", new Date(2017, 8, 15),"asdf", "123"));
-        populateRightMenu_lowerPane_allStationsTable(sysList2);
+
+        Station station2 = new Station();
+        station2.setStationsId(1L);
+        station2.setOblast(4L);
+        station2.setInstallationDate("setInstallationDate");
+        station2.setLastInspection("setLastInspection");
+        station2.setNearestTown("setNearestTown");
+        station2.setStationLongitude(1.1);
+        station2.setStationLatitude(2.2);
+        populateRightMenu_lowerPane_allStationsTable(station2);
 
 
         // resize all elements
@@ -211,47 +206,32 @@ public class Controller {
         System.out.println("menuItemHTMLReportClicked");
     }
 
-    private void menuItemExitClicked() {
-        //graphicsContext.setFill(Color.RED);
-        //graphicsContext.fillRect(100, 100, 100, 100);
-
-        Circle circle1 = new Circle( 300, 300, 50);
-        circle1.setStroke(Color.ORANGE);
-        circle1.setFill(Color.ORANGE.deriveColor(1, 1, 1, 0.5));
-        circle1.setOnMouseClicked(c -> circle1.setFill(Color.GREEN));
-
-        group.getChildren().add(circle1);
-        circle1.toFront();
-    }
-
-
-
-    private void populateRightMenu_upperPane_detailedInfoTable(List<StationWeatherInfo> list){
+    private void populateRightMenu_upperPane_detailedInfoTable(List<WeatherInfo> list){
 
         // make columns to take all available space
         rightMenu_upperPane_detailedInfoTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<StationWeatherInfo, String> temperature = new TableColumn<>("temp");
+        TableColumn<WeatherInfo, String> temperature = new TableColumn<>("temp");
         temperature.setCellValueFactory(
                 new PropertyValueFactory<>("temperature"));
 
-        TableColumn<StationWeatherInfo, String> humidity = new TableColumn<>("humid");
+        TableColumn<WeatherInfo, String> humidity = new TableColumn<>("humid");
         humidity.setCellValueFactory(
                 new PropertyValueFactory<>("humidity"));
 
-        TableColumn<StationWeatherInfo, String> pressure = new TableColumn<>("pres");
+        TableColumn<WeatherInfo, String> pressure = new TableColumn<>("pres");
         pressure.setCellValueFactory(
                 new PropertyValueFactory<>("pressure"));
 
-        TableColumn<StationWeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
+        TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
         wind_speed.setCellValueFactory(
-                new PropertyValueFactory<>("wind_speed"));
+                new PropertyValueFactory<>("windSpeed"));
 
-        TableColumn<StationWeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
+        TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
         wind_direction.setCellValueFactory(
-                new PropertyValueFactory<>("wind_direction"));
+                new PropertyValueFactory<>("windDirection"));
 
-        ObservableList<StationWeatherInfo> data = FXCollections.observableArrayList(list);
+        ObservableList<WeatherInfo> data = FXCollections.observableArrayList(list);
 
         // adding headers
         rightMenu_upperPane_detailedInfoTable.getColumns().addAll(temperature, humidity, pressure, wind_speed, wind_direction);
@@ -262,36 +242,42 @@ public class Controller {
     }
 
 
-    private void populateRightMenu_lowerPane_allStationsTable(List<StationInfo> list){
+    private void populateRightMenu_lowerPane_allStationsTable(Station station){
 
         // TODO how to add big GridPane to a ScrollPane
 
-        // make columns to take all available space
-        rightMenu_lowerPane_allStationsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        Label stationsIdLabel = new Label(String.valueOf(station.getStationsId()));
+        Label oblastLabel = new Label(String.valueOf(station.getOblast()));
+        Label installationDateLabel = new Label(String.valueOf(station.getInstallationDate()));
+        Label lastInspectionLabel = new Label(String.valueOf(station.getLastInspection()));
+        Label nearestTownLabel = new Label(String.valueOf(station.getNearestTown()));
+        Label stationLongitudeLabel = new Label(String.valueOf(station.getStationLongitude()));
+        Label stationLatitudeLabel = new Label(String.valueOf(station.getStationLatitude()));
+
+        stationInfoGrid.setAlignment(Pos.CENTER);
+        stationInfoGrid.setHgap(10);
+        stationInfoGrid.setVgap(10);
+        stationInfoGrid.setPadding(new Insets(25, 25, 25, 25));
+
+        stationInfoGrid.add(stationsIdLabel, 1, 1);
+        stationInfoGrid.add(oblastLabel, 1, 2);
+        stationInfoGrid.add(installationDateLabel, 1, 3);
+        stationInfoGrid.add(lastInspectionLabel, 1, 4);
+        stationInfoGrid.add(nearestTownLabel, 1, 5);
+        stationInfoGrid.add(stationLongitudeLabel, 1, 6);
+        stationInfoGrid.add(stationLatitudeLabel, 1, 7);
+
+        stationInfoGrid.add(new Label("id: "), 0, 1);
+        stationInfoGrid.add(new Label("oblast: "), 0, 2);
+        stationInfoGrid.add(new Label("install date: "), 0, 3);
+        stationInfoGrid.add(new Label("last inspect: "), 0, 4);
+        stationInfoGrid.add(new Label("nearest town: "), 0, 5);
+        stationInfoGrid.add(new Label("longitude: "), 0, 6);
+        stationInfoGrid.add(new Label("latitude: "), 0, 7);
+        //stationInfoGrid.add(new Label("unique"), 0, 1);
 
 
-        TableColumn<StationInfo, String> name = new TableColumn<>("name");
-        name.setCellValueFactory(
-                new PropertyValueFactory<>("name"));
-        TableColumn<StationInfo, String> nearestTown = new TableColumn<>("nearest");
-        nearestTown.setCellValueFactory(
-                new PropertyValueFactory<>("nearestTown"));
-        TableColumn<StationInfo, String> creationDate = new TableColumn<>("date");
-        creationDate.setCellValueFactory(
-                new PropertyValueFactory<>("creationDate"));
-        TableColumn<StationInfo, String> coordinates = new TableColumn<>("coord");
-        coordinates.setCellValueFactory(
-                new PropertyValueFactory<>("coordinates"));
-
-        ObservableList<StationInfo> data = FXCollections.observableArrayList(list);
-
-        // adding headers
-        rightMenu_lowerPane_allStationsTable.getColumns().setAll(name, nearestTown, creationDate, coordinates);
-        // adding data
-        rightMenu_lowerPane_allStationsTable.setItems(data);
-
-        rightMenu_SplitPane_lowerAnchorPane.getChildren().add(rightMenu_lowerPane_allStationsTable);
-
+        //rightMenu_SplitPane_lowerAnchorPane.getChildren().add(stationInfoGrid);
     }
 
 
@@ -299,7 +285,7 @@ public class Controller {
     // changes height of upper and lower tables to fit the panes they are wrapped in
     private void rightMenu_SplitPane_upperAnchorPaneHeightChanged() {
 
-        rightMenu_lowerPane_allStationsTable.setPrefHeight(rightMenu_SplitPane_lowerAnchorPane.getHeight());
+        //rightMenu_lowerPane_allStationsTable.setPrefHeight(rightMenu_SplitPane_lowerAnchorPane.getHeight());
         rightMenu_upperPane_detailedInfoTable.setPrefHeight(rightMenu_SplitPane_upperAnchorPane.getHeight());
     }
 
@@ -315,7 +301,7 @@ public class Controller {
 
     // changes width of upped and lower tables to fit the panes they are wrapped in
     private void rightAnchorPaneResized() {
-        rightMenu_lowerPane_allStationsTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
+        //rightMenu_lowerPane_allStationsTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
         rightMenu_upperPane_detailedInfoTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
     }
 

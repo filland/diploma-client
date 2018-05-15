@@ -1,4 +1,4 @@
-package bntu.diploma.beans;
+package bntu.diploma.todelete;
 
 import javafx.beans.property.*;
 

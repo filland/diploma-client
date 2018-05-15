@@ -1,46 +1,68 @@
 package bntu.diploma.test;
 
 import javafx.application.Application;
-import javafx.scene.Node;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
 
 public class RectangleTest extends Application {
 
     private StationInfoNode infoNode;
-
+    private StationInfoPane group;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        AnchorPane pane = new AnchorPane();
 
-        infoNode = new StationInfoNode(50, 50, 100, 100);
-        infoNode.setStationParam("temp", "25.5");
+        BorderPane borderPane = new BorderPane();
 
-        infoNode.set
+        infoNode = new StationInfoNode(50, 50, "1");
+        infoNode.setStationParam("temp", "1");
+        infoNode.setStationParam("temp2", "25.5");
+        infoNode.setStationParam("temp3", "25.5");
 
+        StationInfoNode infoNode2 = new StationInfoNode(250 , 50, "2");
+        infoNode2.setStationParam("temp", "2");
+        infoNode2.setStationParam("temp2", "25.5");
+        infoNode2.setStationParam("temp3", "25.5");
 
-        Button button = new Button("Move");
-        button.setOnMouseClicked(event -> buttonClicked());
+        group = new StationInfoPane();
+        group.addStationInfoNode(infoNode);
+        group.addStationInfoNode(infoNode2);
 
-        pane.getChildren().addAll(infoNode);
-        pane.getChildren().add(button);
+        EventHandler<MouseEvent> mousePressedEventHandler = this::groupClicked;
+        group.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedEventHandler);
 
-        Scene scene = new Scene(pane, 700.0, 700.0);
+        Button buttonRight = new Button("changeCoord");
+        buttonRight.setOnMouseClicked(event -> right());
+        //pane.getChildren().add(button);
 
-        primaryStage.setTitle("Rect test");
+        borderPane.setTop(buttonRight);
+        borderPane.setCenter(group);
+
+        Scene scene = new Scene(borderPane, 700.0, 700.0);
+
+        primaryStage.setTitle("Interactive map");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void buttonClicked() {
+    private void groupClicked(MouseEvent event){
 
-        System.out.println("infoNode.getX() - "+ infoNode.getTopLeftX());
-        System.out.println("infoNode.getY() - "+ infoNode.getTopLeftY());
+        // as an example of using EventHandler
 
-        infoNode.moveStationInfoNode();
+    }
+
+
+
+    private void right() {
+
+
+
+        group.moveStationInfo();
 
     }
 
