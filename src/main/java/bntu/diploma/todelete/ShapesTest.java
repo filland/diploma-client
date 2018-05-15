@@ -1,4 +1,4 @@
-package bntu.diploma.test;
+package bntu.diploma.todelete;
 
 import javafx.application.Application;
 import javafx.scene.Group;

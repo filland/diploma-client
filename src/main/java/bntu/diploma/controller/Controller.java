@@ -1,6 +1,7 @@
 package bntu.diploma.controller;
 
 import bntu.diploma.model.Station;
+import bntu.diploma.model.StationInfoNode;
 import bntu.diploma.model.WeatherInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -9,8 +10,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -22,8 +21,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +55,11 @@ public class Controller {
     // --------------------- STRUCTURE -----------------------
 
 
+    //@FXML
+    //private BorderPane mainSplitPane_leftAnchorPane_borderPane;
 
     @FXML
     private MenuBar menuBar;
-    @FXML
-    private Group group;
-    @FXML
-    private Canvas canvas;
     @FXML
     private SplitPane rightSplitPane;
     @FXML
@@ -140,13 +135,22 @@ public class Controller {
 
     private void initMap(){
 
-        graphicsContext = canvas.getGraphicsContext2D();
+        StationInfoPane stationInfoPane = new StationInfoPane(mainSplitPane_leftAnchorPane);
 
-        imageRect = new Image(LINK_TO_MAP);
-        imageView = new ImageView(imageRect);
+        StationInfoNode infoNode = new StationInfoNode(50, 50, "1");
+        infoNode.setStationParam("temp", "1");
+        infoNode.setStationParam("temp2", "25.5");
+        infoNode.setStationParam("temp3", "25.5");
 
-        imageView.setPreserveRatio(true);
-        group.getChildren().add(imageView);
+        StationInfoNode infoNode2 = new StationInfoNode(250 , 50, "2");
+        infoNode2.setStationParam("temp", "2");
+        infoNode2.setStationParam("temp2", "25.5");
+        infoNode2.setStationParam("temp3", "25.5");
+
+        stationInfoPane.addStationInfoNode(infoNode);
+        stationInfoPane.addStationInfoNode(infoNode2);
+
+        mainSplitPane_leftAnchorPane.getChildren().add(stationInfoPane);
 
     }
 
@@ -164,7 +168,7 @@ public class Controller {
         rightMenu_SplitPane_upperAnchorPane.heightProperty().addListener(h -> rightMenu_SplitPane_upperAnchorPaneHeightChanged());
 
         // -------------------- map ------------------
-        imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClicked);
+        //imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClicked);
         // -------------------- map ------------------
 
     }
@@ -292,11 +296,12 @@ public class Controller {
 
     // changes the size of canvas to fit the anchor it is wrapped in
     private void mainSplitPane_leftAnchorPaneResized() {
-        canvas.setHeight(mainSplitPane_leftAnchorPane.getHeight());
-        canvas.setWidth(mainSplitPane_leftAnchorPane.getWidth());
 
-        imageView.setFitWidth(mainSplitPane_leftAnchorPane.getWidth());
-        imageView.setFitHeight(mainSplitPane_leftAnchorPane.getHeight());
+        //canvas.setHeight(mainSplitPane_leftAnchorPane.getHeight());
+        //canvas.setWidth(mainSplitPane_leftAnchorPane.getWidth());
+
+        //imageView.setFitWidth(mainSplitPane_leftAnchorPane.getWidth());
+        //imageView.setFitHeight(mainSplitPane_leftAnchorPane.getHeight());
     }
 
     // changes width of upped and lower tables to fit the panes they are wrapped in

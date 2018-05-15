@@ -1,4 +1,4 @@
-package bntu.diploma.test;
+package bntu.diploma.model;
 
 import javafx.scene.Group;
 import javafx.scene.control.Label;

@@ -1,5 +1,7 @@
 package bntu.diploma.test;
 
+import bntu.diploma.controller.StationInfoPane;
+import bntu.diploma.model.StationInfoNode;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -29,7 +31,7 @@ public class RectangleTest extends Application {
         infoNode2.setStationParam("temp2", "25.5");
         infoNode2.setStationParam("temp3", "25.5");
 
-        group = new StationInfoPane();
+        group = new StationInfoPane(borderPane);
         group.addStationInfoNode(infoNode);
         group.addStationInfoNode(infoNode2);
 
@@ -38,7 +40,6 @@ public class RectangleTest extends Application {
 
         Button buttonRight = new Button("changeCoord");
         buttonRight.setOnMouseClicked(event -> right());
-        //pane.getChildren().add(button);
 
         borderPane.setTop(buttonRight);
         borderPane.setCenter(group);

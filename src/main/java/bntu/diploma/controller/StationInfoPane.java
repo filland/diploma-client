@@ -1,12 +1,12 @@
-package bntu.diploma.test;
+package bntu.diploma.controller;
 
+import bntu.diploma.model.StationInfoNode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
@@ -27,7 +27,11 @@ public class StationInfoPane extends Pane {
     // using for moving a station
     private String lastNodeId;
 
-    public StationInfoPane() {
+    private Pane parentPane;
+
+    public StationInfoPane(Pane parentPane) {
+
+        this.parentPane = parentPane;
 
         dots = FXCollections.observableArrayList();
 
@@ -35,8 +39,8 @@ public class StationInfoPane extends Pane {
         imageView = new ImageView(imageRect);
         imageView.setPreserveRatio(true);
         imageView.toBack();
-        imageView.fitHeightProperty().bind(this.heightProperty());
-        imageView.fitWidthProperty().bind(this.widthProperty());
+        imageView.fitHeightProperty().bind(parentPane.heightProperty());
+        imageView.fitWidthProperty().bind(parentPane.widthProperty());
 
         mouseClicksHandler = new MouseActionHandler(imageView);
 
@@ -63,7 +67,6 @@ public class StationInfoPane extends Pane {
         mouseClicksHandler.addStationInfoNodes(dots);
         this.getChildren().addAll(nodes);
     }
-
 
     // TODO move all code handling events to this class
     public class MouseActionHandler {
@@ -158,7 +161,6 @@ public class StationInfoPane extends Pane {
             this.dots.put(node.getDot().getId(), node);
             node.addEventHandler(MouseEvent.MOUSE_PRESSED, stationMouseClickHandler);
         }
-
 
     }
 }
