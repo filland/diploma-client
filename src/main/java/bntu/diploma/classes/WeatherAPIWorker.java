@@ -28,6 +28,8 @@ public class WeatherAPIWorker {
     private CloseableHttpClient httpClient;
     private String addressOfWeatherAPI = "http://site.byyy/weather";
 
+    private String sessionToken;
+
     public static WeatherAPIWorker getInstance() {
         if (ourInstance == null){
             ourInstance = new WeatherAPIWorker();
@@ -80,6 +82,8 @@ public class WeatherAPIWorker {
     public String singin(String login, String pass){
 
         // todo !!!!
+
+        sessionToken = null;
 
         return "whatever";
     }
@@ -153,5 +157,9 @@ public class WeatherAPIWorker {
 
     public void setNewAddressOfWeatherAPI(String addressOfWeatherAPI) {
         this.addressOfWeatherAPI = addressOfWeatherAPI;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
     }
 }

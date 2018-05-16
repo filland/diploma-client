@@ -1,20 +1,18 @@
 package bntu.diploma.controller;
 
+import bntu.diploma.classes.map.InteractiveMap;
+import bntu.diploma.classes.StationInfoPane;
 import bntu.diploma.model.Station;
-import bntu.diploma.model.StationInfoNode;
+import bntu.diploma.classes.map.StationInfoNode;
 import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.utils.DataUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -28,8 +26,6 @@ import java.util.List;
 
 /**
  *
- *
- * TODO: ...
  *
  *
  *  DONE:
@@ -72,9 +68,9 @@ public class Controller {
 
 
     // -----------------------------------------------------------------------------------------------
-    private GraphicsContext graphicsContext;
-    private Image imageRect;
-    private ImageView imageView;
+    //private GraphicsContext graphicsContext;
+    //private Image imageRect;
+    //private ImageView imageView;
 
     private TableView<WeatherInfo> rightMenu_upperPane_detailedInfoTable;
     //private TableView<WeatherInfo> rightMenu_lowerPane_allStationsTable;
@@ -86,6 +82,8 @@ public class Controller {
     private final String LINK_TO_MAP = "map.png";
     // ------------- CONSTANTS -----------------------------------------
 
+    private InteractiveMap interactiveMap;
+    private StationInfoPane stationInfoPane;
 
     public Controller() {
 
@@ -103,29 +101,9 @@ public class Controller {
         initMap();
         initListeners();
 
-        List<WeatherInfo> sysList = new ArrayList<>();
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12));
-        populateRightMenu_upperPane_detailedInfoTable(sysList);
 
-
-        Station station2 = new Station();
-        station2.setStationsId(1L);
-        station2.setOblast(4L);
-        station2.setInstallationDate("setInstallationDate");
-        station2.setLastInspection("setLastInspection");
-        station2.setNearestTown("setNearestTown");
-        station2.setStationLongitude(1.1);
-        station2.setStationLatitude(2.2);
-        populateRightMenu_lowerPane_allStationsTable(station2);
-
+        populateRightMenu_upperPane_detailedInfoTable(DataUtils.getStationList());
+        populateRightMenu_lowerPane_allStationsTable(DataUtils.getStationInstance());
 
         // resize all elements
         rightMenu_SplitPane_upperAnchorPaneHeightChanged();
@@ -135,22 +113,15 @@ public class Controller {
 
     private void initMap(){
 
-        StationInfoPane stationInfoPane = new StationInfoPane(mainSplitPane_leftAnchorPane);
+        interactiveMap = new InteractiveMap(mainSplitPane_leftAnchorPane);
 
-        StationInfoNode infoNode = new StationInfoNode(50, 50, "1");
-        infoNode.setStationParam("temp", "1");
-        infoNode.setStationParam("temp2", "25.5");
-        infoNode.setStationParam("temp3", "25.5");
+        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
 
-        StationInfoNode infoNode2 = new StationInfoNode(250 , 50, "2");
-        infoNode2.setStationParam("temp", "2");
-        infoNode2.setStationParam("temp2", "25.5");
-        infoNode2.setStationParam("temp3", "25.5");
-
-        stationInfoPane.addStationInfoNode(infoNode);
-        stationInfoPane.addStationInfoNode(infoNode2);
-
-        mainSplitPane_leftAnchorPane.getChildren().add(stationInfoPane);
+        mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
 
     }
 
@@ -191,19 +162,44 @@ public class Controller {
         menuReport = new Menu("Отчет");
 
         MenuItem menuItemAddNewStation = new MenuItem("Добавить новую станцию");
-        menuStation.getItems().addAll(menuItemAddNewStation);
-        menuBar.getMenus().add(menuStation);
+        menuItemAddNewStation.setOnAction(x -> menuItemExportDataClicked());
+
+        MenuItem menuItemMoveExistingStation = new MenuItem("Переместить станцию");
+        menuItemMoveExistingStation.setOnAction(this::menuItemMoveExistingStationClicked);
+
+        MenuItem menuItemChangeStationInfo = new MenuItem("Изменить информацию о станции");
+        menuItemChangeStationInfo.setOnAction(this::menuItemChangeStationInfoClicked);
+
+        menuStation.getItems().addAll(menuItemMoveExistingStation, menuItemChangeStationInfo, menuItemAddNewStation);
 
         MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
-        menuReport.getItems().addAll(menuItemHTMLReport);
-        menuBar.getMenus().add(menuReport);
-
-        menuItemAddNewStation.setOnAction(x -> menuItemExportDataClicked());
         menuItemHTMLReport.setOnAction(x -> menuItemHTMLReportClicked());
+
+        menuReport.getItems().addAll(menuItemHTMLReport);
+        menuBar.getMenus().addAll(menuStation, menuReport);
+    }
+
+    private void menuItemChangeStationInfoClicked(ActionEvent event) {
+
+        stationInfoPane.getCurrentStation();
+        System.out.println("changing station");
+
+    }
+
+    private void menuItemMoveExistingStationClicked(ActionEvent x) {
+
+        interactiveMap.startMovingStationInfoNode();
+
+        // show a hint
     }
 
     private void menuItemExportDataClicked() {
+
         System.out.println("menuItemExportDataClicked");
+
+
+        interactiveMap.addNewStation(null);
+
     }
 
     private void menuItemHTMLReportClicked() {
@@ -228,17 +224,24 @@ public class Controller {
                 new PropertyValueFactory<>("pressure"));
 
         TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
+        wind_speed.setMinWidth(50);
         wind_speed.setCellValueFactory(
                 new PropertyValueFactory<>("windSpeed"));
 
         TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
+        wind_direction.setMinWidth(35);
         wind_direction.setCellValueFactory(
                 new PropertyValueFactory<>("windDirection"));
+
+        TableColumn<WeatherInfo, String> date_time = new TableColumn<>("date_time");
+        date_time.setMinWidth(60);
+        date_time.setCellValueFactory(
+                new PropertyValueFactory<>("dateTime"));
 
         ObservableList<WeatherInfo> data = FXCollections.observableArrayList(list);
 
         // adding headers
-        rightMenu_upperPane_detailedInfoTable.getColumns().addAll(temperature, humidity, pressure, wind_speed, wind_direction);
+        rightMenu_upperPane_detailedInfoTable.getColumns().addAll(temperature, humidity, pressure, wind_speed, wind_direction, date_time);
         // adding data
         rightMenu_upperPane_detailedInfoTable.setItems(data);
 
@@ -248,40 +251,11 @@ public class Controller {
 
     private void populateRightMenu_lowerPane_allStationsTable(Station station){
 
-        // TODO how to add big GridPane to a ScrollPane
+        stationInfoPane = new StationInfoPane();
+        stationInfoPane.addInfoRow(station);
 
-        Label stationsIdLabel = new Label(String.valueOf(station.getStationsId()));
-        Label oblastLabel = new Label(String.valueOf(station.getOblast()));
-        Label installationDateLabel = new Label(String.valueOf(station.getInstallationDate()));
-        Label lastInspectionLabel = new Label(String.valueOf(station.getLastInspection()));
-        Label nearestTownLabel = new Label(String.valueOf(station.getNearestTown()));
-        Label stationLongitudeLabel = new Label(String.valueOf(station.getStationLongitude()));
-        Label stationLatitudeLabel = new Label(String.valueOf(station.getStationLatitude()));
+        rightMenu_SplitPane_lowerAnchorPane.getChildren().add(stationInfoPane);
 
-        stationInfoGrid.setAlignment(Pos.CENTER);
-        stationInfoGrid.setHgap(10);
-        stationInfoGrid.setVgap(10);
-        stationInfoGrid.setPadding(new Insets(25, 25, 25, 25));
-
-        stationInfoGrid.add(stationsIdLabel, 1, 1);
-        stationInfoGrid.add(oblastLabel, 1, 2);
-        stationInfoGrid.add(installationDateLabel, 1, 3);
-        stationInfoGrid.add(lastInspectionLabel, 1, 4);
-        stationInfoGrid.add(nearestTownLabel, 1, 5);
-        stationInfoGrid.add(stationLongitudeLabel, 1, 6);
-        stationInfoGrid.add(stationLatitudeLabel, 1, 7);
-
-        stationInfoGrid.add(new Label("id: "), 0, 1);
-        stationInfoGrid.add(new Label("oblast: "), 0, 2);
-        stationInfoGrid.add(new Label("install date: "), 0, 3);
-        stationInfoGrid.add(new Label("last inspect: "), 0, 4);
-        stationInfoGrid.add(new Label("nearest town: "), 0, 5);
-        stationInfoGrid.add(new Label("longitude: "), 0, 6);
-        stationInfoGrid.add(new Label("latitude: "), 0, 7);
-        //stationInfoGrid.add(new Label("unique"), 0, 1);
-
-
-        //rightMenu_SplitPane_lowerAnchorPane.getChildren().add(stationInfoGrid);
     }
 
 
@@ -321,7 +295,16 @@ public class Controller {
     }
     // -------------------------- Listeners' methods ------------------------------------------------------------------------------
 
-
+    /**
+     *
+     *
+     * THE WAY TO SPLIT CONTROLLERS
+     *
+     *
+     * https://stackoverflow.com/questions/15041760/javafx-open-new-window
+     *
+     *
+     **/
 
     // -------------------------------------- LOGIN -----------------------------------------------------------------------------------
     @FXML

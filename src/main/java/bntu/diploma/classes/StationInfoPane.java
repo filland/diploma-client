@@ -1,0 +1,100 @@
+package bntu.diploma.classes;
+
+import bntu.diploma.model.Station;
+import bntu.diploma.todelete.StationInfo;
+import bntu.diploma.utils.OblastUtils;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
+
+
+
+/**
+ *
+ * This class is meant to show system information about
+ * a station in a convenient way.
+ *
+ *
+ * */
+public class StationInfoPane extends GridPane {
+
+  /*  public class InfoRow{
+
+        private String id = null;
+        private Label titleLabel;
+        private Label contentLabel;
+
+        public InfoRow(String title, String content) {
+            titleLabel = new Label(title);
+            contentLabel = new Label(content);
+        }
+
+        public Label getTitleLabel() {
+            return titleLabel;
+        }
+
+        public void setTitle(String title) {
+            this.titleLabel = new Label(title);
+        }
+
+        public Label getContentLabel() {
+            return contentLabel;
+        }
+
+        public void setContent(String content) {
+            this.contentLabel = new Label(content);
+        }
+    }*/
+
+
+
+
+    private int rowCounter = 0;
+
+    private Station currentStation;
+
+    public StationInfoPane() {
+
+        this.setAlignment(Pos.CENTER);
+        this.setHgap(10);
+        this.setVgap(10);
+        this.setPadding(new Insets(25, 35, 25, 35));
+    }
+
+    public void addInfoRow(Station station){
+
+        this.getChildren().clear();
+
+        currentStation = station;
+
+        addInfoRow("Station's name: ", station.getNearestTown()+"_"+String.valueOf(station.getStationsId()));
+        addInfoRow("Station's id: ", String.valueOf(station.getStationsId()));
+        addInfoRow("Oblast: ", OblastUtils.getOlastTextName(station.getOblast()));
+        addInfoRow("Installation date: ", station.getInstallationDate());
+        addInfoRow("Last inspection date: ", station.getLastInspection());
+        addInfoRow("Nearest town: ", station.getNearestTown());
+        addInfoRow("Longitude: ", String.valueOf(station.getStationLongitude()));
+        addInfoRow("Latitude: ", String.valueOf(station.getStationLatitude()));
+
+        // make counter equal to zero to add the next station's info starting from the beginning
+        rowCounter = 0;
+    }
+
+    private void addInfoRow(String rowTitle, String rowContent){
+
+        Label title = new Label(rowTitle);
+        Label content = new Label(rowContent);
+
+        this.add(title, 0, rowCounter);
+        this.add(content, 1, rowCounter);
+
+        rowCounter++;
+
+    }
+
+    public Station getCurrentStation() {
+        return currentStation;
+    }
+
+}

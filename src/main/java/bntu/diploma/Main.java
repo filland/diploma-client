@@ -10,13 +10,14 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/view.fxml"));
 
         primaryStage.setTitle("WeatherTower");
         primaryStage.setScene(new Scene(root));
 
-        primaryStage.setMinWidth(1100);
-        primaryStage.setMinHeight(700);
+        primaryStage.setMinWidth(1050);
+        primaryStage.setMinHeight(750);
 
         primaryStage.show();
     }

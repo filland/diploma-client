@@ -2,7 +2,7 @@ package bntu.diploma.todelete;
 
 import javafx.beans.property.*;
 
-// TODO replace this class with the one from Server project
+
 public class StationWeatherInfo {
 
     public enum Direction{

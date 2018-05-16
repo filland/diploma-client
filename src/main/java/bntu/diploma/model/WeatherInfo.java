@@ -9,7 +9,7 @@ public class WeatherInfo {
     private Double humidity;
     private Double windSpeed;
     private Integer windDirection;
-
+    private Integer batteryLevel;
 
     private Long weatherInfoId;
     private Station station;
@@ -17,7 +17,7 @@ public class WeatherInfo {
 
     public WeatherInfo() {  }
 
-    public WeatherInfo(String dateTime, double temperature, double pressure, double humidity, double windSpeed, int windDirection) {
+    public WeatherInfo(String dateTime, double temperature, double pressure, double humidity, double windSpeed, int windDirection, int batteryLevel) {
 
         this.dateTime = dateTime;
         this.temperature = temperature;
@@ -25,6 +25,7 @@ public class WeatherInfo {
         this.humidity = humidity;
         this.windSpeed = windSpeed;
         this.windDirection = windDirection;
+        this.batteryLevel = batteryLevel;
     }
 
 
@@ -90,5 +91,13 @@ public class WeatherInfo {
 
     public void setStation(Station station) {
         this.station = station;
+    }
+
+    public Integer getBatteryLevel() {
+        return batteryLevel;
+    }
+
+    public void setBatteryLevel(Integer batteryLevel) {
+        this.batteryLevel = batteryLevel;
     }
 }

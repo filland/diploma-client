@@ -1,21 +1,28 @@
-package bntu.diploma.controller;
+package bntu.diploma.classes.map;
 
-import bntu.diploma.model.StationInfoNode;
+import bntu.diploma.classes.WeatherAPIWorker;
+import bntu.diploma.classes.map.StationInfoNode;
+import bntu.diploma.model.Station;
+import javafx.animation.PauseTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
+import javafx.util.Duration;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StationInfoPane extends Pane {
+public class InteractiveMap extends Pane {
 
     private ObservableList<StationInfoNode> dots;
     private MouseActionHandler mouseClicksHandler;
@@ -29,7 +36,9 @@ public class StationInfoPane extends Pane {
 
     private Pane parentPane;
 
-    public StationInfoPane(Pane parentPane) {
+    private WeatherAPIWorker weatherAPIWorker = WeatherAPIWorker.getInstance();
+
+    public InteractiveMap(Pane parentPane) {
 
         this.parentPane = parentPane;
 
@@ -42,16 +51,14 @@ public class StationInfoPane extends Pane {
         imageView.fitHeightProperty().bind(parentPane.heightProperty());
         imageView.fitWidthProperty().bind(parentPane.widthProperty());
 
-        mouseClicksHandler = new MouseActionHandler(imageView);
+        mouseClicksHandler = new MouseActionHandler(this, imageView);
 
         this.getChildren().add(imageView);
     }
 
 
-    public void moveStationInfo(){
-
+    public void startMovingStationInfoNode(){
         mouseClicksHandler.startWaitingForPickingStation();
-
     }
 
     public void addStationInfoNode(StationInfoNode node){
@@ -68,12 +75,25 @@ public class StationInfoPane extends Pane {
         this.getChildren().addAll(nodes);
     }
 
+    public void addNewStation(Station station){
+
+        // working with APIWorker
+        // sent post request with data from station's instance
+        weatherAPIWorker.addNewStation(station);
+
+
+
+    }
+
+
+
     // TODO move all code handling events to this class
     public class MouseActionHandler {
 
         // dot id, station
         private Map<String, StationInfoNode> dots;
 
+        private Pane parentPane;
         private ImageView imageView;
 
         private boolean pickingStation = false;
@@ -82,27 +102,80 @@ public class StationInfoPane extends Pane {
         private EventHandler<MouseEvent> mapMouseClickHandler;
         private EventHandler<MouseEvent> stationMouseClickHandler;
 
-        public MouseActionHandler(ImageView imageView) {
+        // adding delay when scaling stationInfoNodes
+        private PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
 
+        private double oldHeight;
+        private double oldWidth;
+
+        public MouseActionHandler(Pane parentPane, ImageView imageView) {
+
+            this.parentPane = parentPane;
             this.imageView = imageView;
+
+            oldHeight = parentPane.getHeight();
+            oldWidth = parentPane.getWidth();
 
             dots = new HashMap<>();
 
             this.mapMouseClickHandler = event -> {
-
                 mapClicked(event);
                 event.consume();
             };
 
             this.imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, mapMouseClickHandler);
 
+
+            ChangeListener<Number> parentPaneSizeListener = (observable, oldValue, newValue) -> {
+
+                pause.setOnFinished(event -> interactiveMapResized(observable, oldValue, newValue));
+                pause.playFromStart();
+            };
+
+            this.parentPane.widthProperty().addListener(parentPaneSizeListener);
+            this.parentPane.heightProperty().addListener(parentPaneSizeListener);
+
             stationMouseClickHandler = this::stationClicked;
 
+        }
+
+
+        private void interactiveMapResized(ObservableValue<? extends Number> observable, Number oldValue, Number newValue){
+
+//            System.out.println("old value - "+oldValue);
+//            System.out.println("new value - "+newValue);
+//            System.out.println("Height: " + parentPane.getHeight() + " Width: " + parentPane.getWidth());
+
+            if (oldHeight == 0 || oldWidth == 0){
+
+                oldHeight = imageView.getFitHeight();
+                oldWidth = imageView.getFitWidth();
+                return;
+            }
+
+            dots.forEach((dotId, stationInfoNode) -> {
+
+
+                //System.out.println("scale x - "+parentPane.getWidth()/oldWidth);
+                //System.out.println("scale y - "+parentPane.getHeight()/oldHeight);
+
+                stationInfoNode.scaleStationInfoNode(imageView.getFitWidth()/oldWidth,
+                                                imageView.getFitHeight()/oldHeight);
+
+            });
+
+            //parentPane.setScaleX(oldWidth/imageView.getX());
+            //parentPane.setScaleY(oldHeight/imageView.getY());
+
+
+            oldHeight = imageView.getFitHeight();
+            oldWidth = imageView.getFitWidth();
         }
 
         private void stationClicked(MouseEvent mouseEvent) {
             String nodeId = ((Shape)mouseEvent.getTarget()).getId();
 
+            // while moving a stationInfo node
             if (pickingStation){
 
                 lastNodeId = nodeId;
@@ -112,6 +185,7 @@ public class StationInfoPane extends Pane {
                 return;
             }
 
+            // hiding/showing stationInfoNode's info by click
             if (dots.get(nodeId).isStationInfoVisible()) {
 
                 dots.get(nodeId).hideInfo();
@@ -119,14 +193,22 @@ public class StationInfoPane extends Pane {
 
             } else {
 
+                dots.get(nodeId).toFront();
                 dots.get(nodeId).showInfo();
                 dots.get(nodeId).setStationInfoVisible(true);
             }
+
+            System.out.println("stat x - "+ dots.get(nodeId).getLayoutX());
+            System.out.println("stat Y - "+ dots.get(nodeId).getLayoutY()+"\n");
         }
 
 
         private void mapClicked(MouseEvent event) {
 
+            //System.out.println("x - "+event.getX());
+            //System.out.println("y - "+event.getY());
+
+            // setting a new place for a stationInfoNode
             if (pickingNewPlace){
                 moveStation(lastNodeId, event.getX(), event.getY());
                 pickingNewPlace = false;
@@ -137,13 +219,13 @@ public class StationInfoPane extends Pane {
             dots.forEach((circle, stationInfoNode) -> stationInfoNode.hideInfo());
         }
 
+        // once the method is called a target stationInfoNode should be selected by clicking
         public void startWaitingForPickingStation(){
-
             pickingStation = true;
         }
 
+        // called when a new place for the selected stationInfoNode was specified by clicking
         public void moveStation(String id, double x, double y){
-
             dots.get(id).moveStationInfoNode(x, y);
         }
 
