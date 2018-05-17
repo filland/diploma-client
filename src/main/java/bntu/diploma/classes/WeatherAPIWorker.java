@@ -26,7 +26,13 @@ public class WeatherAPIWorker {
     private static WeatherAPIWorker ourInstance;
 
     private CloseableHttpClient httpClient;
-    private String addressOfWeatherAPI = "http://site.byyy/weather";
+
+    private String addressOfWeatherAPI = "localhost";
+    private static final String HTTP_SCHEME = "http";
+    private int port = 8080;
+    private String ALL_WEATHER_DATA_RESOURCE_PATH = "weather";
+    private String ALL_STATIONS_DATA_RESOURCE_PATH = "station";
+    private String ADD_NEW_STATION_RESOURCE_PATH = "add_station";
 
     private String sessionToken;
 
@@ -48,7 +54,7 @@ public class WeatherAPIWorker {
      * @param token a secret key for authentication
      * @param from - beginning date (format - ddmmyyyy)
      * @param to - ending date (format - ddmmyyyy)
-     * @param scale specifies the scale of
+     * @param scale specifies the scale (country, oblast, station)
      *
      *
      * */
@@ -56,16 +62,20 @@ public class WeatherAPIWorker {
 
         Map<String, String> params = new HashMap<>();
         params.put("key", token);
-        params.put("from", from);
-        params.put("to", to);
         params.put("scale", scale);
+
+        // these two params are not necessary
+        if (from != null && to != null) {
+            params.put("from", from);
+            params.put("to", to);
+        }
 
         String result = null;
 
         try {
             result = executeGetRequest(null,
                     params,
-                    addressOfWeatherAPI);
+                    ALL_WEATHER_DATA_RESOURCE_PATH);
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -73,6 +83,47 @@ public class WeatherAPIWorker {
         return result;
     }
 
+
+    public String getAllWeatherData(String sessionToken){
+
+        // TODO token
+        Map<String, String> params = new HashMap<>();
+        params.put("key", sessionToken);
+
+
+        String result = null;
+
+        try {
+            result = executeGetRequest(null,
+                    params,
+                    ALL_WEATHER_DATA_RESOURCE_PATH);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+
+    public String getAllStationsInfo(String sessionToken){
+
+        // TODO token
+
+        Map<String, String> params = new HashMap<>();
+        params.put("key", sessionToken);
+
+        String result = null;
+
+        try {
+            result = executeGetRequest(null,
+                    params,
+                    ALL_STATIONS_DATA_RESOURCE_PATH);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 
     /**
      *
@@ -106,9 +157,13 @@ public class WeatherAPIWorker {
 
     private String executeGetRequest(Map<String, String> headers,
                                      Map<String, String> params,
-                                     String url) throws URISyntaxException {
+                                     String path) throws URISyntaxException {
 
-        URIBuilder builder = new URIBuilder(url);
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme(HTTP_SCHEME);
+        builder.setHost(addressOfWeatherAPI);
+        builder.setPath(path);
+        builder.setPort(port);
 
         if(params != null){
             for (Map.Entry<String, String> param: params.entrySet()){

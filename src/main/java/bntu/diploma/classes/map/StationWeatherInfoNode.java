@@ -23,7 +23,7 @@ import java.util.*;
  * Visually this class looks like a table of parameters.
  *
  * */
-public class StationInfoNode extends Group {
+public class StationWeatherInfoNode extends Group {
 
 
     private String id;
@@ -54,7 +54,7 @@ public class StationInfoNode extends Group {
     private double boarderWidth = 140;
     private double boarderHeight = 120;
 
-    public StationInfoNode(double x, double y, long id, String name) {
+    public StationWeatherInfoNode(double x, double y, long id, String name) {
 
         this.id = String.valueOf(id);
 
@@ -82,29 +82,6 @@ public class StationInfoNode extends Group {
         this.getChildren().addAll(nameLabel, boarder, dot);
     }
 
-    private void setStationParam(String paramName, String paramValue) {
-
-        // to avoid duplications
-        if(params.containsValue(params.get(paramName)))
-            return;
-
-        params.put(paramName, new Label(paramName+" : "+paramValue));
-        params.get(paramName).setLayoutX(topLeftX+10);
-        // we need to move only vertically
-        params.get(paramName).setLayoutY(topLeftY+10+yShift);
-        // all params of the station has the same id
-        params.get(paramName).setId(id);
-
-        // to put the next param 15 lower vertically
-        yShift+=15;
-
-        // hide new params if appears
-        if (!stationInfoVisible)
-            params.get(paramName).setVisible(stationInfoVisible);
-
-        this.getChildren().addAll(params.get(paramName));
-    }
-
     public void setStationParam(WeatherInfo weatherInfo){
 
         params.forEach((s, label) -> this.getChildren().remove(label));
@@ -120,19 +97,19 @@ public class StationInfoNode extends Group {
     }
 
     // hide all shapes except dot
+
     public void hideInfo(){
 
         boarder.setVisible(false);
         params.forEach((s, label) -> label.setVisible(false));
     }
-
     // show all shapes except dot
+
     public void showInfo(){
 
         boarder.setVisible(true);
         params.forEach((s, label) -> label.setVisible(true));
     }
-
     public void moveStationInfoNode(double newXcoord, double newYcoord){
 
         this.relocate(newXcoord-10, newYcoord-30);
@@ -182,5 +159,33 @@ public class StationInfoNode extends Group {
 
     public void setStationInfoVisible(boolean stationInfoVisible) {
         this.stationInfoVisible = stationInfoVisible;
+    }
+
+    private void setStationParam(String paramName, String paramValue) {
+
+        // to avoid duplications
+        if(params.containsValue(params.get(paramName)))
+            return;
+
+        Label label = new Label(paramName+" : "+paramValue);
+
+        label.setLayoutX(topLeftX+10);
+        // we need to move only vertically
+        label.setLayoutY(topLeftY+10+yShift);
+        // all params of the station has the same id
+        //label.setId(this.id);
+
+        System.out.println("label.getId()  - " +label.getId());
+
+        params.put(paramName, label);
+
+        // to put the next param 15 lower vertically
+        yShift+=15;
+
+        // hide new params if appears
+        if (!stationInfoVisible)
+            params.get(paramName).setVisible(stationInfoVisible);
+
+        this.getChildren().addAll(params.get(paramName));
     }
 }

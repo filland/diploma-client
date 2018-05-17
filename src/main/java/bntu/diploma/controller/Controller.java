@@ -1,9 +1,9 @@
 package bntu.diploma.controller;
 
+import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.classes.map.InteractiveMap;
 import bntu.diploma.classes.StationInfoPane;
 import bntu.diploma.model.Station;
-import bntu.diploma.classes.map.StationInfoNode;
 import bntu.diploma.model.WeatherInfo;
 import bntu.diploma.utils.DataUtils;
 import javafx.collections.FXCollections;
@@ -20,7 +20,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -84,6 +83,7 @@ public class Controller {
 
     private InteractiveMap interactiveMap;
     private StationInfoPane stationInfoPane;
+    private WeatherDataStore weatherDataStore;
 
     public Controller() {
 
@@ -97,13 +97,17 @@ public class Controller {
     @FXML
     public void initialize(){
 
+        weatherDataStore = WeatherDataStore.getInstance();
+
         initMenuBar();
         initMap();
         initListeners();
 
 
-        populateRightMenu_upperPane_detailedInfoTable(DataUtils.getStationList());
-        populateRightMenu_lowerPane_allStationsTable(DataUtils.getStationInstance());
+//        populateRightMenu_upperPane_detailedInfoTable(DataUtils.getListOfWeatherInfo());
+        populateRightMenu_upperPane_detailedInfoTable(weatherDataStore.getAllWeatherInfoForStation(1));
+//        populateRightMenu_lowerPane_allStationsTable(DataUtils.getStationInstance());
+        populateRightMenu_lowerPane_allStationsTable(weatherDataStore.getStationInfo(1));
 
         // resize all elements
         rightMenu_SplitPane_upperAnchorPaneHeightChanged();
@@ -116,10 +120,10 @@ public class Controller {
         interactiveMap = new InteractiveMap(mainSplitPane_leftAnchorPane);
 
         interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
+//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
 
         mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
 
@@ -162,7 +166,7 @@ public class Controller {
         menuReport = new Menu("Отчет");
 
         MenuItem menuItemAddNewStation = new MenuItem("Добавить новую станцию");
-        menuItemAddNewStation.setOnAction(x -> menuItemExportDataClicked());
+        menuItemAddNewStation.setOnAction(x -> menuItemAddNewStationClicked());
 
         MenuItem menuItemMoveExistingStation = new MenuItem("Переместить станцию");
         menuItemMoveExistingStation.setOnAction(this::menuItemMoveExistingStationClicked);
@@ -177,6 +181,10 @@ public class Controller {
 
         menuReport.getItems().addAll(menuItemHTMLReport);
         menuBar.getMenus().addAll(menuStation, menuReport);
+    }
+
+    private void menuItemAddNewStationClicked() {
+        interactiveMap.addNewStation(null);
     }
 
     private void menuItemChangeStationInfoClicked(ActionEvent event) {
@@ -197,9 +205,6 @@ public class Controller {
 
         System.out.println("menuItemExportDataClicked");
 
-
-        interactiveMap.addNewStation(null);
-
     }
 
     private void menuItemHTMLReportClicked() {
@@ -207,6 +212,8 @@ public class Controller {
     }
 
     private void populateRightMenu_upperPane_detailedInfoTable(List<WeatherInfo> list){
+
+        rightMenu_upperPane_detailedInfoTable.getColumns().clear();
 
         // make columns to take all available space
         rightMenu_upperPane_detailedInfoTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -224,17 +231,17 @@ public class Controller {
                 new PropertyValueFactory<>("pressure"));
 
         TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
-        wind_speed.setMinWidth(50);
+        wind_speed.setPrefWidth(40);
         wind_speed.setCellValueFactory(
                 new PropertyValueFactory<>("windSpeed"));
 
         TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
-        wind_direction.setMinWidth(35);
+        wind_direction.setPrefWidth(30);
         wind_direction.setCellValueFactory(
                 new PropertyValueFactory<>("windDirection"));
 
         TableColumn<WeatherInfo, String> date_time = new TableColumn<>("date_time");
-        date_time.setMinWidth(60);
+        date_time.setMinWidth(70);
         date_time.setCellValueFactory(
                 new PropertyValueFactory<>("dateTime"));
 

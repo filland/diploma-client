@@ -1,8 +1,11 @@
 package bntu.diploma.model;
 
 import bntu.diploma.model.Station;
+import bntu.diploma.utils.Utils;
 
-public class WeatherInfo {
+import java.time.LocalDateTime;
+
+public class WeatherInfo implements Comparable<WeatherInfo> {
 
     private Double temperature;
     private Double pressure;
@@ -12,8 +15,8 @@ public class WeatherInfo {
     private Integer batteryLevel;
 
     private Long weatherInfoId;
-    private Station station;
     private String dateTime;
+    private Long station;
 
     public WeatherInfo() {  }
 
@@ -85,11 +88,11 @@ public class WeatherInfo {
         this.pressure = pressure;
     }
 
-    public Station getStation() {
+    public Long getStation() {
         return station;
     }
 
-    public void setStation(Station station) {
+    public void setStation(long station) {
         this.station = station;
     }
 
@@ -99,5 +102,19 @@ public class WeatherInfo {
 
     public void setBatteryLevel(Integer batteryLevel) {
         this.batteryLevel = batteryLevel;
+    }
+
+
+
+    /**
+     *
+     * Sorting weatherInfo like this (from 2010(o index) to 2017(last index))
+     *
+     *
+     * */
+    @Override
+    public int compareTo(WeatherInfo o) {
+        return LocalDateTime.parse(this.getDateTime(), Utils.DATE_FORMATTER2).
+                compareTo(LocalDateTime.parse(o.getDateTime(), Utils.DATE_FORMATTER2));
     }
 }

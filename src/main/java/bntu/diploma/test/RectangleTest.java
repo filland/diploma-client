@@ -1,7 +1,7 @@
 package bntu.diploma.test;
 
 import bntu.diploma.classes.map.InteractiveMap;
-import bntu.diploma.classes.map.StationInfoNode;
+import bntu.diploma.classes.map.StationWeatherInfoNode;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 public class RectangleTest extends Application {
 
-    private StationInfoNode infoNode;
+    private StationWeatherInfoNode infoNode;
     private InteractiveMap group;
 
     @Override
@@ -21,12 +21,12 @@ public class RectangleTest extends Application {
 
         BorderPane borderPane = new BorderPane();
 
-        infoNode = new StationInfoNode(50, 50, 1, "vileyka");
+        infoNode = new StationWeatherInfoNode(50, 50, 1, "vileyka");
 //        infoNode.setStationParam("temp", "1");
 //        infoNode.setStationParam("temp2", "25.5");
 //        infoNode.setStationParam("temp3", "25.5");
 
-        StationInfoNode infoNode2 = new StationInfoNode(250 , 50, 2, "gomel");
+        StationWeatherInfoNode infoNode2 = new StationWeatherInfoNode(250 , 50, 2, "gomel");
 //        infoNode2.setStationParam("temp", "2");
 //        infoNode2.setStationParam("temp2", "25.5");
 //        infoNode2.setStationParam("temp3", "25.5");

@@ -1,7 +1,9 @@
 package bntu.diploma.classes;
 
 import bntu.diploma.model.Station;
-import javafx.application.Application;
+import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.utils.DataUtils;
+import bntu.diploma.utils.Utils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,28 +11,41 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class Test extends Application {
+import java.util.Set;
+import java.util.TreeSet;
+
+public class Test {
 
     static GridPane stationInfoGrid;
 
     public static void main(String[] args) {
 
-        /*WeatherAPIWorker weatherAPIWorker = WeatherAPIWorker.getInstance();
-        weatherAPIWorker.setNewAddressOfWeatherAPI("http://bot.whatismyipaddress.com");
 
-        System.out.println("Response body - " + weatherAPIWorker.getWeatherData("20180422",
-                "20180425",
-                "all",
-                "qweqweqwe1"));*/
+        WeatherDataStore weatherDataStore = WeatherDataStore.getInstance();
+
+        //weatherDataStore.downloadAndParseData();
+
+        //System.out.println(weatherDataStore.getLastWeatherInfo(2).getDateTime());
+
+        for (WeatherInfo weatherInfo : weatherDataStore.getOneHundredWeatherInfoRecordsForStation(5)) {
+
+            System.out.println(weatherInfo.getDateTime());
+
+        }
 
 
-        launch();
+        /*Set<WeatherInfo> weatherInfoSet = new TreeSet<>(DataUtils.getListOfWeatherInfo());
 
-        //stationInfoGrid.add(new Label("unique"), 0, 1);
+
+        for (WeatherInfo weatherInfo : weatherInfoSet) {
+
+            System.out.println(weatherInfo.getDateTime());
+
+        }*/
 
     }
 
-    @Override
+
     public void start(Stage primaryStage) throws Exception {
 
         stationInfoGrid = new GridPane();

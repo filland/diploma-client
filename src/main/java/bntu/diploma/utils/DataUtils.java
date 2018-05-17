@@ -1,6 +1,7 @@
 package bntu.diploma.utils;
 
-import bntu.diploma.classes.map.StationInfoNode;
+import bntu.diploma.classes.WeatherDataStore;
+import bntu.diploma.classes.map.StationWeatherInfoNode;
 import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 
@@ -23,23 +24,23 @@ public class DataUtils {
 
 
 
-    public static List<WeatherInfo> getStationList(){
+    public static List<WeatherInfo> getListOfWeatherInfo(){
 
         List<WeatherInfo> sysList = new ArrayList<>();
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
-        sysList.add(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("15-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("16-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("17-06-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("08-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("19-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-05-2018 15:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("02-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("10-07-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-05-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-01-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-02-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
+        sysList.add(new WeatherInfo("14-03-2018 12:00",1.1, 2.2, 10.1, 10.1, 12, 50));
 
         return sysList;
     }
@@ -64,13 +65,17 @@ public class DataUtils {
     }
 
 
-    public static StationInfoNode getStationInfoNodeInstance(){
+    public static StationWeatherInfoNode getStationInfoNodeInstance(){
 
-        StationInfoNode infoNode = new StationInfoNode(stationInfoNodeShift, stationInfoNodeShift, ++counter, "vileyka");
-//        infoNode.setStationParam("temp", "1");
+        StationWeatherInfoNode infoNode = new StationWeatherInfoNode(stationInfoNodeShift, stationInfoNodeShift, ++counter, "vileyka");
+
+        //        infoNode.setStationParam("temp", "1");
 //        infoNode.setStationParam("temp2", "25.5");
 //        infoNode.setStationParam("temp3", "25.5");
-        infoNode.setStationParam(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
+
+//        infoNode.setStationParam(new WeatherInfo("14052018",1.1, 2.2, 10.1, 10.1, 12, 50));
+
+        infoNode.setStationParam(WeatherDataStore.getInstance().getLastWeatherInfo(1));
 
         stationInfoNodeShift+=50;
 

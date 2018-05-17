@@ -13,7 +13,6 @@ public class Station {
 
     private Long stationsId;
 
-    private String stationUniqueKey;
 
     /**
      * The oblast where the station is located
@@ -39,6 +38,8 @@ public class Station {
      * */
     private String lastInspection;
 
+    private int currentBatteryLevel;
+
     public Station() {
     }
 
@@ -48,14 +49,6 @@ public class Station {
 
     public void setStationsId(Long stationsId) {
         this.stationsId = stationsId;
-    }
-
-    public String getStationUniqueKey() {
-        return stationUniqueKey;
-    }
-
-    public void setStationUniqueKey(String stationUniqueKey) {
-        this.stationUniqueKey = stationUniqueKey;
     }
 
     public Long getOblast() {
@@ -106,4 +99,11 @@ public class Station {
         this.lastInspection = lastInspection;
     }
 
+    public int getCurrentBatteryLevel() {
+        return currentBatteryLevel;
+    }
+
+    public void setCurrentBatteryLevel(int currentBatteryLevel) {
+        this.currentBatteryLevel = currentBatteryLevel;
+    }
 }

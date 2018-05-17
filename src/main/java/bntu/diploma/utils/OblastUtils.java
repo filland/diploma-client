@@ -11,16 +11,13 @@ public class OblastUtils {
 
         intOblastMap = new HashMap<>();
 
-        intOblastMap.put(1L, "Brestskaya");
-        intOblastMap.put(2L, "Vitebskaya");
-        intOblastMap.put(3L, "Gomelskaya");
-        intOblastMap.put(4L, "Grodnenskaya");
-        intOblastMap.put(5L, "Minskaya");
-        intOblastMap.put(6L, "Mogilevskaya");
+        for (OblastEnum oblastEnum : OblastEnum.values()) {
+            intOblastMap.put(oblastEnum.getId(), oblastEnum.name());
+        }
 
     }
 
-    public static String getOlastTextName(long number) {
+    public static String getOblastTextName(long number) {
 
         if (number > 6 || number < 1)
             return null;

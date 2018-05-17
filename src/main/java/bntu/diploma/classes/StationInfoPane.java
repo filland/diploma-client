@@ -1,7 +1,6 @@
 package bntu.diploma.classes;
 
 import bntu.diploma.model.Station;
-import bntu.diploma.todelete.StationInfo;
 import bntu.diploma.utils.OblastUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,7 +69,7 @@ public class StationInfoPane extends GridPane {
 
         addInfoRow("Station's name: ", station.getNearestTown()+"_"+String.valueOf(station.getStationsId()));
         addInfoRow("Station's id: ", String.valueOf(station.getStationsId()));
-        addInfoRow("Oblast: ", OblastUtils.getOlastTextName(station.getOblast()));
+        addInfoRow("Oblast: ", OblastUtils.getOblastTextName(station.getOblast()));
         addInfoRow("Installation date: ", station.getInstallationDate());
         addInfoRow("Last inspection date: ", station.getLastInspection());
         addInfoRow("Nearest town: ", station.getNearestTown());
