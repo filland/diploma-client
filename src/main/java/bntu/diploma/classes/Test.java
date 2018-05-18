@@ -1,16 +1,29 @@
 package bntu.diploma.classes;
 
 import bntu.diploma.model.Station;
-import bntu.diploma.model.WeatherInfo;
-import bntu.diploma.utils.DataUtils;
-import bntu.diploma.utils.Utils;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,17 +34,18 @@ public class Test {
     public static void main(String[] args) {
 
 
-        WeatherDataStore weatherDataStore = WeatherDataStore.getInstance();
+//        WeatherDataStore weatherDataStore = WeatherDataStore.getInstance();
 
         //weatherDataStore.downloadAndParseData();
 
         //System.out.println(weatherDataStore.getLastWeatherInfo(2).getDateTime());
 
-        for (WeatherInfo weatherInfo : weatherDataStore.getOneHundredWeatherInfoRecordsForStation(5)) {
+//        for (WeatherInfo weatherInfo : weatherDataStore.getOneHundredWeatherInfoRecordsForStation(5)) {
+//
+//            System.out.println(weatherInfo.getDateTime());
+//
+//        }
 
-            System.out.println(weatherInfo.getDateTime());
-
-        }
 
 
         /*Set<WeatherInfo> weatherInfoSet = new TreeSet<>(DataUtils.getListOfWeatherInfo());
@@ -43,7 +57,42 @@ public class Test {
 
         }*/
 
+
+        WeatherAPIWorker apiWorker = WeatherAPIWorker.getInstance();
+
+
+        boolean loginResult = apiWorker.login(String.valueOf(666), String.valueOf(1));
+        System.out.println("login result  - "+loginResult);
+
+//        boolean logoutResult = apiWorker.logout();
+//        System.out.println("logout result - "+logoutResult);
+
+
+
+
+
+        try {
+
+            CloseableHttpResponse hello = apiWorker.executePostRequest(null, null, "hello");
+            System.out.println(hello.getEntity());
+
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+//            Station station = new Station();
+//
+//            station.setStationsId(2L);
+//            station.setCurrentBatteryLevel(40);
+//
+//            boolean b = apiWorker.changeStationInfo(station);
+//
+//            System.out.println("");
     }
+
 
 
     public void start(Stage primaryStage) throws Exception {

@@ -5,7 +5,6 @@ package bntu.diploma;
  *
  * TODO
  *
- * - split login and main controller
  * - API Worker !!!!
  * - HTML report generation
  * - Fix exception invoking by clicking stationInfoNode's params
@@ -13,6 +12,7 @@ package bntu.diploma;
  *  - add separate table of all stations. Open a separate tables with data by click.
  *  - a feature for adding new stations to the InteractiveMap (a popup menu with a list of new station to place on the map)
  * - change data in upper and lower panes when click by a green dot
+ * - split login and main controller (see how to do this here https://stackoverflow.com/questions/15041760/javafx-open-new-window)
  *
  * Not so ASAP:
  * - make moving stationIntoNode's coordinates more accurate while scaling
