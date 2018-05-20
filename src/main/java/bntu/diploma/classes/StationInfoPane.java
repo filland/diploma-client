@@ -18,36 +18,6 @@ import javafx.scene.layout.GridPane;
  * */
 public class StationInfoPane extends GridPane {
 
-  /*  public class InfoRow{
-
-        private String id = null;
-        private Label titleLabel;
-        private Label contentLabel;
-
-        public InfoRow(String title, String content) {
-            titleLabel = new Label(title);
-            contentLabel = new Label(content);
-        }
-
-        public Label getTitleLabel() {
-            return titleLabel;
-        }
-
-        public void setTitle(String title) {
-            this.titleLabel = new Label(title);
-        }
-
-        public Label getContentLabel() {
-            return contentLabel;
-        }
-
-        public void setContent(String content) {
-            this.contentLabel = new Label(content);
-        }
-    }*/
-
-
-
 
     private int rowCounter = 0;
 

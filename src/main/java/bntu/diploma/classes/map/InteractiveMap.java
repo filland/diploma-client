@@ -2,7 +2,12 @@ package bntu.diploma.classes.map;
 
 import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.model.Station;
+import bntu.diploma.utils.ApplicationProperties;
 import javafx.animation.PauseTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -13,12 +18,14 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
+import javax.swing.plaf.multi.MultiOptionPaneUI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,12 +35,13 @@ public class InteractiveMap extends Pane {
     private ObservableList<StationWeatherInfoNode> dots;
     private MouseActionHandler mouseClicksHandler;
 
-    private final String LINK_TO_MAP = "map.png";
+    private final String LINK_TO_MAP = ApplicationProperties.prop.getProperty("map");
     private Image imageRect;
     private ImageView imageView;
 
     // using for moving a station
     private String lastNodeId;
+    private SimpleLongProperty currentSelectedStationsID;
 
     private Pane parentPane;
 
@@ -54,12 +62,20 @@ public class InteractiveMap extends Pane {
 
         mouseClicksHandler = new MouseActionHandler(this, imageView);
 
+
+        currentSelectedStationsID = new SimpleLongProperty();
+        mouseClicksHandler.setCurrentSelectedStationsID(currentSelectedStationsID);
+
         this.getChildren().add(imageView);
     }
 
 
     public void startMovingStationInfoNode(){
         mouseClicksHandler.startWaitingForPickingStation();
+    }
+
+    public void startPickingPlaceForNewStation(DoubleProperty x, DoubleProperty y) {
+        mouseClicksHandler.startPickingPlaceForANewStation(x, y);
     }
 
     public void addStationInfoNode(StationWeatherInfoNode node){
@@ -81,15 +97,22 @@ public class InteractiveMap extends Pane {
         // working with APIWorker
         // sent post request with data from station's instance
         weatherAPIWorker.addNewStation(station);
-
-
-
     }
 
 
+    public SimpleLongProperty getCurrentSelectedStationsID() {
+        return currentSelectedStationsID;
+    }
 
-    // TODO move all code handling events to this class
+    public SimpleLongProperty currentSelectedStationsIDProperty() {
+        return currentSelectedStationsID;
+    }
+
+    // this class is responsible for handling any actions on InteractionMap
     public class MouseActionHandler {
+
+
+        private LongProperty currentSelectedStationsID;
 
         // dot id, station
         private Map<String, StationWeatherInfoNode> dots;
@@ -97,8 +120,28 @@ public class InteractiveMap extends Pane {
         private Pane parentPane;
         private ImageView imageView;
 
+        /*
+        *
+        * equals true when user need to pick a dot to move
+        *
+        * */
         private boolean pickingStation = false;
+        /*
+        * equals true when user needs to specify a new place for selected dot
+        *
+        * */
         private boolean pickingNewPlace = false;
+
+
+
+        /*
+        * When a new station needs to be placed on the map this param is true
+        * */
+        private boolean pickingPlaceForNewStation = false;
+        // coords for a new station
+        private DoubleProperty x;
+        private DoubleProperty y;
+
 
         private EventHandler<MouseEvent> mapMouseClickHandler;
         private EventHandler<MouseEvent> stationMouseClickHandler;
@@ -182,27 +225,35 @@ public class InteractiveMap extends Pane {
             if (nodeId == null)
                 return;
 
-            // while moving a stationInfo node
-            if (pickingStation){
+            // tell what station is selected to update other components of the application
+            if (mouseEvent.getButton() == MouseButton.PRIMARY){
 
-                lastNodeId = nodeId;
-                dots.get(lastNodeId).getDot().setFill(Paint.valueOf("RED"));
-                pickingStation = false;
-                pickingNewPlace = true;
-                return;
-            }
+                // while moving a stationInfo node
+                if (pickingStation){
 
-            // hiding/showing stationInfoNode's info by click
-            if (dots.get(nodeId).isStationInfoVisible()) {
+                    lastNodeId = nodeId;
+                    dots.get(lastNodeId).getDot().setFill(Paint.valueOf("RED"));
+                    pickingStation = false;
+                    pickingNewPlace = true;
+                    return;
+                }
 
-                dots.get(nodeId).hideInfo();
-                dots.get(nodeId).setStationInfoVisible(false);
+                // hiding/showing stationInfoNode's info by click
+                if (dots.get(nodeId).isStationInfoVisible()) {
 
-            } else {
+                    dots.get(nodeId).hideInfo();
+                    dots.get(nodeId).setStationInfoVisible(false);
 
-                dots.get(nodeId).toFront();
-                dots.get(nodeId).showInfo();
-                dots.get(nodeId).setStationInfoVisible(true);
+                } else {
+
+                    dots.get(nodeId).toFront();
+                    dots.get(nodeId).showInfo();
+                    dots.get(nodeId).setStationInfoVisible(true);
+                }
+
+            } else if (mouseEvent.getButton() == MouseButton.SECONDARY){
+
+                currentSelectedStationsID.set(Long.parseLong(nodeId));
             }
 
 //            System.out.println("stat x - "+ dots.get(nodeId).getLayoutX());
@@ -212,9 +263,6 @@ public class InteractiveMap extends Pane {
 
         private void mapClicked(MouseEvent event) {
 
-            //System.out.println("x - "+event.getX());
-            //System.out.println("y - "+event.getY());
-
             // setting a new place for a stationInfoNode
             if (pickingNewPlace){
                 moveStation(lastNodeId, event.getX(), event.getY());
@@ -223,12 +271,28 @@ public class InteractiveMap extends Pane {
                 return;
             }
 
+
+            if (pickingPlaceForNewStation){
+                this.x.set(event.getX());
+                this.y.set(event.getY());
+                pickingPlaceForNewStation = false;
+            }
+
+            // hide info of each dot on the map
             dots.forEach((circle, stationWeatherInfoNode) -> stationWeatherInfoNode.hideInfo());
         }
 
         // once the method is called a target stationInfoNode should be selected by clicking
         public void startWaitingForPickingStation(){
             pickingStation = true;
+        }
+
+        public void startPickingPlaceForANewStation(DoubleProperty x, DoubleProperty y){
+
+            this.x = x;
+            this.y = y;
+
+            pickingPlaceForNewStation = true;
         }
 
         // called when a new place for the selected stationInfoNode was specified by clicking
@@ -251,5 +315,16 @@ public class InteractiveMap extends Pane {
             node.addEventHandler(MouseEvent.MOUSE_PRESSED, stationMouseClickHandler);
         }
 
+        public long getCurrentSelectedStationsID() {
+            return currentSelectedStationsID.get();
+        }
+
+        public LongProperty currentSelectedStationsIDProperty() {
+            return currentSelectedStationsID;
+        }
+
+        public void setCurrentSelectedStationsID(SimpleLongProperty currentSelectedStationsID) {
+            this.currentSelectedStationsID = currentSelectedStationsID;
+        }
     }
 }

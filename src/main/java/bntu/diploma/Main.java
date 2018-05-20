@@ -11,16 +11,14 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
 
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/view.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
 
-        primaryStage.setTitle("WeatherTower");
+        primaryStage.setTitle("Авторизация");
         primaryStage.setScene(new Scene(root));
-
-        primaryStage.setMinWidth(1050);
-        primaryStage.setMinHeight(750);
-
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
+
 
 
     public static void main(String[] args) {

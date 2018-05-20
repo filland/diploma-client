@@ -38,7 +38,25 @@ public class Station {
      * */
     private String lastInspection;
 
+    /**
+     *
+     * Shows the current level of the station's battery
+     *
+     * The param can equal the value from 1 to 100.
+     *
+     * */
     private int currentBatteryLevel;
+
+    /**
+     * Used to place a representation of the station as a dot on a map
+     * */
+    private Double coordinateXOnInteractiveMap;
+
+
+    /**
+     * Used to place a representation of the station as a dot on a map
+     * */
+    private Double coordinateYOnInteractiveMap;
 
     public Station() {
     }
@@ -105,5 +123,21 @@ public class Station {
 
     public void setCurrentBatteryLevel(int currentBatteryLevel) {
         this.currentBatteryLevel = currentBatteryLevel;
+    }
+
+    public Double getCoordinateXOnInteractiveMap() {
+        return coordinateXOnInteractiveMap;
+    }
+
+    public void setCoordinateXOnInteractiveMap(Double coordinateXOnInteractiveMap) {
+        this.coordinateXOnInteractiveMap = coordinateXOnInteractiveMap;
+    }
+
+    public Double getCoordinateYOnInteractiveMap() {
+        return coordinateYOnInteractiveMap;
+    }
+
+    public void setCoordinateYOnInteractiveMap(Double coordinateYOnInteractiveMap) {
+        this.coordinateYOnInteractiveMap = coordinateYOnInteractiveMap;
     }
 }

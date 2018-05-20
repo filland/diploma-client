@@ -2,6 +2,10 @@ package bntu.diploma.classes;
 
 import bntu.diploma.model.Station;
 
+import bntu.diploma.utils.AdvancedEncryptionStandard;
+import bntu.diploma.utils.ApplicationProperties;
+import bntu.diploma.utils.OblastEnum;
+import com.google.gson.Gson;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -12,20 +16,19 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Test {
 
@@ -61,26 +64,54 @@ public class Test {
         WeatherAPIWorker apiWorker = WeatherAPIWorker.getInstance();
 
 
-        boolean loginResult = apiWorker.login(String.valueOf(666), String.valueOf(1));
+        boolean loginResult = apiWorker.login(String.valueOf(1), String.valueOf(666));
         System.out.println("login result  - "+loginResult);
-
-//        boolean logoutResult = apiWorker.logout();
-//        System.out.println("logout result - "+logoutResult);
+        System.out.println();
 
 
+        Station station = new Station();
+        station.setStationsId(1L);
+        station.setOblast(OblastEnum.gomelskaya.getId());
+        station.setNearestTown("Gomel");
+        station.setInstallationDate("yesterday");
+        station.setLastInspection("today");
+        station.setStationLongitude(1.1);
+        station.setStationLatitude(2.2);
+        station.setCurrentBatteryLevel(30);
+
+        if (apiWorker.changeStationInfo(station)){
+            System.out.println("station's info changed");
+        } else
+            System.out.println("station's info was not changed");
+
+        boolean logoutResult = apiWorker.logout();
+        System.out.println("logout result - "+logoutResult);
 
 
 
-        try {
-
-            CloseableHttpResponse hello = apiWorker.executePostRequest(null, null, "hello");
-            System.out.println(hello.getEntity());
-
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-
-
+//        try {
+//
+//            Map<String, String> map = new HashMap<>();
+//            map.put("id", "11303113");
+//
+//            Map<String, String> params = new HashMap<>();
+//            params.put("name", "Oleg");
+//
+//            Map<String, String> oblast = new HashMap<>();
+//            oblast.put("name", "minskaya");
+//            oblast.put("id", "2");
+//
+//
+//            CloseableHttpResponse hello = apiWorker.executePostRequest(EntityBuilder.create().setText(new Gson().toJson(oblast)).build(),
+//                    map, params, "hello");
+//
+//            System.out.println("entity - "+hello.getEntity());
+//            System.out.println("headers - "+Arrays.toString(hello.getAllHeaders()));
+//            System.out.println("what - "+ EntityUtils.toString(hello.getEntity()));
+//
+//        } catch (URISyntaxException | IOException e) {
+//            e.printStackTrace();
+//        }
 
 
 //            Station station = new Station();
@@ -91,6 +122,10 @@ public class Test {
 //            boolean b = apiWorker.changeStationInfo(station);
 //
 //            System.out.println("");
+
+
+        System.out.println("station.1.x prop - "+Double.valueOf(ApplicationProperties.prop.getProperty("station.1.x")));
+
     }
 
 

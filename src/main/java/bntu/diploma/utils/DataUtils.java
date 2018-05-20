@@ -5,6 +5,7 @@ import bntu.diploma.classes.map.StationWeatherInfoNode;
 import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +48,7 @@ public class DataUtils {
 
     public static WeatherInfo getWeatherInfoInstance(){
 
-        return new WeatherInfo(new Date().toString()+(counter++),1.1, 2.2, 10.1, 10.1, 12, 50);
+        return new WeatherInfo("14-03-2018 17:00",1.1, 2.2, 10.1, 10.1, 12, 50);
     }
 
     public static Station getStationInstance(){
@@ -68,6 +69,7 @@ public class DataUtils {
     public static StationWeatherInfoNode getStationInfoNodeInstance(){
 
         StationWeatherInfoNode infoNode = new StationWeatherInfoNode(stationInfoNodeShift, stationInfoNodeShift, ++counter, "vileyka");
+
 
         //        infoNode.setStationParam("temp", "1");
 //        infoNode.setStationParam("temp2", "25.5");

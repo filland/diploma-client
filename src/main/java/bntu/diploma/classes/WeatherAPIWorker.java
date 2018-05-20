@@ -3,7 +3,6 @@ package bntu.diploma.classes;
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.AdvancedEncryptionStandard;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -12,18 +11,12 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.ByteArrayEntity;
-import org.apache.http.entity.ContentProducer;
-import org.apache.http.entity.EntityTemplate;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +36,8 @@ public class WeatherAPIWorker {
     private String addressOfWeatherAPI = "localhost";
     private static final String HTTP_SCHEME = "http";
     private int port = 8080;
-    private final String ALL_WEATHER_DATA_RESOURCE_PATH = "weather";
-    private final String ALL_STATIONS_DATA_RESOURCE_PATH = "station";
+    private final String ALL_WEATHER_DATA_RESOURCE_PATH = "all_weather";
+    private final String ALL_STATIONS_DATA_RESOURCE_PATH = "all_stations";
     private final String ADD_NEW_STATION_RESOURCE_PATH = "add_station";
     private final String LOGIN_RESOURCE_PATH = "login";
     private final String LOGOUT_RESOURCE_PATH = "logout";
@@ -77,7 +70,7 @@ public class WeatherAPIWorker {
     public String getWeatherData(String from, String to, String scale, String token){
 
         Map<String, String> params = new HashMap<>();
-        params.put("key", token);
+        params.put("token", token);
         params.put("scale", scale);
 
         // these two params are not necessary
@@ -102,10 +95,8 @@ public class WeatherAPIWorker {
 
     public String getAllWeatherData(String sessionToken){
 
-        // TODO token
         Map<String, String> params = new HashMap<>();
-        params.put("key", sessionToken);
-
+        params.put("token", sessionToken);
 
         String result = null;
 
@@ -122,8 +113,6 @@ public class WeatherAPIWorker {
 
 
     public String getAllStationsInfo(String sessionToken){
-
-        // TODO token
 
         Map<String, String> params = new HashMap<>();
         params.put("token", sessionToken);
@@ -146,20 +135,24 @@ public class WeatherAPIWorker {
      * @return session token for accessing server API
      *
      * */
-    public boolean login(String secretKey, String userId){
+    public boolean login(String userId, String secretKey){
 
-
-        Map<String, String> params = new HashMap<>();
-        params.put("id", userId);
+        Map<String, String> header = new HashMap<>();
 
         try {
+            header.put("id", userId);
 
-            CloseableHttpResponse response = executePostRequest(AdvancedEncryptionStandard.encrypt(secretKey.getBytes(), AdvancedEncryptionStandard.thisStationEncyptionKey.getBytes()),
-                    null, params, LOGIN_RESOURCE_PATH);
+            CloseableHttpResponse response = executePostRequest(AdvancedEncryptionStandard.encrypt(secretKey.getBytes(), AdvancedEncryptionStandard.thisStationEncryptionKey.getBytes()),
+                                                            header,
+                                                        null,
+                                                            LOGIN_RESOURCE_PATH);
 
-            System.out.println("headers"+ Arrays.toString(response.getAllHeaders()));
-            System.out.println("StatusCode() - "+response.getStatusLine().getStatusCode());
-            System.out.println("token - "+EntityUtils.toString(response.getEntity()));
+            if (response.getStatusLine().getStatusCode() == 200){
+
+                sessionToken = response.getFirstHeader("key").getValue();
+                System.out.println(sessionToken);
+                return true;
+            }
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -171,35 +164,30 @@ public class WeatherAPIWorker {
             return false;
         }
 
-        sessionToken = null;
-
-        return true;
+        return false;
     }
 
 
     public boolean logout (){
 
-        System.out.println("logout token - "+sessionToken);
-
        if (sessionToken != null){
 
-           Map<String, String> params = new HashMap<>();
-           params.put("token", sessionToken);
+           Map<String, String> headers = new HashMap<>();
+           headers.put("token", sessionToken);
 
            CloseableHttpResponse result = null;
 
            try {
-               result = executePostRequest(null, params, LOGOUT_RESOURCE_PATH);
+               result = executePostRequest(headers, null, LOGOUT_RESOURCE_PATH);
            } catch (URISyntaxException e) {
                e.printStackTrace();
                System.out.println("fail while logout");
                return false;
            }
 
-           System.out.println("logout result - "+result.getEntity());
-           System.out.println();
+           System.out.println("logout status - "+result.getStatusLine().getStatusCode());
 
-           if (false){
+           if (result.getStatusLine().getStatusCode() == 200){
 
                sessionToken = null;
                return true;
@@ -207,33 +195,9 @@ public class WeatherAPIWorker {
                return false;
 
        } else
+           System.err.println("Error while logout. No session was established");
            return false;
     }
-
-//    public String hello(){
-//
-//        /*Map<String, String> params = new HashMap<>();
-//        params.put("key", sessionToken);*/
-//
-//        Map<String, String> headers = new HashMap<>();
-//        headers.put("hello", "123");
-//
-//        try {
-//            CloseableHttpResponse hello = executePostRequest(headers, null, "hello");
-//
-//            InputStream is = hello.getEntity().getContent();
-//            byte[] b = new byte[20000];
-//            is.read(b);
-//            return new String(b);
-//
-//
-//            System.out.println("headers - "+Arrays.toString(hello.getHeaders("hello")));
-//        } catch (URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return null;
-//    }
 
 
     public String addNewStation(Station station){
@@ -247,29 +211,24 @@ public class WeatherAPIWorker {
 
         if (sessionToken != null){
 
-            Map<String, String> params = new HashMap<>();
-            params.put("token", sessionToken);
+            Map<String, String> headers = new HashMap<>();
+            headers.put("token", sessionToken);
+            headers.put("station_id", String.valueOf(station.getStationsId()));
 
             CloseableHttpResponse result = null;
 
-
             try {
-                result = executePutRequest(station,null, params, CHANGE_STATION_RESOURCE_PATH);
+                result = executePutRequest(station,headers, null, CHANGE_STATION_RESOURCE_PATH);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 System.out.println("fail while changing station's info");
                 return false;
             }
 
-            System.out.println("change station result - "+result.getEntity());
+            System.out.println("change station result's status - "+result.getStatusLine().getStatusCode());
             System.out.println();
 
-            if (false){
-
-                sessionToken = null;
-                return true;
-            } else
-                return false;
+            return result.getStatusLine().getStatusCode() == 200;
 
         } else
             return false;
@@ -362,28 +321,22 @@ public class WeatherAPIWorker {
             post.setEntity(entity);
         }
 
-        CloseableHttpResponse response = null;
+
         //String result = null;
 
-        try {
-            response = httpClient.execute(post);
+        try(CloseableHttpResponse response = httpClient.execute(post)) {
+
             //result = EntityUtils.toString(response.getEntity());
+
+            return response;
 
         } catch (IOException e) {
             e.printStackTrace();
+            System.err.println(">>> Have not managed to close CloseableHttpResponse response");
 
-        } finally {
-
-            try {
-                if (response != null)
-                    response.close();
-
-            } catch (IOException e) {
-                System.err.println(">>> Have not managed to close CloseableHttpResponse response");
-            }
         }
 
-        return response;
+        return null;
     }
 
 
@@ -481,8 +434,6 @@ public class WeatherAPIWorker {
 
         try {
             response = httpClient.execute(post);
-            System.out.println("what - "+EntityUtils.toString(response.getEntity()));
-
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -522,7 +473,7 @@ public class WeatherAPIWorker {
 
         HttpPut put = new HttpPut(builder.build());
 
-        System.out.println("builder.build() -- "+builder.build());
+        System.out.println("put url -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -556,7 +507,7 @@ public class WeatherAPIWorker {
                     response.close();
 
             } catch (IOException e) {
-                System.err.println(">>> Have not managed to close CloseableHttpResponse response");
+                System.err.println(">>> Have not managed to close CloseableHttpResponse response in executePutRequest()");
             }
         }
 

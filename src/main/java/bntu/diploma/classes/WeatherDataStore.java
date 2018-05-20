@@ -56,10 +56,11 @@ public class WeatherDataStore {
 
     private boolean downloadAndParseData(){
 
-        // TODO session TOKEN
+        weatherAPIWorker.login(String.valueOf(666), "1");
+
         String result = null;
         try {
-            result = weatherAPIWorker.getAllWeatherData( "222");
+            result = weatherAPIWorker.getAllWeatherData(weatherAPIWorker.getSessionToken());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -73,10 +74,9 @@ public class WeatherDataStore {
             return false;
         }
 
-        // TODO session TOKEN
         result = null;
         try {
-            result = weatherAPIWorker.getAllStationsInfo( "222");
+            result = weatherAPIWorker.getAllStationsInfo( weatherAPIWorker.getSessionToken());
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -179,6 +179,20 @@ public class WeatherDataStore {
         });*/
     }
 
+    // theoretically added info will be showed automatically as i will change existing instance
+    public void getRecentWeatherInfoData(){
+
+        // check if any new station was created
+        // this can be done by a separate method (????)
+        // if so offer to add its dot to the map
+
+
+        // to get all recent data i can use station's ids
+        // then iterate through the map
+
+    }
+
+
     public Station getStationInfo(long stationId){
 
         return stationMap.get(stationId);
@@ -188,7 +202,6 @@ public class WeatherDataStore {
 
         return new ArrayList<>(stationsWeatherInfoMap.get(stationId)).get(stationsWeatherInfoMap.get(stationId).size()-1);
     }
-
 
     public List<WeatherInfo> getAllWeatherInfoForStation(long stationId){
 
@@ -206,6 +219,13 @@ public class WeatherDataStore {
         }
     }
 
+    public List<WeatherInfo> getRecordsForOneStation(long stationId){
 
+        return new ArrayList<>(stationsWeatherInfoMap.get(stationId));
+    }
 
+    public List<Station> getAllStations(){
+
+        return new ArrayList<>(stationMap.values());
+    }
 }

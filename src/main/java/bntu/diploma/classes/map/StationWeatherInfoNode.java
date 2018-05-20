@@ -25,8 +25,8 @@ import java.util.*;
  * */
 public class StationWeatherInfoNode extends Group {
 
-
-    private String id;
+    // The ID of the station which is being represented by this Node
+    private long id;
 
     // visible name of the node
     private Label nameLabel;
@@ -56,7 +56,9 @@ public class StationWeatherInfoNode extends Group {
 
     public StationWeatherInfoNode(double x, double y, long id, String name) {
 
-        this.id = String.valueOf(id);
+        this.id =id;
+
+        this.setId(String.valueOf(id));
 
         params = new HashMap<>();
 
@@ -73,11 +75,11 @@ public class StationWeatherInfoNode extends Group {
         boarder.setStroke(Color.BLACK);
         boarder.setFill(Color.LIGHTGREEN);
         boarder.setVisible(stationInfoVisible);
-        boarder.setId(this.id);
+        boarder.setId(String.valueOf(this.id));
 
         dot = new Circle(x,y,10,Paint.valueOf("GREEN"));
         dot.setId(String.valueOf(new Date()));
-        dot.setId(this.id);
+        dot.setId(String.valueOf(this.id));
 
         this.getChildren().addAll(nameLabel, boarder, dot);
     }
