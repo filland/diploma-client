@@ -1,5 +1,6 @@
 package bntu.diploma.classes.map;
 
+import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
@@ -53,6 +54,15 @@ public class StationWeatherInfoNode extends Group {
     // width on the rectangle which works as a frame
     private double boarderWidth = 140;
     private double boarderHeight = 120;
+
+
+    public StationWeatherInfoNode(Station station){
+
+        this(station.getCoordinateXOnInteractiveMap(),
+                station.getCoordinateYOnInteractiveMap(),
+                station.getStationsId(), station.getNearestTown());
+
+    }
 
     public StationWeatherInfoNode(double x, double y, long id, String name) {
 
@@ -125,8 +135,8 @@ public class StationWeatherInfoNode extends Group {
 
     public void scaleStationInfoNode(double scaleX, double scaleY){
 
-        System.out.println("scale x - "+scaleX);
-        System.out.println("scale y - "+scaleY);
+//        System.out.println("scale x - "+scaleX);
+//        System.out.println("scale y - "+scaleY);
         System.out.println("old topLeftX - "+topLeftX);
         System.out.println("old topLeftY - "+topLeftY);
 
@@ -177,7 +187,7 @@ public class StationWeatherInfoNode extends Group {
         // all params of the station has the same id
         //label.setId(this.id);
 
-        System.out.println("label.getId()  - " +label.getId());
+        //System.out.println("label.getId()  - " +label.getId());
 
         params.put(paramName, label);
 

@@ -1,5 +1,7 @@
 package bntu.diploma.controller;
 
+import bntu.diploma.classes.AddingNewStationsToMapTableView;
+import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.classes.map.InteractiveMap;
 import bntu.diploma.classes.StationInfoPane;
@@ -12,13 +14,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Group;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.omg.PortableInterceptor.ACTIVE;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,8 +56,9 @@ public class Controller {
     private AnchorPane mainSplitPane_leftAnchorPane;
     @FXML
     private AnchorPane mainSplitPane_rightAnchorPane;
+
     @FXML
-    private StackPane mainSplitPane_right_stackPane;
+    private StackPane rightSplitPane_upper_stackPane;
     // --------------------- STRUCTURE -----------------------
 
 
@@ -61,9 +71,6 @@ public class Controller {
     @FXML
     private TableView<WeatherInfo> rightMenu_upperPane_allRecordsFromStationTable;
     @FXML
-    private ListView stationsToBeAddedListView;
-
-    @FXML
     private AnchorPane rightMenu_SplitPane_lowerAnchorPane;
 
 
@@ -71,8 +78,11 @@ public class Controller {
 
     // -----------------------------------------------------------------------------------------------
 
+    private Menu menuUser;
     private Menu menuStation;
     private Menu menuReport;
+
+    private AddingNewStationsToMapTableView addingNewStationsToMapTableView;
 
     // ------------- CONSTANTS -----------------------------------------
 
@@ -89,20 +99,20 @@ public class Controller {
 
     public Controller() {
 
-
     }
 
     @FXML
     public void initialize(){
 
         weatherDataStore = WeatherDataStore.getInstance();
+        stationInfoPane = new StationInfoPane();
 
         initMenuBar();
         initMap();
         initListeners();
 
 
-        mainSplitPane_right_stackPane.getChildren().get(0).toBack();
+        //mainSplitPane_right_stackPane.getChildren().get(0).toBack();
 
 
         populateAllRecordsFromStationTable(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
@@ -119,34 +129,78 @@ public class Controller {
     private void initMap(){
 
         interactiveMap = new InteractiveMap(mainSplitPane_leftAnchorPane);
+        mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
+
 
         currentSelectedStationsID = interactiveMap.getCurrentSelectedStationsID();
 
-        double x = 30;
-        double y = 30;
+
+
+        addingNewStationsToMapTableView = new AddingNewStationsToMapTableView(interactiveMap, stationInfoPane);
+
+        addingNewStationsToMapTableView.getAllStationsHaveCoordinates().addListener((observable, oldValue, newValue) -> {
+
+            if (addingNewStationsToMapTableView.getAllStationsHaveCoordinates().get()){
+
+                rightSplitPane_upper_stackPane.getChildren().get(0).toFront();
+
+                for (AddingNewStationsToMapTableView.Row row : addingNewStationsToMapTableView.getRows()) {
+
+                    StationWeatherInfoNode node = new StationWeatherInfoNode(weatherDataStore.getStationInfo(Long.parseLong(row.getId())));
+                    node.setStationParam(weatherDataStore.getLastWeatherInfo(Long.parseLong(row.getId())));
+
+                    interactiveMap.addStationInfoNode(node);
+
+                }
+
+            }
+
+        });
+
+        rightSplitPane_upper_stackPane.getChildren().add(addingNewStationsToMapTableView);
+
+//        for (Node node : mainSplitPane_right_stackPane.getChildren()) {
+//            System.out.println("node in stack visible - "+node.isVisible());
+//        }
+
+        //List<Station> stationsWithoutSpecifiedCoordsForInteractiveMap = new ArrayList<>();
+
         for (Station station : weatherDataStore.getAllStations()) {
 
-            StationWeatherInfoNode infoNode = new StationWeatherInfoNode(
-                    x,
-                    y,
-                    station.getStationsId(),
-                    String.valueOf(x+y));
+            // station does not have coords for interactive map
+            if (station.getCoordinateXOnInteractiveMap() == null ||
+                    station.getCoordinateYOnInteractiveMap() == null){
 
-            x+=20;
-            y+=35;
+                System.out.println("do not have coords");
 
-            infoNode.setStationParam(weatherDataStore.getLastWeatherInfo(2));
-            interactiveMap.addStationInfoNode(infoNode);
+                AddingNewStationsToMapTableView.Row row = new AddingNewStationsToMapTableView.Row(station);
+                addingNewStationsToMapTableView.addRow(row);
+
+            } else {
+
+                System.out.println("station has coords");
+
+                StationWeatherInfoNode node = new StationWeatherInfoNode(station);
+                node.setStationParam(weatherDataStore.getLastWeatherInfo(station.getStationsId()));
+
+                interactiveMap.addStationInfoNode(node);
+            }
 
         }
 
+        if (!addingNewStationsToMapTableView.getItems().isEmpty()){
 
-        Group group = new Group();
-        group.getChildren().add(new Label("Station 1", new Button("Add this")));
+            System.out.println("addingNewStationsToMapTableView.getItems() is NOT empty");
+            rightSplitPane_upper_stackPane.getChildren().get(1).toFront();
 
-        stationsToBeAddedListView.getItems().add(group);
-        stationsToBeAddedListView.getItems().add(new Button("Add"));
-        stationsToBeAddedListView.getItems().add(new Button("Add"));
+
+        } else {
+            System.out.println("addingNewStationsToMapTableView.getItems() is empty");
+            rightSplitPane_upper_stackPane.getChildren().get(0).toFront();
+        }
+
+
+
 
 
         // TODO change this. Get coordinates from Station's model
@@ -165,7 +219,6 @@ public class Controller {
 //        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
 //        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
 
-        mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
     }
 
     private void initListeners(){
@@ -184,7 +237,7 @@ public class Controller {
         rightMenu_SplitPane_upperAnchorPane.heightProperty().addListener(h -> rightMenu_SplitPane_upperAnchorPaneHeightChanged());
 
         // -------------------- map ------------------
-        //imageView.addEventFilter(MouseEvent.MOUSE_CLICKED, imageClicked);
+
         // -------------------- map ------------------
 
     }
@@ -193,8 +246,14 @@ public class Controller {
     private void initMenuBar(){
 
         // MENU
+        menuUser = new Menu("Пользователь");
         menuStation = new Menu("Станция");
         menuReport = new Menu("Отчет");
+
+        MenuItem menuItemLogout = new MenuItem("Выйти из кабинета");
+        menuItemLogout.setOnAction(this::menuItemLogoutClicked);
+
+        menuUser.getItems().add(menuItemLogout);
 
         MenuItem menuItemAddNewStation = new MenuItem("Добавить новую станцию");
         menuItemAddNewStation.setOnAction(x -> menuItemAddNewStationClicked());
@@ -211,7 +270,35 @@ public class Controller {
         menuItemHTMLReport.setOnAction(x -> menuItemGenerateHTMLReportClicked());
 
         menuReport.getItems().addAll(menuItemHTMLReport);
-        menuBar.getMenus().addAll(menuStation, menuReport);
+        menuBar.getMenus().addAll(menuUser, menuStation, menuReport);
+    }
+
+    private void menuItemLogoutClicked(ActionEvent actionEvent) {
+
+        boolean logout = WeatherAPIWorker.getInstance().logout();
+
+        if (logout){
+
+            Parent root;
+            try {
+                Stage stage = new Stage();
+
+                root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+
+                stage.setTitle("Авторизация");
+                stage.setScene(new Scene(root));
+                stage.setResizable(false);
+                stage.show();
+
+                // Hide this current window (if this is what you want)
+                ((Stage)mainSplitPane.getScene().getWindow()).close();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println("An error while closing MainFrame and opening LoginFrame");
+            }
+
+        }
     }
 
 
@@ -267,7 +354,6 @@ public class Controller {
 
     private void populateStationsDetailedInformation(Station station){
 
-        stationInfoPane = new StationInfoPane();
         stationInfoPane.addInfoRow(station);
 
         rightMenu_SplitPane_lowerAnchorPane.getChildren().clear();
@@ -278,7 +364,25 @@ public class Controller {
 
     // ------------------------------- MENU BAR METHODS START ---------------------------------------------------------
     private void menuItemAddNewStationClicked() {
-        interactiveMap.addNewStation(null);
+
+        Parent root;
+        try {
+            Stage stage = new Stage();
+
+            root = FXMLLoader.load(getClass().getResource("/fxml/addNewStation.fxml"));
+            stage.setTitle("Добавить новую станцию");
+            stage.setScene(new Scene(root));
+
+            //.setMinWidth(600);
+            //stage.setMinHeight(650);
+            stage.show();
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("An error while closing AddNewStation frame");
+        }
+
     }
 
     private void menuItemChangeStationInfoClicked(ActionEvent event) {

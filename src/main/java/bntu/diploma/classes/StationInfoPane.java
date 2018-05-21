@@ -45,6 +45,7 @@ public class StationInfoPane extends GridPane {
         addInfoRow("Nearest town: ", station.getNearestTown());
         addInfoRow("Longitude: ", String.valueOf(station.getStationLongitude()));
         addInfoRow("Latitude: ", String.valueOf(station.getStationLatitude()));
+        addInfoRow("Battery: ", String.valueOf(station.getCurrentBatteryLevel()));
 
         // make counter equal to zero to add the next station's info starting from the beginning
         rowCounter = 0;

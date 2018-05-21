@@ -21,6 +21,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Shape;
 import javafx.util.Duration;
@@ -60,11 +61,9 @@ public class InteractiveMap extends Pane {
         imageView.fitHeightProperty().bind(parentPane.heightProperty());
         imageView.fitWidthProperty().bind(parentPane.widthProperty());
 
-        mouseClicksHandler = new MouseActionHandler(this, imageView);
+        currentSelectedStationsID = new SimpleLongProperty(1);
 
-
-        currentSelectedStationsID = new SimpleLongProperty();
-        mouseClicksHandler.setCurrentSelectedStationsID(currentSelectedStationsID);
+        mouseClicksHandler = new MouseActionHandler(this, imageView, currentSelectedStationsID);
 
         this.getChildren().add(imageView);
     }
@@ -152,10 +151,12 @@ public class InteractiveMap extends Pane {
         private double oldHeight;
         private double oldWidth;
 
-        public MouseActionHandler(Pane parentPane, ImageView imageView) {
+        public MouseActionHandler(Pane parentPane, ImageView imageView, SimpleLongProperty currentSelectedStationsID) {
 
             this.parentPane = parentPane;
             this.imageView = imageView;
+
+            this.currentSelectedStationsID = currentSelectedStationsID;
 
             oldHeight = parentPane.getHeight();
             oldWidth = parentPane.getWidth();
@@ -189,19 +190,21 @@ public class InteractiveMap extends Pane {
 
             if (oldHeight == 0 || oldWidth == 0){
 
-                oldHeight = imageView.getFitHeight();
-                oldWidth = imageView.getFitWidth();
+                oldWidth = imageView.boundsInParentProperty().get().getWidth();
+                oldHeight = imageView.boundsInParentProperty().get().getHeight();
                 return;
             }
 
             dots.forEach((dotId, stationWeatherInfoNode) -> {
 
+//                System.out.println("actual image height  - "+imageView.getImage().getHeight());
+//                System.out.println("actual image width  - "+imageView.getImage().getWidth());
+//
+//                System.out.println("image height - "+imageView.boundsInParentProperty().get().getHeight());
+//                System.out.println("image width - "+imageView.boundsInParentProperty().get().getWidth());
 
-                //System.out.println("scale x - "+parentPane.getWidth()/oldWidth);
-                //System.out.println("scale y - "+parentPane.getHeight()/oldHeight);
-
-                stationWeatherInfoNode.scaleStationInfoNode(imageView.getFitWidth()/oldWidth,
-                                                imageView.getFitHeight()/oldHeight);
+                stationWeatherInfoNode.scaleStationInfoNode(imageView.boundsInParentProperty().get().getWidth()/oldWidth,
+                        imageView.boundsInParentProperty().get().getHeight()/oldHeight);
 
             });
 
@@ -209,18 +212,14 @@ public class InteractiveMap extends Pane {
             //parentPane.setScaleY(oldHeight/imageView.getY());
 
 
-            oldHeight = imageView.getFitHeight();
-            oldWidth = imageView.getFitWidth();
+            oldWidth = imageView.boundsInParentProperty().get().getWidth();
+            oldHeight = imageView.boundsInParentProperty().get().getHeight();
         }
 
         private void stationClicked(MouseEvent mouseEvent) {
 
             String nodeId = ((Styleable)mouseEvent.getTarget()).getId();
 
-           /* dots.get("1").getMapWithLabels().forEach((key, value) ->{
-
-                System.out.println(key + " - " +value.getId());
-            });*/
 
             if (nodeId == null)
                 return;
@@ -253,7 +252,11 @@ public class InteractiveMap extends Pane {
 
             } else if (mouseEvent.getButton() == MouseButton.SECONDARY){
 
+                // make previous selected station's dot green
+                dots.get(String.valueOf(currentSelectedStationsID.get())).getDot().setFill(Color.GREEN);
+
                 currentSelectedStationsID.set(Long.parseLong(nodeId));
+                dots.get(nodeId).getDot().setFill(Color.ORANGE);
             }
 
 //            System.out.println("stat x - "+ dots.get(nodeId).getLayoutX());

@@ -27,7 +27,9 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 
 public class Test {
@@ -61,31 +63,31 @@ public class Test {
         }*/
 
 
-        WeatherAPIWorker apiWorker = WeatherAPIWorker.getInstance();
-
-
-        boolean loginResult = apiWorker.login(String.valueOf(1), String.valueOf(666));
-        System.out.println("login result  - "+loginResult);
-        System.out.println();
-
-
-        Station station = new Station();
-        station.setStationsId(1L);
-        station.setOblast(OblastEnum.gomelskaya.getId());
-        station.setNearestTown("Gomel");
-        station.setInstallationDate("yesterday");
-        station.setLastInspection("today");
-        station.setStationLongitude(1.1);
-        station.setStationLatitude(2.2);
-        station.setCurrentBatteryLevel(30);
-
-        if (apiWorker.changeStationInfo(station)){
-            System.out.println("station's info changed");
-        } else
-            System.out.println("station's info was not changed");
-
-        boolean logoutResult = apiWorker.logout();
-        System.out.println("logout result - "+logoutResult);
+//        WeatherAPIWorker apiWorker = WeatherAPIWorker.getInstance();
+//
+//
+//        boolean loginResult = apiWorker.login(String.valueOf(1), String.valueOf(666));
+//        System.out.println("login result  - "+loginResult);
+//        System.out.println();
+//
+//
+//        Station station = new Station();
+//        station.setStationsId(1L);
+//        station.setOblast(OblastEnum.gomelskaya.getId());
+//        station.setNearestTown("Gomel");
+//        station.setInstallationDate("yesterday");
+//        station.setLastInspection("today");
+//        station.setStationLongitude(1.1);
+//        station.setStationLatitude(2.2);
+//        station.setCurrentBatteryLevel(30);
+//
+//        if (apiWorker.changeStationInfo(station)){
+//            System.out.println("station's info changed");
+//        } else
+//            System.out.println("station's info was not changed");
+//
+//        boolean logoutResult = apiWorker.logout();
+//        System.out.println("logout result - "+logoutResult);
 
 
 
@@ -124,7 +126,21 @@ public class Test {
 //            System.out.println("");
 
 
-        System.out.println("station.1.x prop - "+Double.valueOf(ApplicationProperties.prop.getProperty("station.1.x")));
+        System.out.println("map link - "+ApplicationProperties.prop.getProperty("map"));
+
+
+
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL("http://localhost:8080/available");
+            connection = (HttpURLConnection)url.openConnection();
+            connection.connect();
+            int httpStatusCode = connection.getResponseCode();
+
+            System.out.println("status code - "+httpStatusCode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

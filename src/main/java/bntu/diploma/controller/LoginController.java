@@ -50,11 +50,22 @@ public class LoginController {
 
         asAdminCheckbox.setDisable(true);
         weatherAPIWorker = WeatherAPIWorker.getInstance();
+
+        IDField.setText(String.valueOf(1));
+        secretKeyField.setText("666");
     }
 
     public void loginButtonPressed(ActionEvent actionEvent) {
 
-        if (IDField.getText().trim().isEmpty() || secretKeyField.getText().trim().isEmpty()){
+        boolean availableServer = weatherAPIWorker.isAvailableServer();
+
+        if (!availableServer){
+            IDField.setText("Сервер не отвечает");
+            return;
+        }
+
+
+        if (IDField.getText().trim().isEmpty() || secretKeyField.getText().trim().isEmpty()) {
 
             errorLabel.setVisible(true);
             errorLabel.setText("ID field or Secret key field is empty");
@@ -66,7 +77,7 @@ public class LoginController {
             boolean isLoggedIn = weatherAPIWorker.login(IDField.getText(), secretKeyField.getText());
 
 
-            if (isLoggedIn){
+            if (isLoggedIn) {
 
                 Parent root;
                 try {
@@ -81,9 +92,8 @@ public class LoginController {
                     stage.show();
 
                     // Hide this current window (if this is what you want)
-                    ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
-                }
-                catch (IOException e) {
+                    ((Node) (actionEvent.getSource())).getScene().getWindow().hide();
+                } catch (IOException e) {
                     e.printStackTrace();
                     System.err.println("An error while closing Login Frame and opening MainFrame");
                 }
@@ -91,6 +101,7 @@ public class LoginController {
             }
 
         }
+
 
     }
 

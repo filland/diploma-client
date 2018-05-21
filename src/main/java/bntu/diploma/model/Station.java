@@ -14,6 +14,8 @@ public class Station {
     private Long stationsId;
 
 
+    private String stationUniqueKey;
+
     /**
      * The oblast where the station is located
      * */
@@ -117,11 +119,11 @@ public class Station {
         this.lastInspection = lastInspection;
     }
 
-    public int getCurrentBatteryLevel() {
+    public Integer getCurrentBatteryLevel() {
         return currentBatteryLevel;
     }
 
-    public void setCurrentBatteryLevel(int currentBatteryLevel) {
+    public void setCurrentBatteryLevel(Integer currentBatteryLevel) {
         this.currentBatteryLevel = currentBatteryLevel;
     }
 
@@ -139,5 +141,13 @@ public class Station {
 
     public void setCoordinateYOnInteractiveMap(Double coordinateYOnInteractiveMap) {
         this.coordinateYOnInteractiveMap = coordinateYOnInteractiveMap;
+    }
+
+    public String getStationUniqueKey() {
+        return stationUniqueKey;
+    }
+
+    public void setStationUniqueKey(String stationUniqueKey) {
+        this.stationUniqueKey = stationUniqueKey;
     }
 }

@@ -3,7 +3,10 @@ package bntu.diploma.classes;
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.AdvancedEncryptionStandard;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -16,7 +19,9 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +47,8 @@ public class WeatherAPIWorker {
     private final String LOGIN_RESOURCE_PATH = "login";
     private final String LOGOUT_RESOURCE_PATH = "logout";
     private final String CHANGE_STATION_RESOURCE_PATH = "change_station";
+    private final String AVAILABLE_RESOURCE_PATH = "available";
+
 
     private String sessionToken;
 
@@ -79,36 +86,61 @@ public class WeatherAPIWorker {
             params.put("to", to);
         }
 
-        String result = null;
+        CloseableHttpResponse result = null;
 
         try {
             result = executeGetRequest(null,
                     params,
                     ALL_WEATHER_DATA_RESOURCE_PATH);
+            return EntityUtils.toString(result.getEntity());
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return result;
+        return null;
     }
 
+
+    /**
+     *
+     * This method is meant to check if the server is available
+     *
+     * */
+    public boolean isAvailableServer(){
+
+        try {
+
+            CloseableHttpResponse request = executeGetRequest(null, null, AVAILABLE_RESOURCE_PATH);
+
+            if (request.getStatusLine().getStatusCode() == 200)
+                return true;
+
+        } catch (Exception e) {
+           // e.printStackTrace();
+        }
+
+        return false;
+    }
 
     public String getAllWeatherData(String sessionToken){
 
         Map<String, String> params = new HashMap<>();
         params.put("token", sessionToken);
 
-        String result = null;
+        CloseableHttpResponse result = null;
 
         try {
             result = executeGetRequest(null,
                     params,
                     ALL_WEATHER_DATA_RESOURCE_PATH);
+            return EntityUtils.toString(result.getEntity());
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return result;
+        return null;
     }
 
 
@@ -117,17 +149,20 @@ public class WeatherAPIWorker {
         Map<String, String> params = new HashMap<>();
         params.put("token", sessionToken);
 
-        String result = null;
+        CloseableHttpResponse result = null;
 
         try {
             result = executeGetRequest(null,
                     params,
                     ALL_STATIONS_DATA_RESOURCE_PATH);
+            return EntityUtils.toString(result.getEntity());
+
         } catch (URISyntaxException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        return result;
+        return null;
     }
 
     /**
@@ -150,7 +185,7 @@ public class WeatherAPIWorker {
             if (response.getStatusLine().getStatusCode() == 200){
 
                 sessionToken = response.getFirstHeader("key").getValue();
-                System.out.println(sessionToken);
+                //System.out.println(sessionToken);
                 return true;
             }
 
@@ -200,11 +235,31 @@ public class WeatherAPIWorker {
     }
 
 
-    public String addNewStation(Station station){
+    public boolean addNewStation(Station station){
 
-        // TODO
+        if (sessionToken != null){
 
-        return null;
+            Map<String, String> headers = new HashMap<>();
+            headers.put("token", sessionToken);
+            //headers.put("station_id", String.valueOf(station.getStationsId()));
+
+            CloseableHttpResponse result = null;
+
+            try {
+                result = executePutRequest(station,headers, null, ADD_NEW_STATION_RESOURCE_PATH);
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+                System.out.println("fail while adding new station");
+                return false;
+            }
+
+            System.out.println("adding station station result's status - "+result.getStatusLine().getStatusCode());
+            //System.out.println();
+
+            return result.getStatusLine().getStatusCode() == 200;
+
+        } else
+            return false;
     }
 
     public boolean changeStationInfo(Station station){
@@ -226,7 +281,7 @@ public class WeatherAPIWorker {
             }
 
             System.out.println("change station result's status - "+result.getStatusLine().getStatusCode());
-            System.out.println();
+            //System.out.println();
 
             return result.getStatusLine().getStatusCode() == 200;
 
@@ -235,7 +290,7 @@ public class WeatherAPIWorker {
     }
 
 
-    private String executeGetRequest(Map<String, String> headers,
+    private CloseableHttpResponse executeGetRequest(Map<String, String> headers,
                                      Map<String, String> params,
                                      String path) throws URISyntaxException {
 
@@ -253,7 +308,7 @@ public class WeatherAPIWorker {
 
         HttpGet httpget = new HttpGet(builder.build());
 
-        System.out.println("builder.build() -- "+builder.build());
+        //System.out.println("builder.build() -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -262,27 +317,30 @@ public class WeatherAPIWorker {
         }
 
         CloseableHttpResponse response = null;
-        String result = null;
+        //String result = null;
 
         try {
             response = httpClient.execute(httpget);
-            result = EntityUtils.toString(response.getEntity());
+            //result = EntityUtils.toString(response.getEntity());
 
         } catch (IOException e) {
-            e.printStackTrace();
 
-        } finally {
+            System.out.println("Fail to execute http get request");
+            //e.printStackTrace();
 
-            try {
-                if (response != null)
-                    response.close();
-
-            } catch (IOException e) {
-                System.err.println(">>> Have not managed to close CloseableHttpResponse response");
-            }
         }
+//        finally {
+//
+//            try {
+//                if (response != null)
+//                    response.close();
+//
+//            } catch (IOException e) {
+//                System.err.println(">>> Have not managed to close CloseableHttpResponse response");
+//            }
+//        }
 
-        return result;
+        return response;
     }
 
 
@@ -308,7 +366,7 @@ public class WeatherAPIWorker {
 
         HttpPost post = new HttpPost(builder.build());
 
-        System.out.println("post url -- "+builder.build());
+        //System.out.println("post url -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -361,7 +419,7 @@ public class WeatherAPIWorker {
 
         HttpPost post = new HttpPost(builder.build());
 
-        System.out.println("post url -- "+builder.build());
+        //System.out.println("post url -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -409,8 +467,8 @@ public class WeatherAPIWorker {
         builder.setPath(path);
         builder.setPort(port);
 
-        System.out.println("params - "+params);
-        System.out.println("post url -- "+builder.build());
+        //System.out.println("params - "+params);
+        //System.out.println("post url -- "+builder.build());
 
         if(params != null){
             for (Map.Entry<String, String> param: params.entrySet()){
@@ -421,7 +479,7 @@ public class WeatherAPIWorker {
 
         HttpPost post = new HttpPost(builder.build());
 
-        System.out.println("post url -- "+builder.build());
+        //System.out.println("post url -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -473,7 +531,7 @@ public class WeatherAPIWorker {
 
         HttpPut put = new HttpPut(builder.build());
 
-        System.out.println("put url -- "+builder.build());
+        //System.out.println("put url -- "+builder.build());
 
         if(headers != null){
             for (Map.Entry<String, String> header: headers.entrySet()){
@@ -487,9 +545,9 @@ public class WeatherAPIWorker {
             Gson g = new Gson();
             String stationAsJson = g.toJson(station);
 
-            System.out.println("stationAsJson - "+stationAsJson);
+            //System.out.println("stationAsJson - "+stationAsJson);
 
-            put.setEntity(EntityBuilder.create().setText(stationAsJson).build());
+            put.setEntity(EntityBuilder.create().setText(stationAsJson.replace("\\\"", "")).build());
         }
 
         CloseableHttpResponse response = null;

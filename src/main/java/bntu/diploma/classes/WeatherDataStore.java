@@ -113,13 +113,13 @@ public class WeatherDataStore {
                     JsonObject record = weatherInfoRecord.getAsJsonObject();
 
                     WeatherInfo weatherInfo = new WeatherInfo();
-                    weatherInfo.setPressure(Double.valueOf(record.get("pressure").toString()));
-                    weatherInfo.setTemperature(Double.valueOf(record.get("temperature").toString()));
-                    weatherInfo.setHumidity(Double.valueOf(record.get("humidity").toString()));
-                    weatherInfo.setWindSpeed(Double.valueOf(record.get("windSpeed").toString()));
-                    weatherInfo.setWindDirection(Integer.valueOf(record.get("windDirection").toString()));
-                    weatherInfo.setDateTime(record.get("dateTime").getAsString());
-                    weatherInfo.setBatteryLevel(Integer.valueOf(record.get("batteryLevel").toString()));
+                    weatherInfo.setPressure(Double.valueOf(record.get("pressure").toString().replace("\"", "")));
+                    weatherInfo.setTemperature(Double.valueOf(record.get("temperature").toString().replace("\"", "")));
+                    weatherInfo.setHumidity(Double.valueOf(record.get("humidity").toString().replace("\"", "")));
+                    weatherInfo.setWindSpeed(Double.valueOf(record.get("windSpeed").toString().replace("\"", "")));
+                    weatherInfo.setWindDirection(Integer.valueOf(record.get("windDirection").toString().replace("\"", "")));
+                    weatherInfo.setDateTime(record.get("dateTime").getAsString().replace("\"", ""));
+                    weatherInfo.setBatteryLevel(Integer.valueOf(record.get("batteryLevel").toString().replace("\"", "")));
 
                     stationsWeatherInfoMap.get(stationId).add(weatherInfo);
 
@@ -146,16 +146,24 @@ public class WeatherDataStore {
 
         for (JsonElement stationJson : new JsonParser().parse(dataAsJson).getAsJsonArray()) {
 
-            JsonObject object = stationJson.getAsJsonObject();
+
+            JsonObject object = (JsonObject) new JsonParser().parse(stationJson.toString());
 
             Station station = new Station();
-            station.setStationsId(Long.valueOf(object.get("stationsId").toString()));
-            station.setOblast(Long.valueOf(object.get("oblast").getAsJsonObject().get("oblastsId").toString()));
-            station.setNearestTown(object.get("nearestTown").toString());
-            station.setInstallationDate(object.get("installationDate").toString());
-            station.setLastInspection(object.get("lastInspection").toString());
-            station.setStationLatitude(Double.valueOf(object.get("stationLatitude").toString()));
-            station.setStationLongitude(Double.valueOf(object.get("stationLongitude").toString()));
+            station.setStationsId(Long.valueOf(object.get("stationsId").toString().replace("\"", "")));
+            station.setOblast(Long.valueOf(object.get("oblast").getAsJsonObject().get("oblastsId").toString().replace("\"", "")));
+            station.setNearestTown(object.get("nearestTown").toString().replace("\"", ""));
+            station.setInstallationDate(object.get("installationDate").toString().replace("\"", ""));
+            station.setLastInspection(object.get("lastInspection").toString().replace("\"", ""));
+            station.setStationLatitude(Double.valueOf(object.get("stationLatitude").toString().replace("\"", "")));
+            station.setStationLongitude(Double.valueOf(object.get("stationLongitude").toString().replace("\"", "")));
+
+            System.out.println(object.get("coordinateXOnInteractiveMap"));
+
+            if (!object.get("coordinateXOnInteractiveMap").toString().toLowerCase().equals("null"))
+                station.setCoordinateXOnInteractiveMap(Double.valueOf(object.get("coordinateXOnInteractiveMap").toString().replace("\"", "")));
+            if(!object.get("coordinateYOnInteractiveMap").toString().toLowerCase().equals("null"))
+                station.setCoordinateYOnInteractiveMap(Double.valueOf(object.get("coordinateYOnInteractiveMap").toString().replace("\"", "")));
 
             // make a list of the set, then get first el (it is the latest record and get its battery level)
             try {
