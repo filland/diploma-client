@@ -7,14 +7,17 @@ package bntu.diploma;
  *
  * TODO AGENDA: - upload recent data from the server
  *
- *  - add separate table of all stations. Open a separate tables with data by click.
- * - API Worker !!!!
- * - HTML report generation
+ * - Setting critical threshold. When it is exceeded al alert is popped up
+ * - A class for building charts and diagrams
+ * - add separate table of all stations. Open a separate tables with data by click.
+ * ?? - API Worker !!!!
  * - Remove boilerplate code in WeatherAPIWorker
  * - handle all exceptions in AddNewStationController
+ * - add region's centers on the map
  *
  *
  * Not so ASAP:
+ * - HTML report generation
  * - Move all initializations of view in FXML
  * - Add a logo above Id/secretKey fields in LoginForm
  * - Swap date and time in AllRecordsTable

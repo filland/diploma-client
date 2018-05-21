@@ -1,4 +1,4 @@
-package bntu.diploma.utils;
+package bntu.diploma.report;
 
 public class HTMLReportGenerator {
     
