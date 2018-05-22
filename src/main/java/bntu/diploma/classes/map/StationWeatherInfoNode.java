@@ -106,6 +106,8 @@ public class StationWeatherInfoNode extends Group {
         setStationParam("wind_dir" , String.valueOf(weatherInfo.getWindDirection()));
         setStationParam("battery", String.valueOf(weatherInfo.getBatteryLevel())+" %");
 
+        yShift=0;
+
     }
 
     // hide all shapes except dot
@@ -126,27 +128,16 @@ public class StationWeatherInfoNode extends Group {
 
         this.relocate(newXcoord-10, newYcoord-30);
 
-//        this.setLayoutX(newXcoord-topLeftX);
-//        this.setLayoutY(newYcoord-topLeftY);
-
         topLeftX = newXcoord;
         topLeftY = newYcoord;
     }
 
     public void scaleStationInfoNode(double scaleX, double scaleY){
 
-//        System.out.println("scale x - "+scaleX);
-//        System.out.println("scale y - "+scaleY);
-        System.out.println("old topLeftX - "+topLeftX);
-        System.out.println("old topLeftY - "+topLeftY);
-
         this.relocate(topLeftX*scaleX-10, topLeftY*scaleY-30);
 
         topLeftX*=scaleX;
         topLeftY*=scaleY;
-
-        System.out.println("new topLeftX - "+topLeftX);
-        System.out.println("new topLeftY - "+topLeftY+"\n");
     }
 
     public Double getTopLeftX() {
@@ -195,9 +186,12 @@ public class StationWeatherInfoNode extends Group {
         yShift+=15;
 
         // hide new params if appears
-        if (!stationInfoVisible)
-            params.get(paramName).setVisible(stationInfoVisible);
+        if (stationInfoVisible == false)
+            params.get(paramName).setVisible(false);
 
         this.getChildren().addAll(params.get(paramName));
+
+
+        System.out.println("info node params' size - "+params.values().size());
     }
 }

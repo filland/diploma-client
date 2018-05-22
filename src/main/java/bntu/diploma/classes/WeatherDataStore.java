@@ -33,41 +33,34 @@ public class WeatherDataStore {
 
     private WeatherAPIWorker weatherAPIWorker;
 
-    private static WeatherDataStore weatherDataStoreInstance;
+    private volatile static WeatherDataStore weatherDataStoreInstance;
 
     public static WeatherDataStore getInstance() {
         if (weatherDataStoreInstance == null){
             weatherDataStoreInstance = new WeatherDataStore();
             return weatherDataStoreInstance;
         }
-
         return weatherDataStoreInstance;
     }
 
 
     private WeatherDataStore() {
 
-        stationMap = new HashMap<>();
+        //stationMap = new HashMap<>();
         weatherAPIWorker = WeatherAPIWorker.getInstance();
-        stationsWeatherInfoMap = new HashMap<>();
+        //stationsWeatherInfoMap = new HashMap<>();
 
         downloadAndParseData();
     }
 
     private boolean downloadAndParseData(){
 
-        weatherAPIWorker.login(String.valueOf(666), "1");
-
         String result = null;
         try {
-            result = weatherAPIWorker.getAllWeatherData(weatherAPIWorker.getSessionToken());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        try {
-            parseWeatherInfoData(result);
+            result = weatherAPIWorker.getAllWeatherData(weatherAPIWorker.getSessionToken());
+            this.stationsWeatherInfoMap = parseWeatherInfoData(result);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("An error while parsing a json string with WeatherInfo's data");
@@ -76,24 +69,30 @@ public class WeatherDataStore {
 
         result = null;
         try {
-            result = weatherAPIWorker.getAllStationsInfo( weatherAPIWorker.getSessionToken());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        try {
-            parseStationsInfoData(result);
+            result = weatherAPIWorker.getAllStationsInfo( weatherAPIWorker.getSessionToken());
+            stationMap = parseStationsInfoData(result);
+
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("An error while parsing a json string with Stations' data");
             return false;
         }
 
+
+
+        stationMap.values().forEach((station -> {
+
+            System.out.println(station.getStationsId()+" - "+station.getCurrentBatteryLevel());
+
+        }));
+
         return true;
     }
 
-    private void parseWeatherInfoData(String dataAsJson){
+    private Map<Long, Set<WeatherInfo>> parseWeatherInfoData(String dataAsJson){
+
+        Map<Long, Set<WeatherInfo>> map = new HashMap<>();
 
         JsonParser parser = new JsonParser();
         JsonObject rootElement = parser.parse(dataAsJson).getAsJsonObject();
@@ -106,7 +105,7 @@ public class WeatherDataStore {
             for (JsonElement station : stationsOfOblast.getAsJsonArray()) {
 
                 Long stationId = Long.valueOf(station.getAsJsonObject().get("station_id").toString());
-                stationsWeatherInfoMap.put(stationId, new TreeSet<>());
+                map.put(stationId, new TreeSet<>());
 
                 station.getAsJsonObject().get("data").getAsJsonArray().forEach((weatherInfoRecord) -> {
 
@@ -121,11 +120,13 @@ public class WeatherDataStore {
                     weatherInfo.setDateTime(record.get("dateTime").getAsString().replace("\"", ""));
                     weatherInfo.setBatteryLevel(Integer.valueOf(record.get("batteryLevel").toString().replace("\"", "")));
 
-                    stationsWeatherInfoMap.get(stationId).add(weatherInfo);
+                    map.get(stationId).add(weatherInfo);
 
                 });
             }
         }
+
+        return map;
 
 
        /* stationsWeatherInfoMap.forEach((aLong, weatherInfos) -> {
@@ -142,10 +143,11 @@ public class WeatherDataStore {
         });*/
     }
 
-    private void parseStationsInfoData(String dataAsJson){
+    private Map<Long, Station> parseStationsInfoData(String dataAsJson){
+
+        Map<Long, Station> map = new HashMap<>();
 
         for (JsonElement stationJson : new JsonParser().parse(dataAsJson).getAsJsonArray()) {
-
 
             JsonObject object = (JsonObject) new JsonParser().parse(stationJson.toString());
 
@@ -167,17 +169,16 @@ public class WeatherDataStore {
 
             // make a list of the set, then get first el (it is the latest record and get its battery level)
             try {
-                station.setCurrentBatteryLevel(new ArrayList<>(stationsWeatherInfoMap.
-                                            get(Long.valueOf(object.get("stationsId").toString()))).
-                                            get(0).getBatteryLevel());
+                station.setCurrentBatteryLevel(Integer.valueOf(object.get("currentBatteryLevel").toString()));
             } catch (Exception e) {
                 station.setCurrentBatteryLevel(-1);
             }
 
-            stationMap.put(Long.valueOf(object.get("stationsId").toString()), station);
+            map.put(Long.valueOf(object.get("stationsId").toString()), station);
         }
 
 
+        return map;
        /* stationMap.forEach((aLong, station) ->{
 
             System.out.println("station id - "+aLong);
@@ -188,7 +189,19 @@ public class WeatherDataStore {
     }
 
     // theoretically added info will be showed automatically as i will change existing instance
-    public void getRecentWeatherInfoData(){
+    public boolean getRecentChanges(){
+
+
+        try {
+
+            downloadAndParseData();
+
+        } catch (Exception e) {
+            System.out.println("Fail while updating weather data");
+            e.printStackTrace();
+            return false;
+        }
+
 
         // check if any new station was created
         // this can be done by a separate method (????)
@@ -197,7 +210,7 @@ public class WeatherDataStore {
 
         // to get all recent data i can use station's ids
         // then iterate through the map
-
+        return true;
     }
 
 
@@ -208,7 +221,7 @@ public class WeatherDataStore {
 
     public WeatherInfo getLastWeatherInfo(long stationId){
 
-        return new ArrayList<>(stationsWeatherInfoMap.get(stationId)).get(stationsWeatherInfoMap.get(stationId).size()-1);
+        return new ArrayList<>(stationsWeatherInfoMap.get(stationId)).get(0);
     }
 
     public List<WeatherInfo> getAllWeatherInfoForStation(long stationId){

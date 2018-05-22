@@ -35,7 +35,7 @@ import java.util.Map;
  * */
 public class WeatherAPIWorker {
 
-    private static WeatherAPIWorker ourInstance;
+    private static volatile WeatherAPIWorker ourInstance;
     private CloseableHttpClient httpClient;
 
     private String addressOfWeatherAPI = "localhost";
@@ -185,7 +185,7 @@ public class WeatherAPIWorker {
             if (response.getStatusLine().getStatusCode() == 200){
 
                 sessionToken = response.getFirstHeader("key").getValue();
-                //System.out.println(sessionToken);
+                System.out.println(sessionToken);
                 return true;
             }
 

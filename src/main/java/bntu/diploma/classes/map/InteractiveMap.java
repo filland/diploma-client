@@ -1,21 +1,20 @@
 package bntu.diploma.classes.map;
 
+import bntu.diploma.classes.Dispatcher;
 import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.model.Station;
+import bntu.diploma.model.WeatherInfo;
 import bntu.diploma.utils.ApplicationProperties;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.Styleable;
 import javafx.event.EventHandler;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -23,17 +22,18 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
-import javafx.scene.shape.Shape;
 import javafx.util.Duration;
 
-import javax.swing.plaf.multi.MultiOptionPaneUI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class InteractiveMap extends Pane {
 
-    private ObservableList<StationWeatherInfoNode> dots;
+    //private ObservableList<StationWeatherInfoNode> dots;
+    // dot id, station
+    private Map<String, StationWeatherInfoNode> dotsMap;
+
     private MouseActionHandler mouseClicksHandler;
 
     private final String LINK_TO_MAP = ApplicationProperties.prop.getProperty("map");
@@ -52,7 +52,9 @@ public class InteractiveMap extends Pane {
 
         this.parentPane = parentPane;
 
-        dots = FXCollections.observableArrayList();
+//        dots = FXCollections.observableArrayList();
+
+        dotsMap = new HashMap<>();
 
         imageRect = new Image(LINK_TO_MAP);
         imageView = new ImageView(imageRect);
@@ -62,6 +64,7 @@ public class InteractiveMap extends Pane {
         imageView.fitWidthProperty().bind(parentPane.widthProperty());
 
         currentSelectedStationsID = new SimpleLongProperty(1);
+        Dispatcher.getInstance().setCurrentStation(currentSelectedStationsID);
 
         mouseClicksHandler = new MouseActionHandler(this, imageView, currentSelectedStationsID);
 
@@ -79,16 +82,23 @@ public class InteractiveMap extends Pane {
 
     public void addStationInfoNode(StationWeatherInfoNode node){
 
-        dots.add(node);
-        mouseClicksHandler.addOneStationInfoNode(node);
-        this.getChildren().add(node);
+        //dots.add(node);
+        dotsMap.put(node.getId(), node);
+        mouseClicksHandler.addOneStationInfoNode(dotsMap.get(node.getId()));
+        this.getChildren().add(dotsMap.get(node.getId()));
     }
 
     public void addAllStationInfoNodes(List<StationWeatherInfoNode> nodes){
 
-        dots.addAll(nodes);
-        mouseClicksHandler.addStationInfoNodes(dots);
-        this.getChildren().addAll(nodes);
+        //dots.addAll(nodes);
+        nodes.forEach((node)-> dotsMap.put(node.getId(), node));
+
+        mouseClicksHandler.addStationInfoNodes((ObservableList<StationWeatherInfoNode>) nodes);
+
+        nodes.forEach((node)->
+                this.getChildren().add(dotsMap.get(node.getId()))
+        );
+
     }
 
     public void addNewStation(Station station){
@@ -99,6 +109,11 @@ public class InteractiveMap extends Pane {
     }
 
 
+    public void updateNode(long nodeId, WeatherInfo weatherInfo){
+
+        dotsMap.get(String.valueOf(nodeId)).setStationParam(weatherInfo);
+    }
+
     public SimpleLongProperty getCurrentSelectedStationsID() {
         return currentSelectedStationsID;
     }
@@ -106,6 +121,7 @@ public class InteractiveMap extends Pane {
     public SimpleLongProperty currentSelectedStationsIDProperty() {
         return currentSelectedStationsID;
     }
+
 
     // this class is responsible for handling any actions on InteractionMap
     public class MouseActionHandler {
@@ -221,14 +237,20 @@ public class InteractiveMap extends Pane {
             String nodeId = ((Styleable)mouseEvent.getTarget()).getId();
 
 
+            System.out.println("station id - "+nodeId);
+
             if (nodeId == null)
                 return;
 
             // tell what station is selected to update other components of the application
             if (mouseEvent.getButton() == MouseButton.PRIMARY){
 
+                System.out.println("primary button");
+
                 // while moving a stationInfo node
                 if (pickingStation){
+
+                    System.out.println("picking station");
 
                     lastNodeId = nodeId;
                     dots.get(lastNodeId).getDot().setFill(Paint.valueOf("RED"));
@@ -237,13 +259,19 @@ public class InteractiveMap extends Pane {
                     return;
                 }
 
+
+
                 // hiding/showing stationInfoNode's info by click
                 if (dots.get(nodeId).isStationInfoVisible()) {
+
+                    System.out.println("station is visible");
 
                     dots.get(nodeId).hideInfo();
                     dots.get(nodeId).setStationInfoVisible(false);
 
                 } else {
+
+                    System.out.println("station is NOT visible");
 
                     dots.get(nodeId).toFront();
                     dots.get(nodeId).showInfo();
@@ -254,8 +282,10 @@ public class InteractiveMap extends Pane {
 
                 // make previous selected station's dot green
                 dots.get(String.valueOf(currentSelectedStationsID.get())).getDot().setFill(Color.GREEN);
+//                dots.get(String.valueOf(Dispatcher.getInstance().getCurrentStationID())).getDot().setFill(Color.GREEN);
 
                 currentSelectedStationsID.set(Long.parseLong(nodeId));
+//                Dispatcher.getInstance().setCurrentStationID(Long.parseLong(nodeId));
                 dots.get(nodeId).getDot().setFill(Color.ORANGE);
             }
 
@@ -282,7 +312,12 @@ public class InteractiveMap extends Pane {
             }
 
             // hide info of each dot on the map
-            dots.forEach((circle, stationWeatherInfoNode) -> stationWeatherInfoNode.hideInfo());
+            dots.forEach((circle, stationWeatherInfoNode) -> {
+
+                stationWeatherInfoNode.hideInfo();
+                stationWeatherInfoNode.setStationInfoVisible(false);
+
+            });
         }
 
         // once the method is called a target stationInfoNode should be selected by clicking

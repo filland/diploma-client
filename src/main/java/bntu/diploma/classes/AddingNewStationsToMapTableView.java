@@ -156,10 +156,10 @@ public class AddingNewStationsToMapTableView extends ListView {
                                  Number oldValue,
                                  Number newValue) {
 
-        System.out.println("oldValue - "+oldValue);
-        System.out.println("newValue - "+newValue);
-        System.out.println("coordinate x "+x.get());
-        System.out.println("coordinate y "+y.get());
+//        System.out.println("oldValue - "+oldValue);
+//        System.out.println("newValue - "+newValue);
+//        System.out.println("coordinate x "+x.get());
+//        System.out.println("coordinate y "+y.get());
 
         // get this station's info
         Station station = WeatherDataStore.getInstance().getStationInfo(currentStationID);

@@ -126,21 +126,30 @@ public class Test {
 //            System.out.println("");
 
 
-        System.out.println("map link - "+ApplicationProperties.prop.getProperty("map"));
+//        System.out.println("map link - "+ApplicationProperties.prop.getProperty("map"));
+//
+//
+//
+//        HttpURLConnection connection = null;
+//        try {
+//            URL url = new URL("http://localhost:8080/available");
+//            connection = (HttpURLConnection)url.openConnection();
+//            connection.connect();
+//            int httpStatusCode = connection.getResponseCode();
+//
+//            System.out.println("status code - "+httpStatusCode);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+
+        Thread thread1 = new Thread(new RunnableExample());
+        thread1.start();
+        Thread thread2 = new Thread(new RunnableExample());
+        thread2.start();
 
 
 
-        HttpURLConnection connection = null;
-        try {
-            URL url = new URL("http://localhost:8080/available");
-            connection = (HttpURLConnection)url.openConnection();
-            connection.connect();
-            int httpStatusCode = connection.getResponseCode();
-
-            System.out.println("status code - "+httpStatusCode);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
     }
 

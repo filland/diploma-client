@@ -114,7 +114,7 @@ public class WeatherInfo implements Comparable<WeatherInfo> {
      * */
     @Override
     public int compareTo(WeatherInfo o) {
-        return LocalDateTime.parse(this.getDateTime(), Utils.DATE_FORMATTER2).
-                compareTo(LocalDateTime.parse(o.getDateTime(), Utils.DATE_FORMATTER2));
+        return LocalDateTime.parse(o.getDateTime(), Utils.DATE_FORMATTER2).
+                compareTo(LocalDateTime.parse(this.getDateTime(), Utils.DATE_FORMATTER2));
     }
 }

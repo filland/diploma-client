@@ -23,7 +23,19 @@ public class StationInfoPane extends GridPane {
 
     private Station currentStation;
 
-    public StationInfoPane() {
+    private static StationInfoPane ourInstance;
+
+    public static StationInfoPane getInstance(){
+        if (ourInstance == null){
+            ourInstance = new StationInfoPane();
+            return ourInstance;
+        }
+
+        return ourInstance;
+    }
+
+
+    private StationInfoPane() {
 
         this.setAlignment(Pos.CENTER);
         this.setHgap(10);
