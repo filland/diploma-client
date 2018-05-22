@@ -32,7 +32,7 @@ public class InteractiveMap extends Pane {
 
     //private ObservableList<StationWeatherInfoNode> dots;
     // dot id, station
-    private Map<String, StationWeatherInfoNode> dotsMap;
+    private volatile Map<String, StationWeatherInfoNode> dotsMap;
 
     private MouseActionHandler mouseClicksHandler;
 

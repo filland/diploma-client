@@ -110,32 +110,18 @@ public class Controller {
         initListeners();
 
 
-//        Platform.runLater(() -> {
-//            //Update your GUI here
-//
-//            WeatherPostman weatherPostman = new WeatherPostman();
-//            weatherPostman.start();
-//            weatherPostman.subscribe(allRecordsFromStationTable);
-//            weatherPostman.subscribe(interactiveMap);
-//            weatherPostman.subscribe(stationInfoPane);
-//            weatherPostman.startDelivery();
-//
-//        });
-
-
 
         // https://stackoverflow.com/questions/36850217/modifying-javafx-gui-from-different-thread-in-different-class
 
-        Task task = new Task() {
+/*        Task task = new Task() {
             @Override
             protected Integer call() throws Exception {
 
-//                WeatherPostman weatherPostman = new WeatherPostman();
-//                weatherPostman.start();
-//                weatherPostman.subscribe(allRecordsFromStationTable);
-//                weatherPostman.subscribe(interactiveMap);
-//                weatherPostman.subscribe(stationInfoPane);
-//                weatherPostman.startDelivery();
+                WeatherPostman weatherPostman = new WeatherPostman();
+                weatherPostman.subscribe(allRecordsFromStationTable);
+                weatherPostman.subscribe(interactiveMap);
+                weatherPostman.subscribe(stationInfoPane);
+                weatherPostman.run();
 
 
                 for (int i = 0; i < 100; i++) {
@@ -151,9 +137,7 @@ public class Controller {
 
         Thread t1= new Thread(task);
         t1.setDaemon(true);
-        t1.start();
-
-
+        t1.start();*/
 
 
         //populateAllRecordsFromStationTable(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
@@ -161,6 +145,48 @@ public class Controller {
         populateStationsDetailedInformation(weatherDataStore.getStationInfo(weatherDataStore.getAllStations().get(0).getStationsId()));
 //        populate(DataUtils.getListOfWeatherInfo());
 //        populateStationsDetailedInformation(DataUtils.getStationInstance());
+
+
+
+//        WeatherPostman weatherPostman = new WeatherPostman();
+//        weatherPostman.subscribe(allRecordsFromStationTable);
+//        weatherPostman.subscribe(interactiveMap);
+//        weatherPostman.subscribe(stationInfoPane);
+//
+//        Thread t = new Thread(weatherPostman);
+//        t.start();
+
+        Task task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                return null;
+            }
+
+            @Override public void run() {
+                WeatherPostman weatherPostman = new WeatherPostman();
+                weatherPostman.subscribe(allRecordsFromStationTable);
+                weatherPostman.subscribe(interactiveMap);
+                weatherPostman.subscribe(stationInfoPane);
+                weatherPostman.startDelivery();
+            }
+        };
+        new Thread(task).start();
+
+//        Platform.setImplicitExit(false);
+//        Platform.runLater(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                try {
+//                    Thread.sleep(10 * 1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                System.out.println("Hello");
+//            }
+//        });
+
 
         // resize all elements
         rightMenu_SplitPane_upperAnchorPaneHeightChanged();

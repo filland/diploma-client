@@ -9,7 +9,7 @@ import javafx.scene.layout.AnchorPane;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WeatherPostman extends Thread {
+public class WeatherPostman {
 
 
 //    private Thread t;
@@ -57,7 +57,6 @@ public class WeatherPostman extends Thread {
 
                 if (subscriber instanceof InteractiveMap) {
 
-                    System.out.println("InteractiveMap");
 
                     InteractiveMap interactiveMap = (InteractiveMap) subscriber;
 
@@ -67,11 +66,11 @@ public class WeatherPostman extends Thread {
                                 weatherDataStore.getLastWeatherInfo(station.getStationsId()));
                     }
 
+                    System.out.println("InteractiveMap done");
                 }
 
                 if (subscriber instanceof StationInfoPane) {
 
-                    System.out.println("StationInfoPane");
 
 //                    System.out.println("new stat battery - "+weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()).getCurrentBatteryLevel());
 
@@ -81,17 +80,18 @@ public class WeatherPostman extends Thread {
 //                    System.out.println("battery stat in DetailedInfoPane - "+StationInfoPane.getInstance().getCurrentStation().getCurrentBatteryLevel());
 
 
+                    System.out.println("StationInfoPane done");
                 }
 
                 if (subscriber instanceof AllRecordsTableView) {
 
-                    System.out.println("TabableView");
 
                     AllRecordsTableView allRecordsTableView = (AllRecordsTableView) subscriber;
                     allRecordsTableView.populate(weatherDataStore.getAllWeatherInfoForStation(
                             Dispatcher.getInstance().getCurrentStationID()
                     ));
 
+                    System.out.println("TabableView done");
                 }
 
             }
@@ -125,17 +125,17 @@ public class WeatherPostman extends Thread {
     }
 
 
-    public static void main(String[] args) {
+    //
+    //        weatherPostman.startDelivery();
+    //
+    //        weatherPostman.subscribe(StationInfoPane.getInstance());
+    //        weatherPostman.subscribe(new InteractiveMap(new AnchorPane()));
+    //        weatherPostman.subscribe(AllRecordsTableView.getInstance());
+    //        WeatherPostman weatherPostman =new  WeatherPostman();
+    //
+    //        WeatherAPIWorker.getInstance().login(String.valueOf(1), String.valueOf(666));
+    //
+//    public static void main(String[] args) {
 
-        WeatherAPIWorker.getInstance().login(String.valueOf(1), String.valueOf(666));
-
-        WeatherPostman weatherPostman =new  WeatherPostman();
-        weatherPostman.subscribe(AllRecordsTableView.getInstance());
-        weatherPostman.subscribe(new InteractiveMap(new AnchorPane()));
-        weatherPostman.subscribe(StationInfoPane.getInstance());
-
-        weatherPostman.startDelivery();
-
-    }
-
+//    }
 }
