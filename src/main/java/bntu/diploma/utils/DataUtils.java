@@ -1,13 +1,11 @@
 package bntu.diploma.utils;
 
 import bntu.diploma.classes.WeatherDataStore;
-import bntu.diploma.classes.map.StationWeatherInfoNode;
+import bntu.diploma.node.map.StationWeatherInfoNode;
 import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 

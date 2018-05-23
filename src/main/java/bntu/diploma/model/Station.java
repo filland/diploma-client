@@ -9,7 +9,7 @@ package bntu.diploma.model;
  *
  * */
 
-public class Station {
+public class Station implements Comparable<Station> {
 
     private Long stationsId;
 
@@ -149,5 +149,10 @@ public class Station {
 
     public void setStationUniqueKey(String stationUniqueKey) {
         this.stationUniqueKey = stationUniqueKey;
+    }
+
+    @Override
+    public int compareTo(Station o) {
+        return o.getStationsId().compareTo(this.getStationsId());
     }
 }

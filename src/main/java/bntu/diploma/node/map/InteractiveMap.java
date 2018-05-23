@@ -1,4 +1,4 @@
-package bntu.diploma.classes.map;
+package bntu.diploma.node.map;
 
 import bntu.diploma.classes.Dispatcher;
 import bntu.diploma.classes.WeatherAPIWorker;
@@ -11,7 +11,6 @@ import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.css.Styleable;
 import javafx.event.EventHandler;
@@ -186,7 +185,6 @@ public class InteractiveMap extends Pane {
 
             this.imageView.addEventHandler(MouseEvent.MOUSE_PRESSED, mapMouseClickHandler);
 
-
             ChangeListener<Number> parentPaneSizeListener = (observable, oldValue, newValue) -> {
 
                 pause.setOnFinished(event -> interactiveMapResized(observable, oldValue, newValue));
@@ -203,7 +201,6 @@ public class InteractiveMap extends Pane {
 
         private void interactiveMapResized(ObservableValue<? extends Number> observable, Number oldValue, Number newValue){
 
-
             if (oldHeight == 0 || oldWidth == 0){
 
                 oldWidth = imageView.boundsInParentProperty().get().getWidth();
@@ -213,20 +210,9 @@ public class InteractiveMap extends Pane {
 
             dots.forEach((dotId, stationWeatherInfoNode) -> {
 
-//                System.out.println("actual image height  - "+imageView.getImage().getHeight());
-//                System.out.println("actual image width  - "+imageView.getImage().getWidth());
-//
-//                System.out.println("image height - "+imageView.boundsInParentProperty().get().getHeight());
-//                System.out.println("image width - "+imageView.boundsInParentProperty().get().getWidth());
-
                 stationWeatherInfoNode.scaleStationInfoNode(imageView.boundsInParentProperty().get().getWidth()/oldWidth,
                         imageView.boundsInParentProperty().get().getHeight()/oldHeight);
-
             });
-
-            //parentPane.setScaleX(oldWidth/imageView.getX());
-            //parentPane.setScaleY(oldHeight/imageView.getY());
-
 
             oldWidth = imageView.boundsInParentProperty().get().getWidth();
             oldHeight = imageView.boundsInParentProperty().get().getHeight();
@@ -237,20 +223,14 @@ public class InteractiveMap extends Pane {
             String nodeId = ((Styleable)mouseEvent.getTarget()).getId();
 
 
-            System.out.println("station id - "+nodeId);
-
             if (nodeId == null)
                 return;
 
             // tell what station is selected to update other components of the application
             if (mouseEvent.getButton() == MouseButton.PRIMARY){
 
-                System.out.println("primary button");
-
                 // while moving a stationInfo node
                 if (pickingStation){
-
-                    System.out.println("picking station");
 
                     lastNodeId = nodeId;
                     dots.get(lastNodeId).getDot().setFill(Paint.valueOf("RED"));
@@ -264,14 +244,14 @@ public class InteractiveMap extends Pane {
                 // hiding/showing stationInfoNode's info by click
                 if (dots.get(nodeId).isStationInfoVisible()) {
 
-                    System.out.println("station is visible");
+//                    System.out.println("station is visible");
 
                     dots.get(nodeId).hideInfo();
                     dots.get(nodeId).setStationInfoVisible(false);
 
                 } else {
 
-                    System.out.println("station is NOT visible");
+//                    System.out.println("station is NOT visible");
 
                     dots.get(nodeId).toFront();
                     dots.get(nodeId).showInfo();
@@ -288,11 +268,7 @@ public class InteractiveMap extends Pane {
 //                Dispatcher.getInstance().setCurrentStationID(Long.parseLong(nodeId));
                 dots.get(nodeId).getDot().setFill(Color.ORANGE);
             }
-
-//            System.out.println("stat x - "+ dots.get(nodeId).getLayoutX());
-//            System.out.println("stat Y - "+ dots.get(nodeId).getLayoutY()+"\n");
         }
-
 
         private void mapClicked(MouseEvent event) {
 
@@ -303,7 +279,6 @@ public class InteractiveMap extends Pane {
                 dots.get(lastNodeId).getDot().setFill(Paint.valueOf("GREEN"));
                 return;
             }
-
 
             if (pickingPlaceForNewStation){
                 this.x.set(event.getX());

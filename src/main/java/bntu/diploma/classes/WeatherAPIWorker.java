@@ -107,7 +107,7 @@ public class WeatherAPIWorker {
      * This method is meant to check if the server is available
      *
      * */
-    public boolean isAvailableServer(){
+    public boolean isServerAvailable(){
 
         try {
 
@@ -253,7 +253,7 @@ public class WeatherAPIWorker {
                 return false;
             }
 
-            System.out.println("adding station station result's status - "+result.getStatusLine().getStatusCode());
+            System.out.println("adding station result's status - "+result.getStatusLine().getStatusCode());
             //System.out.println();
 
             return result.getStatusLine().getStatusCode() == 200;

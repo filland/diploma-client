@@ -1,4 +1,4 @@
-package bntu.diploma.classes;
+package bntu.diploma.node;
 
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.OblastUtils;
@@ -49,15 +49,15 @@ public class StationInfoPane extends GridPane {
 
         currentStation = station;
 
-        addInfoRow("Station's name: ", station.getNearestTown()+"_"+String.valueOf(station.getStationsId()));
-        addInfoRow("Station's id: ", String.valueOf(station.getStationsId()));
-        addInfoRow("Oblast: ", OblastUtils.getOblastTextName(station.getOblast()));
-        addInfoRow("Installation date: ", station.getInstallationDate());
-        addInfoRow("Last inspection date: ", station.getLastInspection());
-        addInfoRow("Nearest town: ", station.getNearestTown());
-        addInfoRow("Longitude: ", String.valueOf(station.getStationLongitude()));
-        addInfoRow("Latitude: ", String.valueOf(station.getStationLatitude()));
-        addInfoRow("Battery: ", String.valueOf(station.getCurrentBatteryLevel()));
+        addInfoRow("Имя станции: ", station.getNearestTown()+"_"+String.valueOf(station.getStationsId()));
+        addInfoRow("ID станции: ", String.valueOf(station.getStationsId()));
+        addInfoRow("Область: ", OblastUtils.getOblastTextName(station.getOblast()));
+        addInfoRow("Дата установки: ", station.getInstallationDate());
+        addInfoRow("Дата последней инспекции: ", station.getLastInspection());
+        addInfoRow("Ближайший город: ", station.getNearestTown());
+        addInfoRow("Долгота: ", String.valueOf(station.getStationLongitude()));
+        addInfoRow("Широта: ", String.valueOf(station.getStationLatitude()));
+        addInfoRow("Батарея: ", String.valueOf(station.getCurrentBatteryLevel()));
 
         // make counter equal to zero to add the next station's info starting from the beginning
         rowCounter = 0;

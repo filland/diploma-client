@@ -81,11 +81,11 @@ public class WeatherDataStore {
 
 
 
-        stationMap.values().forEach((station -> {
-
-            System.out.println(station.getStationsId()+" - "+station.getCurrentBatteryLevel());
-
-        }));
+//        stationMap.values().forEach((station -> {
+//
+//            System.out.println(station.getStationsId()+" - "+station.getCurrentBatteryLevel());
+//
+//        }));
 
         return true;
     }
@@ -129,18 +129,7 @@ public class WeatherDataStore {
         return map;
 
 
-       /* stationsWeatherInfoMap.forEach((aLong, weatherInfos) -> {
 
-
-            System.out.println("station id - "+aLong);
-           weatherInfos.forEach(weatherInfo -> {
-
-               System.out.println(weatherInfo.getDateTime());
-
-           });
-
-
-        });*/
     }
 
     private Map<Long, Station> parseStationsInfoData(String dataAsJson){
@@ -160,7 +149,6 @@ public class WeatherDataStore {
             station.setStationLatitude(Double.valueOf(object.get("stationLatitude").toString().replace("\"", "")));
             station.setStationLongitude(Double.valueOf(object.get("stationLongitude").toString().replace("\"", "")));
 
-            System.out.println(object.get("coordinateXOnInteractiveMap"));
 
             if (!object.get("coordinateXOnInteractiveMap").toString().toLowerCase().equals("null"))
                 station.setCoordinateXOnInteractiveMap(Double.valueOf(object.get("coordinateXOnInteractiveMap").toString().replace("\"", "")));
@@ -179,21 +167,12 @@ public class WeatherDataStore {
 
 
         return map;
-       /* stationMap.forEach((aLong, station) ->{
-
-            System.out.println("station id - "+aLong);
-            System.out.println("town+id - "+station.getNearestTown()+station.getStationsId());
-            System.out.println();
-
-        });*/
     }
 
     // theoretically added info will be showed automatically as i will change existing instance
     public boolean getRecentChanges(){
 
-
         try {
-
             downloadAndParseData();
 
         } catch (Exception e) {

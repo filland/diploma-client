@@ -1,13 +1,7 @@
 package bntu.diploma.test;
 
-import bntu.diploma.classes.map.InteractiveMap;
-import bntu.diploma.classes.map.StationWeatherInfoNode;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 

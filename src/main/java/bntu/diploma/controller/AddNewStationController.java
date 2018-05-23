@@ -1,5 +1,6 @@
 package bntu.diploma.controller;
 
+import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.OblastEnum;
 import bntu.diploma.utils.OblastUtils;
@@ -16,6 +17,7 @@ import javafx.scene.layout.HBox;
 
 import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -61,10 +63,13 @@ public class AddNewStationController {
 
     public void placeStationButtonClicked(ActionEvent actionEvent) {
         // TODO
+
+        List<Station> allStations = WeatherDataStore.getInstance().getAllStations();
+        Collections.sort(allStations);
+        System.out.println(allStations.get(0).getStationsId());
     }
 
     public void generateSecretKeyButtonClicked(ActionEvent actionEvent) {
-//        secretKeyField.setText(UUID.randomUUID().toString().substring(0, 9));
         secretKeyField.setText(SecureTokenGenerator.nextToken().substring(0, 10));
     }
 

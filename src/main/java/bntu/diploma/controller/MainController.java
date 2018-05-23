@@ -1,13 +1,19 @@
 package bntu.diploma.controller;
 
 import bntu.diploma.classes.*;
-import bntu.diploma.classes.map.InteractiveMap;
-import bntu.diploma.classes.map.StationWeatherInfoNode;
+import bntu.diploma.node.AddingNewStationsToMapTableView;
+import bntu.diploma.node.AllRecordsTableView;
+import bntu.diploma.node.StationInfoPane;
+import bntu.diploma.node.map.InteractiveMap;
+import bntu.diploma.node.map.StationWeatherInfoNode;
 import bntu.diploma.model.Station;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,8 +23,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import javafx.util.Duration;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -30,15 +40,13 @@ import java.io.IOException;
  *
  * */
 
-public class Controller {
+public class MainController {
 
     // --------------------- STRUCTURE -----------------------
-    @FXML
-    private StackPane rootPane;
+
     @FXML
     private BorderPane rootBorderPane;
-    @FXML
-    private AnchorPane loginPane;
+
     @FXML
     private SplitPane mainSplitPane;
     @FXML
@@ -58,10 +66,6 @@ public class Controller {
     @FXML
     private AnchorPane rightMenu_SplitPane_upperAnchorPane;
 
-//    @FXML
-//    private TableView<WeatherInfo> rightMenu_upperPane_allRecordsFromStationTable;
-
-    private AllRecordsTableView allRecordsFromStationTable;
 
     @FXML
     private AnchorPane rightMenu_SplitPane_lowerAnchorPane;
@@ -76,6 +80,7 @@ public class Controller {
     private volatile Menu menuReport;
 
     private AddingNewStationsToMapTableView addingNewStationsToMapTableView;
+    private AllRecordsTableView allRecordsFromStationTable;
 
     // ------------- CONSTANTS -----------------------------------------
 
@@ -86,126 +91,78 @@ public class Controller {
     private volatile StationInfoPane stationInfoPane;
     private volatile WeatherDataStore weatherDataStore;
 
-    //WeatherPostman weatherPostman;
-
+    private List<Stage> stageList;
+    private Stage mainStage;
 
     private SimpleLongProperty currentSelectedStationsID;
-    //private ObservableList<WeatherInfo> allRecordsFromStationList;
 
-    public Controller() {
+    public MainController() {
 
+        stageList = new ArrayList<>();
     }
 
     @FXML
     public void initialize(){
 
+
         weatherDataStore = WeatherDataStore.getInstance();
         stationInfoPane = StationInfoPane.getInstance();
+
 
         allRecordsFromStationTable = AllRecordsTableView.getInstance();
         rightSplitPane_upper_stackPane.getChildren().add(allRecordsFromStationTable);
 
+
         initMenuBar();
         initMap();
+
+
+
         initListeners();
 
 
 
-        // https://stackoverflow.com/questions/36850217/modifying-javafx-gui-from-different-thread-in-different-class
+        WeatherPostman weatherPostman = new WeatherPostman();
+        weatherPostman.subscribe(allRecordsFromStationTable);
+        weatherPostman.subscribe(interactiveMap);
+        weatherPostman.subscribe(stationInfoPane);
 
-/*        Task task = new Task() {
-            @Override
-            protected Integer call() throws Exception {
-
-                WeatherPostman weatherPostman = new WeatherPostman();
-                weatherPostman.subscribe(allRecordsFromStationTable);
-                weatherPostman.subscribe(interactiveMap);
-                weatherPostman.subscribe(stationInfoPane);
-                weatherPostman.run();
-
-
-                for (int i = 0; i < 100; i++) {
-
-                    Thread.sleep(10 * 1000);
-
-                    menuReport.setText("report "+i);
-                }
-
-                return -1;
-            }
-        };
-
-        Thread t1= new Thread(task);
-        t1.setDaemon(true);
-        t1.start();*/
+        // start ???? a new thread and call the method for updating app's elements
+        KeyFrame frame1 = new KeyFrame(Duration.seconds(15), event ->  weatherPostman.sendInfoToSubscribers());
+        Timeline timeline = new Timeline(frame1);
+        timeline.setCycleCount(Animation.INDEFINITE);
+        Platform.runLater(timeline::play);
 
 
-        //populateAllRecordsFromStationTable(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
         allRecordsFromStationTable.populate(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
         populateStationsDetailedInformation(weatherDataStore.getStationInfo(weatherDataStore.getAllStations().get(0).getStationsId()));
-//        populate(DataUtils.getListOfWeatherInfo());
-//        populateStationsDetailedInformation(DataUtils.getStationInstance());
-
-
-
-//        WeatherPostman weatherPostman = new WeatherPostman();
-//        weatherPostman.subscribe(allRecordsFromStationTable);
-//        weatherPostman.subscribe(interactiveMap);
-//        weatherPostman.subscribe(stationInfoPane);
-//
-//        Thread t = new Thread(weatherPostman);
-//        t.start();
-
-        Task task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                return null;
-            }
-
-            @Override public void run() {
-                WeatherPostman weatherPostman = new WeatherPostman();
-                weatherPostman.subscribe(allRecordsFromStationTable);
-                weatherPostman.subscribe(interactiveMap);
-                weatherPostman.subscribe(stationInfoPane);
-                weatherPostman.startDelivery();
-            }
-        };
-        new Thread(task).start();
-
-//        Platform.setImplicitExit(false);
-//        Platform.runLater(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//                try {
-//                    Thread.sleep(10 * 1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                System.out.println("Hello");
-//            }
-//        });
 
 
         // resize all elements
         rightMenu_SplitPane_upperAnchorPaneHeightChanged();
         mainSplitPane_leftAnchorPaneResized();
         rightAnchorPaneResized();
+
+        Platform.runLater(() -> menuBar.getScene().getWindow().setOnCloseRequest(event -> {
+
+            System.out.println("closing opened sub-frames");
+            for (Stage stage : stageList) {
+                stage.close();
+            }
+
+        }));
+
     }
+
 
     private void initMap(){
 
         interactiveMap = new InteractiveMap(mainSplitPane_leftAnchorPane);
         mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
 
-
         currentSelectedStationsID = interactiveMap.getCurrentSelectedStationsID();
 
-
-
         addingNewStationsToMapTableView = new AddingNewStationsToMapTableView(interactiveMap, stationInfoPane);
-
         addingNewStationsToMapTableView.getAllStationsHaveCoordinates().addListener((observable, oldValue, newValue) -> {
 
             if (addingNewStationsToMapTableView.getAllStationsHaveCoordinates().get()){
@@ -227,11 +184,6 @@ public class Controller {
 
         rightSplitPane_upper_stackPane.getChildren().add(addingNewStationsToMapTableView);
 
-//        for (Node node : mainSplitPane_right_stackPane.getChildren()) {
-//            System.out.println("node in stack visible - "+node.isVisible());
-//        }
-
-        //List<Station> stationsWithoutSpecifiedCoordsForInteractiveMap = new ArrayList<>();
 
         for (Station station : weatherDataStore.getAllStations()) {
 
@@ -239,14 +191,10 @@ public class Controller {
             if (station.getCoordinateXOnInteractiveMap() == null ||
                     station.getCoordinateYOnInteractiveMap() == null){
 
-//                System.out.println("do not have coords");
-
                 AddingNewStationsToMapTableView.Row row = new AddingNewStationsToMapTableView.Row(station);
                 addingNewStationsToMapTableView.addRow(row);
 
             } else {
-
-//                System.out.println("station has coords");
 
                 StationWeatherInfoNode node = new StationWeatherInfoNode(station);
                 node.setStationParam(weatherDataStore.getLastWeatherInfo(station.getStationsId()));
@@ -258,34 +206,12 @@ public class Controller {
 
         if (!addingNewStationsToMapTableView.getItems().isEmpty()){
 
-//            System.out.println("addingNewStationsToMapTableView.getItems() is NOT empty");
             rightSplitPane_upper_stackPane.getChildren().get(1).toFront();
 
-
         } else {
-//            System.out.println("addingNewStationsToMapTableView.getItems() is empty");
             rightSplitPane_upper_stackPane.getChildren().get(0).toFront();
         }
 
-
-
-
-
-        // TODO change this. Get coordinates from Station's model
-        /*StationWeatherInfoNode infoNode = new StationWeatherInfoNode(
-                Double.valueOf(ApplicationProperties.prop.getProperty("station.2.x")),
-                Double.valueOf(ApplicationProperties.prop.getProperty("station.2.y")),
-                2,
-                "vileyka");
-
-        infoNode.setStationParam(weatherDataStore.getLastWeatherInfo(2));
-        interactiveMap.addStationInfoNode(infoNode);*/
-
-
-//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
-//        interactiveMap.addStationInfoNode(DataUtils.getStationInfoNodeInstance());
 
     }
 
@@ -309,7 +235,6 @@ public class Controller {
         // -------------------- map ------------------
 
     }
-
 
     private void initMenuBar(){
 
@@ -337,8 +262,31 @@ public class Controller {
         MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
         menuItemHTMLReport.setOnAction(x -> menuItemGenerateHTMLReportClicked());
 
-        menuReport.getItems().addAll(menuItemHTMLReport);
+        MenuItem menuItemChartBuilder = new MenuItem("Построить график");
+        menuItemChartBuilder.setOnAction(x -> menuItemBuildChartClicked());
+
+        menuReport.getItems().addAll(menuItemHTMLReport, menuItemChartBuilder);
         menuBar.getMenus().addAll(menuUser, menuStation, menuReport);
+    }
+
+    private void menuItemBuildChartClicked() {
+
+        Parent root;
+        try {
+            Stage stage = new Stage();
+            stageList.add(stage);
+
+            root = FXMLLoader.load(getClass().getResource("/fxml/chartPane.fxml"));
+
+            stage.setTitle("Построение графиков");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("An error while opening ChartPane");
+        }
+
     }
 
     private void menuItemLogoutClicked(ActionEvent actionEvent) {
@@ -346,6 +294,13 @@ public class Controller {
         boolean logout = WeatherAPIWorker.getInstance().logout();
 
         if (logout){
+
+            System.out.println(stageList.size());
+
+            for (Stage stage : stageList) {
+
+                stage.close();
+            }
 
             Parent root;
             try {
@@ -377,45 +332,6 @@ public class Controller {
 
     }
 
-//    private void populateAllRecordsFromStationTable(List<WeatherInfo> list){
-//
-//
-//        rightMenu_upperPane_allRecordsFromStationTable.getColumns().clear();
-//
-//        // make columns to take all available space
-//        rightMenu_upperPane_allRecordsFromStationTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-//
-//        TableColumn<WeatherInfo, String> temperature = new TableColumn<>("temp");
-//        temperature.setCellValueFactory(new PropertyValueFactory<>("temperature"));
-//
-//        TableColumn<WeatherInfo, String> humidity = new TableColumn<>("humid");
-//        humidity.setCellValueFactory(new PropertyValueFactory<>("humidity"));
-//
-//        TableColumn<WeatherInfo, String> pressure = new TableColumn<>("pres");
-//        pressure.setCellValueFactory(new PropertyValueFactory<>("pressure"));
-//
-//        TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
-//        wind_speed.setPrefWidth(40);
-//        wind_speed.setCellValueFactory(new PropertyValueFactory<>("windSpeed"));
-//
-//        TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
-//        wind_direction.setPrefWidth(30);
-//        wind_direction.setCellValueFactory(new PropertyValueFactory<>("windDirection"));
-//
-//        TableColumn<WeatherInfo, String> date_time = new TableColumn<>("date_time");
-//        date_time.setMinWidth(70);
-//        date_time.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
-//
-//        allRecordsFromStationList = FXCollections.observableArrayList(list);
-//
-//        // adding headers
-//        rightMenu_upperPane_allRecordsFromStationTable.getColumns().addAll(temperature, humidity, pressure, wind_speed, wind_direction, date_time);
-//        // adding allRecordsFromStationList
-//        rightMenu_upperPane_allRecordsFromStationTable.setItems(allRecordsFromStationList);
-//
-//    }
-
-
     private void populateStationsDetailedInformation(Station station){
 
         stationInfoPane.addInfoRow(station);
@@ -432,13 +348,12 @@ public class Controller {
         Parent root;
         try {
             Stage stage = new Stage();
+            stageList.add(stage);
 
             root = FXMLLoader.load(getClass().getResource("/fxml/addNewStation.fxml"));
             stage.setTitle("Добавить новую станцию");
             stage.setScene(new Scene(root));
 
-            //.setMinWidth(600);
-            //stage.setMinHeight(650);
             stage.show();
 
         }

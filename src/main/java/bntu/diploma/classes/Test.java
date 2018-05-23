@@ -1,43 +1,23 @@
 package bntu.diploma.classes;
 
-import bntu.diploma.model.Station;
-
-import bntu.diploma.utils.AdvancedEncryptionStandard;
-import bntu.diploma.utils.ApplicationProperties;
-import bntu.diploma.utils.OblastEnum;
-import com.google.gson.Gson;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
+import bntu.diploma.report.WeatherChartBuilder;
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.chart.LineChart;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.EntityBuilder;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.util.*;
-
-public class Test {
+public class Test extends Application {
 
     static GridPane stationInfoGrid;
 
     public static void main(String[] args) {
 
+
+        launch();
 
 //        WeatherDataStore weatherDataStore = WeatherDataStore.getInstance();
 
@@ -143,11 +123,6 @@ public class Test {
 //        }
 
 
-        Thread thread1 = new Thread(new RunnableExample());
-        thread1.start();
-        Thread thread2 = new Thread(new RunnableExample());
-        thread2.start();
-
 
 
 
@@ -157,52 +132,120 @@ public class Test {
 
     public void start(Stage primaryStage) throws Exception {
 
-        stationInfoGrid = new GridPane();
+//        stationInfoGrid = new GridPane();
+//
+//        Station station2 = new Station();
+//        station2.setStationsId(1L);
+//        station2.setOblast(4L);
+//        station2.setInstallationDate("setInstallationDate");
+//        station2.setLastInspection("setLastInspection");
+//        station2.setNearestTown("setNearestTown");
+//        station2.setStationLongitude(1.1);
+//        station2.setStationLatitude(2.2);
+//        //station2.setStationUniqueKey("unique key");
+//
+//        Label stationsIdLabel = new Label(String.valueOf(station2.getStationsId()));
+//        Label oblastLabel = new Label(String.valueOf(station2.getOblast()));
+//        Label installationDateLabel = new Label(String.valueOf(station2.getInstallationDate()));
+//        Label lastInspectionLabel = new Label(String.valueOf(station2.getLastInspection()));
+//        Label nearestTownLabel = new Label(String.valueOf(station2.getNearestTown()));
+//        Label stationLongitudeLabel = new Label(String.valueOf(station2.getStationLongitude()));
+//        Label stationLatitudeLabel = new Label(String.valueOf(station2.getStationLatitude()));
+//        //Label stationUniqueKeyLabel = new Label(String.valueOf(station2.getStationUniqueKey()));
+//
+//        stationInfoGrid.setAlignment(Pos.CENTER);
+//        stationInfoGrid.setHgap(10);
+//        stationInfoGrid.setVgap(10);
+//        stationInfoGrid.setPadding(new Insets(25, 25, 25, 25));
+//
+//        stationInfoGrid.add(stationsIdLabel, 1, 1);
+//        stationInfoGrid.add(oblastLabel, 1, 2);
+//        stationInfoGrid.add(installationDateLabel, 1, 3);
+//        stationInfoGrid.add(lastInspectionLabel, 1, 4);
+//        stationInfoGrid.add(nearestTownLabel, 1, 5);
+//        stationInfoGrid.add(stationLongitudeLabel, 1, 6);
+//        stationInfoGrid.add(stationLatitudeLabel, 1, 7);
+//        //stationInfoGrid.add(stationUniqueKeyLabel, 1, 7);
+//
+//        stationInfoGrid.add(new Label("id: "), 0, 1);
+//        stationInfoGrid.add(new Label("oblast: "), 0, 2);
+//        stationInfoGrid.add(new Label("install date: "), 0, 3);
+//        stationInfoGrid.add(new Label("last inspect: "), 0, 4);
+//        stationInfoGrid.add(new Label("nearest town: "), 0, 5);
+//        stationInfoGrid.add(new Label("longitude: "), 0, 6);
+//        stationInfoGrid.add(new Label("latitude: "), 0, 7);
 
-        Station station2 = new Station();
-        station2.setStationsId(1L);
-        station2.setOblast(4L);
-        station2.setInstallationDate("setInstallationDate");
-        station2.setLastInspection("setLastInspection");
-        station2.setNearestTown("setNearestTown");
-        station2.setStationLongitude(1.1);
-        station2.setStationLatitude(2.2);
-        //station2.setStationUniqueKey("unique key");
 
-        Label stationsIdLabel = new Label(String.valueOf(station2.getStationsId()));
-        Label oblastLabel = new Label(String.valueOf(station2.getOblast()));
-        Label installationDateLabel = new Label(String.valueOf(station2.getInstallationDate()));
-        Label lastInspectionLabel = new Label(String.valueOf(station2.getLastInspection()));
-        Label nearestTownLabel = new Label(String.valueOf(station2.getNearestTown()));
-        Label stationLongitudeLabel = new Label(String.valueOf(station2.getStationLongitude()));
-        Label stationLatitudeLabel = new Label(String.valueOf(station2.getStationLatitude()));
-        //Label stationUniqueKeyLabel = new Label(String.valueOf(station2.getStationUniqueKey()));
+//        for (int i = 1900; i < 2050; i++) {
+//            System.out.println("INSERT INTO weather_info\n" +
+//                    "(\n" +
+//                    "`date_time`,\n" +
+//                    "`humidity`,\n" +
+//                    "`pressure`,\n" +
+//                    "`temperature`,\n" +
+//                    "`wind_direction`,\n" +
+//                    "`wind_speed`,\n" +
+//                    "`stations_id`,\n" +
+//                    "battery_level)\n" +
+//                    "VALUES\n" +
+//                    "(\n" +
+//                    "'14-05-"+i+" 15:50',\n" +
+//                    "50.1,\n" +
+//                    "760.5,\n" +
+//                    "28.1,\n" +
+//                    "260.1,\n" +
+//                    "33.2,\n" +
+//                    "7,\n" +
+//                    "20);\n" +
+//                    "\n" +
+//                    "INSERT INTO weather_info\n" +
+//                    "(\n" +
+//                    "`date_time`,\n" +
+//                    "`humidity`,\n" +
+//                    "`pressure`,\n" +
+//                    "`temperature`,\n" +
+//                    "`wind_direction`,\n" +
+//                    "`wind_speed`,\n" +
+//                    "`stations_id`,\n" +
+//                    "battery_level)\n" +
+//                    "VALUES\n" +
+//                    "(\n" +
+//                    "'14-05-"+i+" 16:00',\n" +
+//                    "77.1,\n" +
+//                    "746.5,\n" +
+//                    "16.1,\n" +
+//                    "45,\n" +
+//                    "11.2,\n" +
+//                    "5,\n" +
+//                    "90);");
+//        }
 
-        stationInfoGrid.setAlignment(Pos.CENTER);
-        stationInfoGrid.setHgap(10);
-        stationInfoGrid.setVgap(10);
-        stationInfoGrid.setPadding(new Insets(25, 25, 25, 25));
 
-        stationInfoGrid.add(stationsIdLabel, 1, 1);
-        stationInfoGrid.add(oblastLabel, 1, 2);
-        stationInfoGrid.add(installationDateLabel, 1, 3);
-        stationInfoGrid.add(lastInspectionLabel, 1, 4);
-        stationInfoGrid.add(nearestTownLabel, 1, 5);
-        stationInfoGrid.add(stationLongitudeLabel, 1, 6);
-        stationInfoGrid.add(stationLatitudeLabel, 1, 7);
-        //stationInfoGrid.add(stationUniqueKeyLabel, 1, 7);
 
-        stationInfoGrid.add(new Label("id: "), 0, 1);
-        stationInfoGrid.add(new Label("oblast: "), 0, 2);
-        stationInfoGrid.add(new Label("install date: "), 0, 3);
-        stationInfoGrid.add(new Label("last inspect: "), 0, 4);
-        stationInfoGrid.add(new Label("nearest town: "), 0, 5);
-        stationInfoGrid.add(new Label("longitude: "), 0, 6);
-        stationInfoGrid.add(new Label("latitude: "), 0, 7);
+        WeatherAPIWorker apiWorker = WeatherAPIWorker.getInstance();
+        boolean loginResult = apiWorker.login(String.valueOf(1), String.valueOf(666));
 
-        Scene scene = new Scene(stationInfoGrid);
+        WeatherChartBuilder builder = new WeatherChartBuilder();
+
+        LineChart lineChart = builder.
+                buildChart(WeatherDataStore.getInstance().getRecordsForOneStation(5L),
+                                    WeatherChartBuilder.WeatherParameter.TEMPERATURE);
+
+
+        ScrollPane scrollPane = new ScrollPane();
+//        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+//        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setPannable(true);
+        scrollPane.setContent(lineChart);
+
+        Scene scene = new Scene(scrollPane);
+
+        primaryStage.widthProperty().addListener((observable, oldValue, newValue) -> {
+            lineChart.setMinWidth(primaryStage.getWidth());
+        });
 
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+
 }

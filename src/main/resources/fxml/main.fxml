@@ -6,10 +6,10 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<BorderPane fx:id="rootBorderPane" prefHeight="650" prefWidth="1100" stylesheets="@style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bntu.diploma.controller.Controller">
+<BorderPane fx:id="rootBorderPane" prefHeight="650" prefWidth="1100" stylesheets="@style.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bntu.diploma.controller.MainController">
 
         <center>
-            <SplitPane fx:id="mainSplitPane" dividerPositions="0.63" prefHeight="160.0" prefWidth="200.0">
+            <SplitPane fx:id="mainSplitPane" dividerPositions="0.55" prefHeight="160.0" prefWidth="200.0">
                 <items>
                     <AnchorPane fx:id="mainSplitPane_leftAnchorPane" minHeight="0.0" minWidth="0.0" />
                     <AnchorPane fx:id="mainSplitPane_rightAnchorPane" minHeight="0.0" minWidth="0.0">

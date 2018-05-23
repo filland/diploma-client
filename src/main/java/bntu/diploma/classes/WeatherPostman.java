@@ -1,10 +1,9 @@
 package bntu.diploma.classes;
 
-import bntu.diploma.classes.map.InteractiveMap;
+import bntu.diploma.node.AllRecordsTableView;
+import bntu.diploma.node.StationInfoPane;
+import bntu.diploma.node.map.InteractiveMap;
 import bntu.diploma.model.Station;
-import javafx.scene.control.Control;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,99 +42,57 @@ public class WeatherPostman {
 
     public boolean sendInfoToSubscribers() {
 
-//        System.out.println("old stat battery - "+weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()).getCurrentBatteryLevel());
+        if (WeatherAPIWorker.getInstance().isServerAvailable()){
 
+            weatherDataStore.getRecentChanges();
 
-        weatherDataStore.getRecentChanges();
+            try {
+                for (Object subscriber : subscribers) {
 
+                    if (subscriber instanceof InteractiveMap) {
 
-        //System.out.println("getDateTime - "+weatherDataStore.getLastWeatherInfo(5).getDateTime());
-        //System.out.println("Current station's id - "+Dispatcher.getInstance().getCurrentStationID());
+                        InteractiveMap interactiveMap = (InteractiveMap) subscriber;
 
-        try {
-            for (Object subscriber : subscribers) {
+                        for (Station station : weatherDataStore.getAllStations()) {
 
-                if (subscriber instanceof InteractiveMap) {
+                            interactiveMap.updateNode(station.getStationsId(),
+                                    weatherDataStore.getLastWeatherInfo(station.getStationsId()));
+                        }
 
-
-                    InteractiveMap interactiveMap = (InteractiveMap) subscriber;
-
-                    for (Station station : weatherDataStore.getAllStations()) {
-
-                        interactiveMap.updateNode(station.getStationsId(),
-                                weatherDataStore.getLastWeatherInfo(station.getStationsId()));
+                        System.out.println("InteractiveMap updated");
                     }
 
-                    System.out.println("InteractiveMap done");
+                    if (subscriber instanceof StationInfoPane) {
+
+                        StationInfoPane.getInstance().addInfoRow(weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()));
+
+                        System.out.println("StationInfoPane updated");
+                    }
+
+                    if (subscriber instanceof AllRecordsTableView) {
+
+                        AllRecordsTableView allRecordsTableView = (AllRecordsTableView) subscriber;
+                        allRecordsTableView.populate(weatherDataStore.getAllWeatherInfoForStation(
+                                Dispatcher.getInstance().getCurrentStationID()
+                        ));
+
+                        System.out.println("TableView updated");
+                    }
+
                 }
+            } catch (Exception e) {
 
-                if (subscriber instanceof StationInfoPane) {
-
-
-//                    System.out.println("new stat battery - "+weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()).getCurrentBatteryLevel());
-
-
-                    StationInfoPane.getInstance().addInfoRow(weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()));
-
-//                    System.out.println("battery stat in DetailedInfoPane - "+StationInfoPane.getInstance().getCurrentStation().getCurrentBatteryLevel());
-
-
-                    System.out.println("StationInfoPane done");
-                }
-
-                if (subscriber instanceof AllRecordsTableView) {
-
-
-                    AllRecordsTableView allRecordsTableView = (AllRecordsTableView) subscriber;
-                    allRecordsTableView.populate(weatherDataStore.getAllWeatherInfoForStation(
-                            Dispatcher.getInstance().getCurrentStationID()
-                    ));
-
-                    System.out.println("TabableView done");
-                }
-
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            return false;
-        }
-
-
-        return true;
-    }
-
-
-    public void startDelivery(){
-
-        try {
-
-            while (true) {
-
-                Thread.sleep(15 * 1000);
-
-                sendInfoToSubscribers();
-
+                e.printStackTrace();
+                return false;
             }
 
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            return true;
+
         }
+
+        return false;
 
     }
 
 
-    //
-    //        weatherPostman.startDelivery();
-    //
-    //        weatherPostman.subscribe(StationInfoPane.getInstance());
-    //        weatherPostman.subscribe(new InteractiveMap(new AnchorPane()));
-    //        weatherPostman.subscribe(AllRecordsTableView.getInstance());
-    //        WeatherPostman weatherPostman =new  WeatherPostman();
-    //
-    //        WeatherAPIWorker.getInstance().login(String.valueOf(1), String.valueOf(666));
-    //
-//    public static void main(String[] args) {
-
-//    }
 }

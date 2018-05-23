@@ -1,10 +1,9 @@
-package bntu.diploma.classes.map;
+package bntu.diploma.node.map;
 
 import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 import javafx.scene.Group;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
@@ -96,15 +95,12 @@ public class StationWeatherInfoNode extends Group {
 
     public void setStationParam(WeatherInfo weatherInfo){
 
-        params.forEach((s, label) -> this.getChildren().remove(label));
-        params.clear();
-
-        setStationParam("temp", String.valueOf(weatherInfo.getTemperature())+" g.");
-        setStationParam("press", String.valueOf(weatherInfo.getPressure())+" м.р.т");
-        setStationParam("humid", String.valueOf(weatherInfo.getHumidity())+" %");
-        setStationParam("wind_s", String.valueOf(weatherInfo.getWindSpeed())+" m/s");
-        setStationParam("wind_dir" , String.valueOf(weatherInfo.getWindDirection()));
-        setStationParam("battery", String.valueOf(weatherInfo.getBatteryLevel())+" %");
+        setStationParam("темп", String.valueOf(weatherInfo.getTemperature())+" °С");
+        setStationParam("давл", String.valueOf(weatherInfo.getPressure())+" м.р.т");
+        setStationParam("влажн", String.valueOf(weatherInfo.getHumidity())+" %");
+        setStationParam("в_скор", String.valueOf(weatherInfo.getWindSpeed())+" м/с");
+        setStationParam("в_напр" , String.valueOf(weatherInfo.getWindDirection()));
+        setStationParam("батарея", String.valueOf(weatherInfo.getBatteryLevel())+" %");
 
         yShift=0;
 
@@ -167,31 +163,34 @@ public class StationWeatherInfoNode extends Group {
     private void setStationParam(String paramName, String paramValue) {
 
         // to avoid duplications
-        if(params.containsValue(params.get(paramName)))
-            return;
+        if(params.containsValue(params.get(paramName))){
 
-        Label label = new Label(paramName+" : "+paramValue);
+            params.get(paramName).setText(paramName + " : " + paramValue);
 
-        label.setLayoutX(topLeftX+10);
-        // we need to move only vertically
-        label.setLayoutY(topLeftY+10+yShift);
-        // all params of the station has the same id
-        //label.setId(this.id);
+        } else {
 
-        //System.out.println("label.getId()  - " +label.getId());
+            Label label = new Label(paramName + " : " + paramValue);
 
-        params.put(paramName, label);
+            label.setLayoutX(topLeftX + 10);
+            // we need to move only vertically
+            label.setLayoutY(topLeftY + 10 + yShift);
+            // all params of the station has the same id
+            //label.setId(this.id);
 
-        // to put the next param 15 lower vertically
-        yShift+=15;
+            //System.out.println("label.getId()  - " +label.getId());
 
-        // hide new params if appears
-        if (stationInfoVisible == false)
-            params.get(paramName).setVisible(false);
+            params.put(paramName, label);
 
-        this.getChildren().addAll(params.get(paramName));
+            // to put the next param 15 lower vertically
+            yShift += 15;
 
+            // hide new params if appears
+            if (stationInfoVisible == false)
+                params.get(paramName).setVisible(false);
 
-        System.out.println("info node params' size - "+params.values().size());
+            this.getChildren().addAll(params.get(paramName));
+
+        }
+//        System.out.println("info node params' size - "+params.values().size());
     }
 }

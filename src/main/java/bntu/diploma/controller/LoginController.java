@@ -57,7 +57,7 @@ public class LoginController {
 
     public void loginButtonPressed(ActionEvent actionEvent) {
 
-        boolean availableServer = weatherAPIWorker.isAvailableServer();
+        boolean availableServer = weatherAPIWorker.isServerAvailable();
 
         if (!availableServer){
             IDField.setText("Сервер не отвечает");
@@ -87,8 +87,11 @@ public class LoginController {
                     stage.setTitle("WeatherTower");
                     stage.setScene(new Scene(root));
 
-                    stage.setMinWidth(1100);
-                    stage.setMinHeight(650);
+                    stage.setMinWidth(1000);
+                    stage.setMinHeight(500);
+
+                    stage.setWidth(1200);
+                    stage.setHeight(650);
                     stage.show();
 
                     // Hide this current window (if this is what you want)

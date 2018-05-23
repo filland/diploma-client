@@ -1,14 +1,14 @@
-package bntu.diploma.classes;
+package bntu.diploma.node;
 
-import bntu.diploma.classes.map.InteractiveMap;
+import bntu.diploma.classes.WeatherAPIWorker;
+import bntu.diploma.classes.WeatherDataStore;
+import bntu.diploma.node.map.InteractiveMap;
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.OblastUtils;
-import com.sun.javafx.scene.control.skin.LabeledText;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
@@ -38,7 +38,7 @@ public class AddingNewStationsToMapTableView extends ListView {
             this.setAlignment(Pos.CENTER_LEFT);
 
 
-            addButton = new Button("Add");
+            addButton = new Button("Добавить");
             addButton.setId(String.valueOf(station.getStationsId()));
             HBox.setMargin(addButton, new Insets(0,15,0,5));
 

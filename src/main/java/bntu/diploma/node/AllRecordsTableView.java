@@ -1,4 +1,4 @@
-package bntu.diploma.classes;
+package bntu.diploma.node;
 
 import bntu.diploma.model.WeatherInfo;
 import javafx.collections.FXCollections;
@@ -38,25 +38,26 @@ public class AllRecordsTableView extends TableView {
         // make columns to take all available space
         this.setColumnResizePolicy(javafx.scene.control.TableView.CONSTRAINED_RESIZE_POLICY);
 
-        TableColumn<WeatherInfo, String> temperature = new TableColumn<>("temp");
+        TableColumn<WeatherInfo, String> temperature = new TableColumn<>("темп");
         temperature.setCellValueFactory(new PropertyValueFactory<>("temperature"));
 
-        TableColumn<WeatherInfo, String> humidity = new TableColumn<>("humid");
-        humidity.setCellValueFactory(new PropertyValueFactory<>("humidity"));
-
-        TableColumn<WeatherInfo, String> pressure = new TableColumn<>("pres");
+        TableColumn<WeatherInfo, String> pressure = new TableColumn<>("давл");
         pressure.setCellValueFactory(new PropertyValueFactory<>("pressure"));
 
-        TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("w_speed");
+        TableColumn<WeatherInfo, String> humidity = new TableColumn<>("влажн");
+        humidity.setCellValueFactory(new PropertyValueFactory<>("humidity"));
+
+
+        TableColumn<WeatherInfo, String> wind_speed = new TableColumn<>("в_скор");
         wind_speed.setPrefWidth(40);
         wind_speed.setCellValueFactory(new PropertyValueFactory<>("windSpeed"));
 
-        TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("w_dir");
+        TableColumn<WeatherInfo, String> wind_direction = new TableColumn<>("в_напр");
         wind_direction.setPrefWidth(30);
         wind_direction.setCellValueFactory(new PropertyValueFactory<>("windDirection"));
 
-        TableColumn<WeatherInfo, String> date_time = new TableColumn<>("date_time");
-        date_time.setMinWidth(70);
+        TableColumn<WeatherInfo, String> date_time = new TableColumn<>("дат_вр");
+        date_time.setMinWidth(80);
         date_time.setCellValueFactory(new PropertyValueFactory<>("dateTime"));
 
         // adding headers

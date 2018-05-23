@@ -5,14 +5,14 @@ package bntu.diploma;
  *
  *
  *
- * TODO AGENDA: - upload recent data from the server
+ * TODO AGENDA:
  *
- * - !!!! A class for building charts and diagrams (Creating a chart and a diagram for stations)
  * - add separate table of all stations. Open a separate tables with data by click.
  * - handle all exceptions in AddNewStationController
- * - ADD TO GIT REPO add region's centers on the map
  * ?? - API Worker !!!!
- *
+ * - Create a separate thread for APIWorker ?
+ * - Process dates in ChartPaneController
+ * - Suspend Postman while user is logged out
  *
  * Not so ASAP:
  * - Remove boilerplate code in WeatherAPIWorker
@@ -22,8 +22,13 @@ package bntu.diploma;
  * - Add a logo above Id/secretKey fields in LoginForm
  * - Swap date and time in AllRecordsTable
  * - Replace local "current station's ids" with Dispatcher class
+ * - Move all text in properties to make localization as simple as possible
  *
  * DONE:
+ * - !!!! A class for building charts and diagrams (Creating a chart and a diagram for stations)
+ * - Handle case when Postman loses connection with the server
+ * - upload recent data from the server
+ * - ADD TO GIT REPO add region's centers on the map
  * - Check if the server is available in LoginController
  * - When  changing map's width by dragging vertical split line Scale Y always equals 1
  *  - add shift to coordinates while scaling (make moving stationIntoNode's coordinates more accurate while scaling)
