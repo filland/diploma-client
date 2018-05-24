@@ -91,8 +91,11 @@ public class MainController {
     private volatile StationInfoPane stationInfoPane;
     private volatile WeatherDataStore weatherDataStore;
 
+    // Storing current opened children frames (not main frame)
     private List<Stage> stageList;
-    private Stage mainStage;
+
+    // Allows to call a Postman's method in a new thread
+    private Timeline timeline;
 
     private SimpleLongProperty currentSelectedStationsID;
 
@@ -115,23 +118,9 @@ public class MainController {
 
         initMenuBar();
         initMap();
-
-
-
         initListeners();
+        initPostman();
 
-
-
-        WeatherPostman weatherPostman = new WeatherPostman();
-        weatherPostman.subscribe(allRecordsFromStationTable);
-        weatherPostman.subscribe(interactiveMap);
-        weatherPostman.subscribe(stationInfoPane);
-
-        // start ???? a new thread and call the method for updating app's elements
-        KeyFrame frame1 = new KeyFrame(Duration.seconds(15), event ->  weatherPostman.sendInfoToSubscribers());
-        Timeline timeline = new Timeline(frame1);
-        timeline.setCycleCount(Animation.INDEFINITE);
-        Platform.runLater(timeline::play);
 
 
         allRecordsFromStationTable.populate(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
@@ -143,15 +132,20 @@ public class MainController {
         mainSplitPane_leftAnchorPaneResized();
         rightAnchorPaneResized();
 
-        Platform.runLater(() -> menuBar.getScene().getWindow().setOnCloseRequest(event -> {
+    }
 
-            System.out.println("closing opened sub-frames");
-            for (Stage stage : stageList) {
-                stage.close();
-            }
+    private void initPostman() {
+        WeatherPostman weatherPostman = new WeatherPostman();
+        weatherPostman.subscribe(allRecordsFromStationTable);
+        weatherPostman.subscribe(interactiveMap);
+        weatherPostman.subscribe(stationInfoPane);
 
-        }));
+        // start ???? a new thread and call the method for updating app's elements
+        KeyFrame frame1 = new KeyFrame(Duration.seconds(60), event ->  weatherPostman.sendInfoToSubscribers());
 
+        timeline = new Timeline(frame1);
+        timeline.setCycleCount(Animation.INDEFINITE);
+        Platform.runLater(timeline::play);
     }
 
 
@@ -217,6 +211,15 @@ public class MainController {
 
     private void initListeners(){
 
+        Platform.runLater(() -> menuBar.getScene().getWindow().setOnCloseRequest(event -> {
+
+            System.out.println("closing opened sub-frames");
+            for (Stage stage : stageList) {
+                stage.close();
+            }
+
+        }));
+
         currentSelectedStationsID.addListener((observable, oldValue, newValue) -> selectedStationChanged());
 
         rootBorderPane.widthProperty().addListener((w) -> rooPaneWidthChanged());
@@ -229,10 +232,6 @@ public class MainController {
         //mainSplitPane_rightAnchorPane.heightProperty().addListener(h -> rightAnchorPaneResized());
 
         rightMenu_SplitPane_upperAnchorPane.heightProperty().addListener(h -> rightMenu_SplitPane_upperAnchorPaneHeightChanged());
-
-        // -------------------- map ------------------
-
-        // -------------------- map ------------------
 
     }
 
@@ -262,11 +261,34 @@ public class MainController {
         MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
         menuItemHTMLReport.setOnAction(x -> menuItemGenerateHTMLReportClicked());
 
+        MenuItem menuItemDocReport = new MenuItem("Отчет в формате Word Docx");
+        menuItemDocReport.setOnAction(x -> menuItemGenerateDocReportClicked());
+
         MenuItem menuItemChartBuilder = new MenuItem("Построить график");
         menuItemChartBuilder.setOnAction(x -> menuItemBuildChartClicked());
 
-        menuReport.getItems().addAll(menuItemHTMLReport, menuItemChartBuilder);
+        menuReport.getItems().addAll(menuItemHTMLReport, menuItemChartBuilder, menuItemDocReport);
         menuBar.getMenus().addAll(menuUser, menuStation, menuReport);
+    }
+
+    private void menuItemGenerateDocReportClicked() {
+
+        Parent root;
+        try {
+            Stage stage = new Stage();
+            stageList.add(stage);
+
+            root = FXMLLoader.load(getClass().getResource("/fxml/docGeneratorPane.fxml"));
+
+            stage.setTitle("Генерация отчета docx");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("An error while opening DocGeneratorPane");
+        }
+
     }
 
     private void menuItemBuildChartClicked() {
@@ -295,7 +317,7 @@ public class MainController {
 
         if (logout){
 
-            System.out.println(stageList.size());
+//            timeline.pause();
 
             for (Stage stage : stageList) {
 
@@ -329,7 +351,6 @@ public class MainController {
 
         allRecordsFromStationTable.populate(weatherDataStore.getRecordsForOneStation(currentSelectedStationsID.get()));
         populateStationsDetailedInformation(weatherDataStore.getStationInfo(currentSelectedStationsID.get()));
-
     }
 
     private void populateStationsDetailedInformation(Station station){

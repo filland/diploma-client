@@ -4,6 +4,7 @@ import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.model.Station;
 import bntu.diploma.report.WeatherChartBuilder;
 import bntu.diploma.utils.OblastEnum;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -14,16 +15,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.stage.FileChooser;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChartPaneController {
+public class ChartBuilderPaneController {
+
 
     @FXML
     private BorderPane mainBorderPane;
@@ -37,6 +40,8 @@ public class ChartPaneController {
     private DatePicker toDatePicker;
     @FXML
     private Button buildChartButton;
+    @FXML
+    private Button saveButton;
 
     @FXML
     private  Label stationLabel;
@@ -49,6 +54,8 @@ public class ChartPaneController {
 
     private WeatherChartBuilder chartBuilder;
     private LineChart chart;
+
+
 
     @FXML
     public void initialize(){
@@ -75,6 +82,7 @@ public class ChartPaneController {
     public void buildChartButtonClicked(ActionEvent actionEvent) {
         if(!stationNameComboBox.getSelectionModel().isEmpty() && !parameterComboBox.getSelectionModel().isEmpty()){
 
+            // reset style of buttons to default
             stationLabel.setTextFill(Color.BLACK);
             stationLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, 14));
             paramLabel.setTextFill(Color.BLACK);
@@ -98,7 +106,7 @@ public class ChartPaneController {
 
                 mainBorderPane.setCenter(chart);
 
-
+                saveButton.setDisable(false);
             }
 
 
@@ -116,6 +124,28 @@ public class ChartPaneController {
             }
         }
 
+
+    }
+
+    public void saveButtonClicked(ActionEvent actionEvent) {
+
+        if (chart != null){
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName("image.png");
+            fileChooser.setTitle("Указание пути для сохранения графика");
+            File file = fileChooser.showSaveDialog(mainBorderPane.getScene().getWindow());
+
+            if (file != null){
+
+                if (file.getAbsolutePath().toLowerCase().endsWith(".png"))
+                  chartBuilder.saveAsImage(file.getAbsolutePath(), chart);
+                else
+                    chartBuilder.saveAsImage(file.getAbsolutePath()+".png", chart);
+
+            }
+
+        }
 
     }
 }

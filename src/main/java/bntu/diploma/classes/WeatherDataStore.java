@@ -112,6 +112,7 @@ public class WeatherDataStore {
                     JsonObject record = weatherInfoRecord.getAsJsonObject();
 
                     WeatherInfo weatherInfo = new WeatherInfo();
+                    weatherInfo.setStation(stationId);
                     weatherInfo.setPressure(Double.valueOf(record.get("pressure").toString().replace("\"", "")));
                     weatherInfo.setTemperature(Double.valueOf(record.get("temperature").toString().replace("\"", "")));
                     weatherInfo.setHumidity(Double.valueOf(record.get("humidity").toString().replace("\"", "")));
@@ -119,6 +120,7 @@ public class WeatherDataStore {
                     weatherInfo.setWindDirection(Integer.valueOf(record.get("windDirection").toString().replace("\"", "")));
                     weatherInfo.setDateTime(record.get("dateTime").getAsString().replace("\"", ""));
                     weatherInfo.setBatteryLevel(Integer.valueOf(record.get("batteryLevel").toString().replace("\"", "")));
+
 
                     map.get(stationId).add(weatherInfo);
 
@@ -227,5 +229,9 @@ public class WeatherDataStore {
     public List<Station> getAllStations(){
 
         return new ArrayList<>(stationMap.values());
+    }
+
+    public Map<Long, Set<WeatherInfo>> getStationsWeatherInfoMap() {
+        return stationsWeatherInfoMap;
     }
 }

@@ -1,5 +1,6 @@
 package bntu.diploma.classes;
 
+import bntu.diploma.report.MicrosoftWordDocXGenerator;
 import bntu.diploma.report.WeatherChartBuilder;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
@@ -10,14 +11,16 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-public class Test extends Application {
+import java.io.IOException;
+
+public class Test {
 
     static GridPane stationInfoGrid;
 
     public static void main(String[] args) {
 
 
-        launch();
+        //launch();
 
 //        WeatherDataStore weatherDataStore = WeatherDataStore.getInstance();
 
@@ -122,13 +125,19 @@ public class Test extends Application {
 //            e.printStackTrace();
 //        }
 
+        WeatherAPIWorker.getInstance().login(String.valueOf("1"), String.valueOf(666));
 
-
-
+        MicrosoftWordDocXGenerator m = new MicrosoftWordDocXGenerator();
+        try {
+            m.saveDocX("D:test.docx",
+                    m.generateDocX(WeatherDataStore.getInstance().getAllStations(), WeatherDataStore.getInstance().getStationsWeatherInfoMap()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-
+/*
 
     public void start(Stage primaryStage) throws Exception {
 
@@ -246,6 +255,6 @@ public class Test extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+    }*/
 
 }

@@ -4,15 +4,23 @@ import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 import bntu.diploma.utils.Utils;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.image.WritableImage;
+import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  *
@@ -59,7 +67,8 @@ public class WeatherChartBuilder {
                for (WeatherInfo weatherInfo : weatherInfoList) {
 
                    try {
-                       series.getData().add(new XYChart.Data(Utils.formatDate(weatherInfo.getDateTime()),method.invoke(weatherInfo)));
+                       series.getData().add(new XYChart.Data(Utils.formatDate(weatherInfo.getDateTime()),
+                                            method.invoke(weatherInfo)));
 //                       series.getData().add(new XYChart.Data(weatherInfo.getDateTime(),method.invoke(weatherInfo)));
                    } catch (IllegalAccessException e) {
                        e.printStackTrace();
@@ -71,13 +80,29 @@ public class WeatherChartBuilder {
            }
         }
 
-//        lineChart.setCreateSymbols(false);
         lineChart.getData().add(series);
 
-        Station station = WeatherDataStore.getInstance().getStationInfo(1L);
+        Station station = WeatherDataStore.getInstance().getStationInfo(weatherInfoList.get(0).getStation());
         lineChart.setTitle(parameter.name()+" changes chart, " +station.getNearestTown()+" "+station.getStationsId());
 
         return lineChart;
+    }
+
+
+    public boolean saveAsImage(String pathAndName, LineChart chart){
+
+        WritableImage image = new WritableImage((int) chart.getWidth(), (int) chart.getHeight());
+        chart.snapshot(null, image);
+        File outFile = new File(pathAndName);
+        System.out.println(outFile);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(image, null), "png", outFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
     }
 
 }

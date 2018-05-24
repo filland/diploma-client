@@ -9,10 +9,13 @@ package bntu.diploma;
  *
  * - add separate table of all stations. Open a separate tables with data by click.
  * - handle all exceptions in AddNewStationController
+ * - Implement the "Разместить" button in AddNewStationController
  * ?? - API Worker !!!!
  * - Create a separate thread for APIWorker ?
- * - Process dates in ChartPaneController
- * - Suspend Postman while user is logged out
+ * - Process dates in ChartBuilderPaneController
+ * - Suspend Postman while user is logged out (timeline object needs to be accessed in two Controllers)
+ * - Find out the reason of the exception arising once Postman updates elements
+ * - Center StationInfoPane
  *
  * Not so ASAP:
  * - Remove boilerplate code in WeatherAPIWorker
@@ -25,6 +28,8 @@ package bntu.diploma;
  * - Move all text in properties to make localization as simple as possible
  *
  * DONE:
+ * - Implement Doc report generator
+ * - Implement ChartBuilder
  * - !!!! A class for building charts and diagrams (Creating a chart and a diagram for stations)
  * - Handle case when Postman loses connection with the server
  * - upload recent data from the server
