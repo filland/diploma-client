@@ -246,7 +246,7 @@ public class WeatherAPIWorker {
             CloseableHttpResponse result = null;
 
             try {
-                result = executePutRequest(station,headers, null, ADD_NEW_STATION_RESOURCE_PATH);
+                result = executePostRequest(station,headers, null, ADD_NEW_STATION_RESOURCE_PATH);
             } catch (URISyntaxException e) {
                 e.printStackTrace();
                 System.out.println("fail while adding new station");
@@ -510,6 +510,69 @@ public class WeatherAPIWorker {
         return response;
     }
 
+
+    public CloseableHttpResponse executePostRequest(Station station,
+                                                    Map<String, String> headers,
+                                                    Map<String, String> params,
+                                                    String path) throws URISyntaxException {
+
+        URIBuilder builder = new URIBuilder();
+        builder.setScheme(HTTP_SCHEME);
+        builder.setHost(addressOfWeatherAPI);
+        builder.setPath(path);
+        builder.setPort(port);
+
+        //System.out.println("params - "+params);
+        //System.out.println("post url -- "+builder.build());
+
+        if(params != null){
+            for (Map.Entry<String, String> param: params.entrySet()){
+                builder.addParameter(param.getKey(), param.getValue());
+            }
+        }
+
+
+        HttpPost post = new HttpPost(builder.build());
+
+        //System.out.println("post url -- "+builder.build());
+
+        if(headers != null){
+            for (Map.Entry<String, String> header: headers.entrySet()){
+                post.setHeader(header.getKey(), header.getValue());
+            }
+        }
+
+
+        if (station != null){
+
+            Gson g = new Gson();
+            String stationAsJson = g.toJson(station);
+
+            post.setEntity(EntityBuilder.create().setText(stationAsJson.replace("\\\"", "")).build());
+        }
+
+        CloseableHttpResponse response = null;
+//        String result = null;
+
+        try {
+            response = httpClient.execute(post);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+
+            try {
+                if (response != null)
+                    response.close();
+
+            } catch (IOException e) {
+                System.err.println(">>> Have not managed to close CloseableHttpResponse response");
+            }
+        }
+
+        return response;
+    }
 
 
     public CloseableHttpResponse executePutRequest(Station station,

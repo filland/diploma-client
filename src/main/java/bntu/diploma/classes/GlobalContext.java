@@ -12,18 +12,18 @@ import javafx.beans.property.SimpleLongProperty;
  *
  *
  * */
-public class Dispatcher {
+public class GlobalContext {
 
-    private static Dispatcher ourInstance = new Dispatcher();
+    private static GlobalContext ourInstance = new GlobalContext();
 
     private SimpleLongProperty currentStation;
 
-    private Dispatcher() {
+    private GlobalContext() {
         currentStation = new SimpleLongProperty(1);
     }
 
 
-    public static Dispatcher getInstance() {
+    public static GlobalContext getInstance() {
         return ourInstance;
     }
 

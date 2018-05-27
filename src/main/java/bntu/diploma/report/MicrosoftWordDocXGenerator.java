@@ -54,7 +54,7 @@ public class MicrosoftWordDocXGenerator {
             stationTable.createRow().getCell(0).setText("Широта");
             stationTable.getRow(6).getCell(1).setText(String.valueOf(station.getStationLongitude()));
 
-            stationTable.createRow().getCell(0).setText("Уровень батарии");
+            stationTable.createRow().getCell(0).setText("Уровень батареи");
             stationTable.getRow(7).getCell(1).setText(String.valueOf(station.getCurrentBatteryLevel()));
 
 

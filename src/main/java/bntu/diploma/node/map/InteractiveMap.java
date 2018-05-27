@@ -1,8 +1,7 @@
 package bntu.diploma.node.map;
 
-import bntu.diploma.classes.Dispatcher;
+import bntu.diploma.classes.GlobalContext;
 import bntu.diploma.classes.WeatherAPIWorker;
-import bntu.diploma.model.Station;
 import bntu.diploma.model.WeatherInfo;
 import bntu.diploma.utils.ApplicationProperties;
 import javafx.animation.PauseTransition;
@@ -63,7 +62,7 @@ public class InteractiveMap extends Pane {
         imageView.fitWidthProperty().bind(parentPane.widthProperty());
 
         currentSelectedStationsID = new SimpleLongProperty(1);
-        Dispatcher.getInstance().setCurrentStation(currentSelectedStationsID);
+        GlobalContext.getInstance().setCurrentStation(currentSelectedStationsID);
 
         mouseClicksHandler = new MouseActionHandler(this, imageView, currentSelectedStationsID);
 
@@ -99,14 +98,6 @@ public class InteractiveMap extends Pane {
         );
 
     }
-
-    public void addNewStation(Station station){
-
-        // working with APIWorker
-        // sent post request with data from station's instance
-        weatherAPIWorker.addNewStation(station);
-    }
-
 
     public void updateNode(long nodeId, WeatherInfo weatherInfo){
 
@@ -262,10 +253,10 @@ public class InteractiveMap extends Pane {
 
                 // make previous selected station's dot green
                 dots.get(String.valueOf(currentSelectedStationsID.get())).getDot().setFill(Color.GREEN);
-//                dots.get(String.valueOf(Dispatcher.getInstance().getCurrentStationID())).getDot().setFill(Color.GREEN);
+//                dots.get(String.valueOf(GlobalContext.getInstance().getCurrentStationID())).getDot().setFill(Color.GREEN);
 
                 currentSelectedStationsID.set(Long.parseLong(nodeId));
-//                Dispatcher.getInstance().setCurrentStationID(Long.parseLong(nodeId));
+//                GlobalContext.getInstance().setCurrentStationID(Long.parseLong(nodeId));
                 dots.get(nodeId).getDot().setFill(Color.ORANGE);
             }
         }

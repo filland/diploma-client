@@ -1,5 +1,6 @@
 package bntu.diploma.controller;
 
+import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.OblastEnum;
@@ -9,11 +10,9 @@ import bntu.diploma.utils.Utils;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
 import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
@@ -40,9 +39,10 @@ public class AddNewStationController {
     private TextField longitudeField;
     @FXML
     private TextField batteryLevelField;
-
     @FXML
     private Button placeStationButton;
+    @FXML
+    private Label resultLabel;
     @FXML
     private Button addStationButton;
 
@@ -78,11 +78,16 @@ public class AddNewStationController {
     }
 
     public void addStationButtonClicked(ActionEvent actionEvent) {
+
+        resultLabel.setText("");
+        resultLabel.setTextFill(Color.BLACK);
+
         Station station = new Station();
 
         // TODO add check to all fields
         station.setNearestTown(nearestTownField.getText());
 
+        // should be 10 symbols in length
         station.setStationUniqueKey(secretKeyField.getText());
 
         station.setOblast(OblastEnum.valueOf(oblastComboBox.getSelectionModel().getSelectedItem()).getId());
@@ -114,6 +119,17 @@ public class AddNewStationController {
                 station.setCurrentBatteryLevel(-1);
         } catch (NumberFormatException e) {
             System.out.println("Error while setting current battery level");
+            e.printStackTrace();
+        }
+
+        try {
+            WeatherAPIWorker.getInstance().addNewStation(station);
+            resultLabel.setText("Новая станция добавлена успешно");
+            resultLabel.setVisible(true);
+        } catch (Exception e) {
+            resultLabel.setTextFill(Color.RED);
+            resultLabel.setText("Новая станция НЕ добавлена");
+            resultLabel.setVisible(true);
             e.printStackTrace();
         }
 

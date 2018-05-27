@@ -13,7 +13,6 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.util.Duration;
 
 import java.io.IOException;
@@ -253,13 +251,13 @@ public class MainController {
         MenuItem menuItemMoveExistingStation = new MenuItem("Переместить станцию");
         menuItemMoveExistingStation.setOnAction(this::menuItemMoveExistingStationClicked);
 
-        MenuItem menuItemChangeStationInfo = new MenuItem("Изменить информацию о станции");
-        menuItemChangeStationInfo.setOnAction(this::menuItemChangeStationInfoClicked);
+//        MenuItem menuItemChangeStationInfo = new MenuItem("Изменить информацию о станции");
+//        menuItemChangeStationInfo.setOnAction(this::menuItemChangeStationInfoClicked);
 
-        menuStation.getItems().addAll(menuItemMoveExistingStation, menuItemChangeStationInfo, menuItemAddNewStation);
+        menuStation.getItems().addAll(menuItemMoveExistingStation, menuItemAddNewStation);
 
-        MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
-        menuItemHTMLReport.setOnAction(x -> menuItemGenerateHTMLReportClicked());
+//        MenuItem menuItemHTMLReport = new MenuItem("Отчет в формате HTML");
+//        menuItemHTMLReport.setOnAction(x -> menuItemGenerateHTMLReportClicked());
 
         MenuItem menuItemDocReport = new MenuItem("Отчет в формате Word Docx");
         menuItemDocReport.setOnAction(x -> menuItemGenerateDocReportClicked());
@@ -267,7 +265,7 @@ public class MainController {
         MenuItem menuItemChartBuilder = new MenuItem("Построить график");
         menuItemChartBuilder.setOnAction(x -> menuItemBuildChartClicked());
 
-        menuReport.getItems().addAll(menuItemHTMLReport, menuItemChartBuilder, menuItemDocReport);
+        menuReport.getItems().addAll(menuItemChartBuilder, menuItemDocReport);
         menuBar.getMenus().addAll(menuUser, menuStation, menuReport);
     }
 
@@ -278,7 +276,7 @@ public class MainController {
             Stage stage = new Stage();
             stageList.add(stage);
 
-            root = FXMLLoader.load(getClass().getResource("/fxml/docGeneratorPane.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/docxGeneratorFrame.fxml"));
 
             stage.setTitle("Генерация отчета docx");
             stage.setScene(new Scene(root));
@@ -298,7 +296,7 @@ public class MainController {
             Stage stage = new Stage();
             stageList.add(stage);
 
-            root = FXMLLoader.load(getClass().getResource("/fxml/chartPane.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/chartBuilderFrame.fxml"));
 
             stage.setTitle("Построение графиков");
             stage.setScene(new Scene(root));
@@ -328,7 +326,7 @@ public class MainController {
             try {
                 Stage stage = new Stage();
 
-                root = FXMLLoader.load(getClass().getResource("/fxml/login.fxml"));
+                root = FXMLLoader.load(getClass().getResource("/fxml/loginFrame.fxml"));
 
                 stage.setTitle("Авторизация");
                 stage.setScene(new Scene(root));
@@ -349,7 +347,7 @@ public class MainController {
 
     private void selectedStationChanged() {
 
-        allRecordsFromStationTable.populate(weatherDataStore.getRecordsForOneStation(currentSelectedStationsID.get()));
+        allRecordsFromStationTable.populate(weatherDataStore.getAllWeatherInfoForStation(currentSelectedStationsID.get()));
         populateStationsDetailedInformation(weatherDataStore.getStationInfo(currentSelectedStationsID.get()));
     }
 
@@ -371,7 +369,7 @@ public class MainController {
             Stage stage = new Stage();
             stageList.add(stage);
 
-            root = FXMLLoader.load(getClass().getResource("/fxml/addNewStation.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fxml/addNewStationFrame.fxml"));
             stage.setTitle("Добавить новую станцию");
             stage.setScene(new Scene(root));
 

@@ -38,7 +38,7 @@ public class AddingNewStationsToMapTableView extends ListView {
             this.setAlignment(Pos.CENTER_LEFT);
 
 
-            addButton = new Button("Добавить");
+            addButton = new Button("Разместить");
             addButton.setId(String.valueOf(station.getStationsId()));
             HBox.setMargin(addButton, new Insets(0,15,0,5));
 

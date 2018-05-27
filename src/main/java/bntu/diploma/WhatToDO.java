@@ -5,26 +5,31 @@ package bntu.diploma;
  *
  *
  *
- * TODO AGENDA:
+ * TODO AGENDA: once a station is located it should become visible
  *
+ * - host and port should be moved to the prop file
+ * - Is it possible to move application.properties file out of .jar executable
  * - add separate table of all stations. Open a separate tables with data by click.
  * - handle all exceptions in AddNewStationController
- * - Implement the "Разместить" button in AddNewStationController
- * ?? - API Worker !!!!
- * - Create a separate thread for APIWorker ?
- * - Process dates in ChartBuilderPaneController
  * - Suspend Postman while user is logged out (timeline object needs to be accessed in two Controllers)
  * - Find out the reason of the exception arising once Postman updates elements
  * - Center StationInfoPane
  *
  * Not so ASAP:
+ * - Handle the exception which arises when you added a new station and it does not have
+ * any weatherInfo
+ * - Implement the "Разместить" button in AddNewStationController
+ * - HTML report generation
+ * - When user logged in and then server shut down in this case user cannot log off !!!
+ * - Process dates in ChartBuilderController
+ * - Once connection with the server lost notify the user about this
  * - Remove boilerplate code in WeatherAPIWorker
  * - Setting critical threshold. When it is exceeded al alert is popped up
- * - HTML report generation
+ * - Create a separate thread for APIWorker !!!!!
  * - Move all initializations of view in FXML
  * - Add a logo above Id/secretKey fields in LoginForm
  * - Swap date and time in AllRecordsTable
- * - Replace local "current station's ids" with Dispatcher class
+ * - Replace local "current station's ids" with GlobalContext class
  * - Move all text in properties to make localization as simple as possible
  *
  * DONE:

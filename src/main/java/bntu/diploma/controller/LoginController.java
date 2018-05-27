@@ -9,6 +9,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class LoginController {
     @FXML
     private Hyperlink needHelpLink;
     @FXML
-    private Label errorLabel;
+    private Label messageLabel;
 
 
     private WeatherAPIWorker weatherAPIWorker;
@@ -52,7 +53,7 @@ public class LoginController {
         weatherAPIWorker = WeatherAPIWorker.getInstance();
 
         IDField.setText(String.valueOf(1));
-        secretKeyField.setText("666");
+        secretKeyField.setText("6666666666");
     }
 
     public void loginButtonPressed(ActionEvent actionEvent) {
@@ -60,22 +61,27 @@ public class LoginController {
         boolean availableServer = weatherAPIWorker.isServerAvailable();
 
         if (!availableServer){
-            IDField.setText("Сервер не отвечает");
+            messageLabel.setVisible(true);
+            messageLabel.setText("Сервер не отвечает");
             return;
         }
 
 
         if (IDField.getText().trim().isEmpty() || secretKeyField.getText().trim().isEmpty()) {
 
-            errorLabel.setVisible(true);
-            errorLabel.setText("ID field or Secret key field is empty");
+            messageLabel.setVisible(true);
+            messageLabel.setText("ID field or Secret key field is empty");
 
         } else {
 
-            errorLabel.setText("");
+            messageLabel.setText("");
+            messageLabel.setTextFill(Color.BLACK);
+
+            System.out.println("about to login");
 
             boolean isLoggedIn = weatherAPIWorker.login(IDField.getText(), secretKeyField.getText());
 
+            System.out.println("login result - "+isLoggedIn);
 
             if (isLoggedIn) {
 
@@ -83,7 +89,7 @@ public class LoginController {
                 try {
                     Stage stage = new Stage();
 
-                    root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
+                    root = FXMLLoader.load(getClass().getResource("/fxml/mainFrame.fxml"));
                     stage.setTitle("WeatherTower");
                     stage.setScene(new Scene(root));
 
@@ -100,6 +106,12 @@ public class LoginController {
                     e.printStackTrace();
                     System.err.println("An error while closing Login Frame and opening MainFrame");
                 }
+
+            } else {
+
+                messageLabel.setVisible(true);
+                messageLabel.setTextFill(Color.RED);
+                messageLabel.setText("Не удалось авторизоваться");
 
             }
 

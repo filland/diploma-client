@@ -210,7 +210,7 @@ public class WeatherDataStore {
         return new ArrayList<>(stationsWeatherInfoMap.get(stationId));
     }
 
-
+	
     public List<WeatherInfo> getOneHundredWeatherInfoRecordsForStation(long stationId){
 
         if (stationsWeatherInfoMap.get(stationId).size() < 100)
@@ -221,10 +221,7 @@ public class WeatherDataStore {
         }
     }
 
-    public List<WeatherInfo> getRecordsForOneStation(long stationId){
-
-        return new ArrayList<>(stationsWeatherInfoMap.get(stationId));
-    }
+   
 
     public List<Station> getAllStations(){
 

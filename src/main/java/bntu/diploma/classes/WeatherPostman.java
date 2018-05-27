@@ -64,7 +64,7 @@ public class WeatherPostman {
 
                     if (subscriber instanceof StationInfoPane) {
 
-                        StationInfoPane.getInstance().addInfoRow(weatherDataStore.getStationInfo(Dispatcher.getInstance().getCurrentStationID()));
+                        StationInfoPane.getInstance().addInfoRow(weatherDataStore.getStationInfo(GlobalContext.getInstance().getCurrentStationID()));
 
                         System.out.println("StationInfoPane updated");
                     }
@@ -73,7 +73,7 @@ public class WeatherPostman {
 
                         AllRecordsTableView allRecordsTableView = (AllRecordsTableView) subscriber;
                         allRecordsTableView.populate(weatherDataStore.getAllWeatherInfoForStation(
-                                Dispatcher.getInstance().getCurrentStationID()
+                                GlobalContext.getInstance().getCurrentStationID()
                         ));
 
                         System.out.println("TableView updated");

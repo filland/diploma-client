@@ -13,7 +13,6 @@ public class Station implements Comparable<Station> {
 
     private Long stationsId;
 
-
     private String stationUniqueKey;
 
     /**
