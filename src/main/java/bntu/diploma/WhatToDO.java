@@ -7,18 +7,20 @@ package bntu.diploma;
  *
  * TODO AGENDA: once a station is located it should become visible
  *
- * - host and port should be moved to the prop file
+ * - REFACTOR NODE PACKAGE
  * - Is it possible to move application.properties file out of .jar executable
  * - add separate table of all stations. Open a separate tables with data by click.
  * - handle all exceptions in AddNewStationController
  * - Suspend Postman while user is logged out (timeline object needs to be accessed in two Controllers)
  * - Find out the reason of the exception arising once Postman updates elements
  * - Center StationInfoPane
+ * - Make encryption real AES implementation
+ * - custom exceptions
  *
  * Not so ASAP:
+ * - move all text to a separate properties file
  * - Handle the exception which arises when you added a new station and it does not have
  * any weatherInfo
- * - Implement the "Разместить" button in AddNewStationController
  * - HTML report generation
  * - When user logged in and then server shut down in this case user cannot log off !!!
  * - Process dates in ChartBuilderController
@@ -33,6 +35,8 @@ package bntu.diploma;
  * - Move all text in properties to make localization as simple as possible
  *
  * DONE:
+ * - Implement the "Разместить" button in AddNewStationController
+ * - host and port should be moved to the prop file
  * - Implement Doc report generator
  * - Implement ChartBuilder
  * - !!!! A class for building charts and diagrams (Creating a chart and a diagram for stations)

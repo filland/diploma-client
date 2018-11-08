@@ -7,7 +7,7 @@ public class AdvancedEncryptionStandard {
 
     private static final String ALGORITHM = "AES";
 
-    public static String thisStationEncryptionKey = ApplicationProperties.prop.getProperty("secret_key");
+    public static String thisClientEncryptionKey = ApplicationProperties.prop.getProperty("encryption_key");
 
     /**
      * Encrypts the given plain text
@@ -41,12 +41,12 @@ public class AdvancedEncryptionStandard {
 
     public static byte[] encrypt(byte[] plainText) throws Exception {
 
-        return encrypt(plainText, thisStationEncryptionKey.getBytes());
+        return encrypt(plainText, thisClientEncryptionKey.getBytes());
     }
 
 
     public static String decrypt(byte[] cipherText) throws Exception {
 
-        return decrypt(cipherText, thisStationEncryptionKey.getBytes());
+        return decrypt(cipherText, thisClientEncryptionKey.getBytes());
     }
 }

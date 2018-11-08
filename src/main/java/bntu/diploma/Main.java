@@ -1,6 +1,5 @@
 package bntu.diploma;
 
-import bntu.diploma.utils.OblastEnum;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -13,8 +12,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
 
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/loginFrame.fxml"));
-
-
 
         primaryStage.setTitle("Авторизация");
         primaryStage.setScene(new Scene(root));

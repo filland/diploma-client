@@ -2,11 +2,9 @@ package bntu.diploma.classes;
 
 import bntu.diploma.model.Station;
 import bntu.diploma.utils.AdvancedEncryptionStandard;
+import bntu.diploma.utils.ApplicationProperties;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
 import org.apache.http.client.entity.EntityBuilder;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -19,9 +17,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,9 +34,10 @@ public class WeatherAPIWorker {
     private static volatile WeatherAPIWorker ourInstance;
     private CloseableHttpClient httpClient;
 
-    private String addressOfWeatherAPI = "localhost";
-    private static final String HTTP_SCHEME = "http";
     private int port = 8080;
+    private String addressOfWeatherAPI = "localhost";
+
+    private static final String HTTP_SCHEME = "http";
     private final String ALL_WEATHER_DATA_RESOURCE_PATH = "all_weather";
     private final String ALL_STATIONS_DATA_RESOURCE_PATH = "all_stations";
     private final String ADD_NEW_STATION_RESOURCE_PATH = "add_station";
@@ -63,6 +60,9 @@ public class WeatherAPIWorker {
 
     private WeatherAPIWorker() {
         httpClient = HttpClients.createDefault();
+
+        port = Integer.parseInt(String.valueOf(ApplicationProperties.prop.get("port")));
+        addressOfWeatherAPI = (String) ApplicationProperties.prop.get("host");
     }
 
     /**
@@ -177,7 +177,7 @@ public class WeatherAPIWorker {
         try {
             header.put("id", userId);
 
-            CloseableHttpResponse response = executePostRequest(AdvancedEncryptionStandard.encrypt(secretKey.getBytes(), AdvancedEncryptionStandard.thisStationEncryptionKey.getBytes()),
+            CloseableHttpResponse response = executePostRequest(AdvancedEncryptionStandard.encrypt(secretKey.getBytes(), AdvancedEncryptionStandard.thisClientEncryptionKey.getBytes()),
                                                             header,
                                                         null,
                                                             LOGIN_RESOURCE_PATH);
@@ -185,7 +185,6 @@ public class WeatherAPIWorker {
             if (response.getStatusLine().getStatusCode() == 200){
 
                 sessionToken = response.getFirstHeader("key").getValue();
-                System.out.println(sessionToken);
                 return true;
             }
 

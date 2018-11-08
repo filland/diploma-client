@@ -278,6 +278,11 @@ public class MainController {
 
             root = FXMLLoader.load(getClass().getResource("/fxml/docxGeneratorFrame.fxml"));
 
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setController(new DocXGeneratorController());
+//            loader.setLocation(getClass().getResource("/fxml/docxGeneratorFrame.fxml"));
+//            root = loader.load();
+
             stage.setTitle("Генерация отчета docx");
             stage.setScene(new Scene(root));
             stage.show();
@@ -297,6 +302,11 @@ public class MainController {
             stageList.add(stage);
 
             root = FXMLLoader.load(getClass().getResource("/fxml/chartBuilderFrame.fxml"));
+
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setController(new ChartBuilderController());
+//            loader.setLocation(getClass().getResource("/fxml/chartBuilderFrame.fxml"));
+//            root = loader.load();
 
             stage.setTitle("Построение графиков");
             stage.setScene(new Scene(root));
@@ -327,6 +337,11 @@ public class MainController {
                 Stage stage = new Stage();
 
                 root = FXMLLoader.load(getClass().getResource("/fxml/loginFrame.fxml"));
+
+//                FXMLLoader loader = new FXMLLoader();
+//                loader.setController(new LoginController());
+//                loader.setLocation(getClass().getResource("/fxml/loginFrame.fxml"));
+//                root = loader.load();
 
                 stage.setTitle("Авторизация");
                 stage.setScene(new Scene(root));
@@ -370,6 +385,13 @@ public class MainController {
             stageList.add(stage);
 
             root = FXMLLoader.load(getClass().getResource("/fxml/addNewStationFrame.fxml"));
+
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setController(new AddNewStationController());
+//            loader.setLocation(getClass().getResource("/fxml/addNewStationFrame.fxml"));
+//            root = loader.load();
+
+
             stage.setTitle("Добавить новую станцию");
             stage.setScene(new Scene(root));
 

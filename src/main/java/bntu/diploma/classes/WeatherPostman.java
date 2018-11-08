@@ -59,14 +59,12 @@ public class WeatherPostman {
                                     weatherDataStore.getLastWeatherInfo(station.getStationsId()));
                         }
 
-                        System.out.println("InteractiveMap updated");
                     }
 
                     if (subscriber instanceof StationInfoPane) {
 
                         StationInfoPane.getInstance().addInfoRow(weatherDataStore.getStationInfo(GlobalContext.getInstance().getCurrentStationID()));
 
-                        System.out.println("StationInfoPane updated");
                     }
 
                     if (subscriber instanceof AllRecordsTableView) {
@@ -76,7 +74,6 @@ public class WeatherPostman {
                                 GlobalContext.getInstance().getCurrentStationID()
                         ));
 
-                        System.out.println("TableView updated");
                     }
 
                 }
