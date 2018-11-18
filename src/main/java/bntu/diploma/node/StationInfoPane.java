@@ -1,6 +1,6 @@
 package bntu.diploma.node;
 
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 import bntu.diploma.utils.OblastUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

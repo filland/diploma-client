@@ -1,26 +1,22 @@
 package bntu.diploma.classes;
 
-import bntu.diploma.model.Station;
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.Station;
+import bntu.diploma.domain.WeatherInfo;
+import bntu.diploma.utils.DataUtils;
 import bntu.diploma.utils.OblastEnum;
-import bntu.diploma.utils.Utils;
 import com.google.gson.*;
 
-import java.text.ParseException;
 import java.util.*;
 
 
 /**
- *
  * This class is supposed to be responsible for handling data received
  * form the server might be redundant
- *
- *
- *
+ * <p>
+ * <p>
+ * <p>
  * - comparator for weatherInfo
- *
- *
- * */
+ */
 public class WeatherDataStore {
 
     // the key is a station's id
@@ -35,8 +31,10 @@ public class WeatherDataStore {
 
     private volatile static WeatherDataStore weatherDataStoreInstance;
 
+    private static final WeatherInfo emptyWeatherInfo = new WeatherInfo();
+
     public static WeatherDataStore getInstance() {
-        if (weatherDataStoreInstance == null){
+        if (weatherDataStoreInstance == null) {
             weatherDataStoreInstance = new WeatherDataStore();
             return weatherDataStoreInstance;
         }
@@ -53,7 +51,7 @@ public class WeatherDataStore {
         downloadAndParseData();
     }
 
-    private boolean downloadAndParseData(){
+    private boolean downloadAndParseData() {
 
         String result = null;
         try {
@@ -70,7 +68,7 @@ public class WeatherDataStore {
         result = null;
         try {
 
-            result = weatherAPIWorker.getAllStationsInfo( weatherAPIWorker.getSessionToken());
+            result = weatherAPIWorker.getAllStationsInfo(weatherAPIWorker.getSessionToken());
             stationMap = parseStationsInfoData(result);
 
         } catch (Exception e) {
@@ -78,7 +76,6 @@ public class WeatherDataStore {
             System.out.println("An error while parsing a json string with Stations' data");
             return false;
         }
-
 
 
 //        stationMap.values().forEach((station -> {
@@ -90,7 +87,9 @@ public class WeatherDataStore {
         return true;
     }
 
-    private Map<Long, Set<WeatherInfo>> parseWeatherInfoData(String dataAsJson){
+    private Map<Long, Set<WeatherInfo>> parseWeatherInfoData(String dataAsJson) {
+
+        System.out.println("weather info data = " + dataAsJson);
 
         Map<Long, Set<WeatherInfo>> map = new HashMap<>();
 
@@ -100,7 +99,7 @@ public class WeatherDataStore {
         // retrieve data of each station
         for (OblastEnum oblastEnum : OblastEnum.values()) {
 
-            JsonArray stationsOfOblast = rootElement.getAsJsonArray(oblastEnum.name());
+            JsonArray stationsOfOblast = rootElement.getAsJsonArray(oblastEnum.getOblastName());
 
             for (JsonElement station : stationsOfOblast.getAsJsonArray()) {
 
@@ -131,10 +130,9 @@ public class WeatherDataStore {
         return map;
 
 
-
     }
 
-    private Map<Long, Station> parseStationsInfoData(String dataAsJson){
+    private Map<Long, Station> parseStationsInfoData(String dataAsJson) {
 
         Map<Long, Station> map = new HashMap<>();
 
@@ -154,7 +152,7 @@ public class WeatherDataStore {
 
             if (!object.get("coordinateXOnInteractiveMap").toString().toLowerCase().equals("null"))
                 station.setCoordinateXOnInteractiveMap(Double.valueOf(object.get("coordinateXOnInteractiveMap").toString().replace("\"", "")));
-            if(!object.get("coordinateYOnInteractiveMap").toString().toLowerCase().equals("null"))
+            if (!object.get("coordinateYOnInteractiveMap").toString().toLowerCase().equals("null"))
                 station.setCoordinateYOnInteractiveMap(Double.valueOf(object.get("coordinateYOnInteractiveMap").toString().replace("\"", "")));
 
             // make a list of the set, then get first el (it is the latest record and get its battery level)
@@ -172,7 +170,7 @@ public class WeatherDataStore {
     }
 
     // theoretically added info will be showed automatically as i will change existing instance
-    public boolean getRecentChanges(){
+    public boolean getRecentChanges() {
 
         try {
             downloadAndParseData();
@@ -195,23 +193,30 @@ public class WeatherDataStore {
     }
 
 
-    public Station getStationInfo(long stationId){
+    public Station getStationInfo(long stationId) {
 
         return stationMap.get(stationId);
     }
 
-    public WeatherInfo getLastWeatherInfo(long stationId){
+    public WeatherInfo getLastWeatherInfo(long stationId) {
 
-        return new ArrayList<>(stationsWeatherInfoMap.get(stationId)).get(0);
+        if (stationsWeatherInfoMap.get(stationId).size() != 0) {
+
+            return new ArrayList<>(stationsWeatherInfoMap.get(stationId)).get(0);
+
+        } else {
+
+            return DataUtils.getEmptyWeatherInfo();
+        }
     }
 
-    public List<WeatherInfo> getAllWeatherInfoForStation(long stationId){
+    public List<WeatherInfo> getAllWeatherInfoForStation(long stationId) {
 
         return new ArrayList<>(stationsWeatherInfoMap.get(stationId));
     }
 
-	
-    public List<WeatherInfo> getOneHundredWeatherInfoRecordsForStation(long stationId){
+
+    public List<WeatherInfo> getOneHundredWeatherInfoRecordsForStation(long stationId) {
 
         if (stationsWeatherInfoMap.get(stationId).size() < 100)
             return new ArrayList<>(stationsWeatherInfoMap.get(stationId));
@@ -221,9 +226,8 @@ public class WeatherDataStore {
         }
     }
 
-   
 
-    public List<Station> getAllStations(){
+    public List<Station> getAllStations() {
 
         return new ArrayList<>(stationMap.values());
     }

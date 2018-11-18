@@ -1,5 +1,8 @@
-package bntu.diploma.model;
+package bntu.diploma.domain;
 
+
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -8,55 +11,65 @@ package bntu.diploma.model;
  *
  *
  * */
-
 public class Station implements Comparable<Station> {
 
+    @Min(0)
+    @NotNull
     private Long stationsId;
 
+    @NotNull
     private String stationUniqueKey;
 
     /**
      * The oblast where the station is located
-     * */
+     */
+    @Min(0)
+    @NotNull
     private Long oblastId;
 
+    @NotNull
     private String nearestTown;
 
     /**
      * Coordinates of the station
-     * */
+     */
+    @Min(0)
+    @NotNull
     private Double stationLongitude;
-
+    @Min(0)
+    @NotNull
     private Double stationLatitude;
 
     /**
      * The date when the station was set up
-     * */
+     */
+    @NotNull
     private String installationDate;
 
     /**
      * The date when the station was inspected last time
-     * */
+     */
+    @NotNull
     private String lastInspection;
 
     /**
-     *
      * Shows the current level of the station's battery
-     *
+     * <p>
      * The param can equal the value from 1 to 100.
-     *
-     * */
+     */
+    @Min(0)
+    @NotNull
     private int currentBatteryLevel;
 
     /**
      * Used to place a representation of the station as a dot on a map
-     * */
+     */
     private Double coordinateXOnInteractiveMap;
 
 
     /**
      * Used to place a representation of the station as a dot on a map
-     * */
+     */
     private Double coordinateYOnInteractiveMap;
 
     public Station() {

@@ -17,14 +17,10 @@ import java.io.IOException;
 public class LoginController {
 
     /**
-     *
-     *
      * THE WAY TO SPLIT CONTROLLERS
-     *
-     *
+     * <p>
+     * <p>
      * https://stackoverflow.com/questions/15041760/javafx-open-new-window
-     *
-     *
      **/
 
     @FXML
@@ -47,7 +43,7 @@ public class LoginController {
     private WeatherAPIWorker weatherAPIWorker;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
 
         asAdminCheckbox.setDisable(true);
         weatherAPIWorker = WeatherAPIWorker.getInstance();
@@ -60,7 +56,7 @@ public class LoginController {
 
         boolean availableServer = weatherAPIWorker.isServerAvailable();
 
-        if (!availableServer){
+        if (!availableServer) {
             messageLabel.setVisible(true);
             messageLabel.setText("Сервер не отвечает");
             return;
@@ -81,7 +77,7 @@ public class LoginController {
 
             boolean isLoggedIn = weatherAPIWorker.login(IDField.getText(), secretKeyField.getText());
 
-            System.out.println("login result - "+isLoggedIn);
+            System.out.println("login result - " + isLoggedIn);
 
             if (isLoggedIn) {
 

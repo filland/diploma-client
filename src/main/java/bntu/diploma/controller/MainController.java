@@ -6,7 +6,7 @@ import bntu.diploma.node.AllRecordsTableView;
 import bntu.diploma.node.StationInfoPane;
 import bntu.diploma.node.map.InteractiveMap;
 import bntu.diploma.node.map.StationWeatherInfoNode;
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -30,13 +30,9 @@ import java.util.List;
 
 
 /**
- *
- *
- *
- *  DONE:
- *  1. make tables resize once the win size is changed
- *
- * */
+ * DONE:
+ * 1. make tables resize once the win size is changed
+ */
 
 public class MainController {
 
@@ -67,8 +63,6 @@ public class MainController {
 
     @FXML
     private AnchorPane rightMenu_SplitPane_lowerAnchorPane;
-
-
 
 
     // -----------------------------------------------------------------------------------------------
@@ -103,7 +97,7 @@ public class MainController {
     }
 
     @FXML
-    public void initialize(){
+    public void initialize() {
 
 
         weatherDataStore = WeatherDataStore.getInstance();
@@ -118,7 +112,6 @@ public class MainController {
         initMap();
         initListeners();
         initPostman();
-
 
 
         allRecordsFromStationTable.populate(weatherDataStore.getAllWeatherInfoForStation(weatherDataStore.getAllStations().get(0).getStationsId()));
@@ -139,7 +132,7 @@ public class MainController {
         weatherPostman.subscribe(stationInfoPane);
 
         // start ???? a new thread and call the method for updating app's elements
-        KeyFrame frame1 = new KeyFrame(Duration.seconds(60), event ->  weatherPostman.sendInfoToSubscribers());
+        KeyFrame frame1 = new KeyFrame(Duration.seconds(60), event -> weatherPostman.sendInfoToSubscribers());
 
         timeline = new Timeline(frame1);
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -147,7 +140,7 @@ public class MainController {
     }
 
 
-    private void initMap(){
+    private void initMap() {
 
         interactiveMap = new InteractiveMap(mainSplitPane_leftAnchorPane);
         mainSplitPane_leftAnchorPane.getChildren().add(interactiveMap);
@@ -157,7 +150,7 @@ public class MainController {
         addingNewStationsToMapTableView = new AddingNewStationsToMapTableView(interactiveMap, stationInfoPane);
         addingNewStationsToMapTableView.getAllStationsHaveCoordinates().addListener((observable, oldValue, newValue) -> {
 
-            if (addingNewStationsToMapTableView.getAllStationsHaveCoordinates().get()){
+            if (addingNewStationsToMapTableView.getAllStationsHaveCoordinates().get()) {
 
                 rightSplitPane_upper_stackPane.getChildren().get(0).toFront();
 
@@ -181,7 +174,7 @@ public class MainController {
 
             // station does not have coords for interactive map
             if (station.getCoordinateXOnInteractiveMap() == null ||
-                    station.getCoordinateYOnInteractiveMap() == null){
+                    station.getCoordinateYOnInteractiveMap() == null) {
 
                 AddingNewStationsToMapTableView.Row row = new AddingNewStationsToMapTableView.Row(station);
                 addingNewStationsToMapTableView.addRow(row);
@@ -189,6 +182,7 @@ public class MainController {
             } else {
 
                 StationWeatherInfoNode node = new StationWeatherInfoNode(station);
+                System.out.println("station id = " + station.getStationsId());
                 node.setStationParam(weatherDataStore.getLastWeatherInfo(station.getStationsId()));
 
                 interactiveMap.addStationInfoNode(node);
@@ -196,7 +190,7 @@ public class MainController {
 
         }
 
-        if (!addingNewStationsToMapTableView.getItems().isEmpty()){
+        if (!addingNewStationsToMapTableView.getItems().isEmpty()) {
 
             rightSplitPane_upper_stackPane.getChildren().get(1).toFront();
 
@@ -207,7 +201,7 @@ public class MainController {
 
     }
 
-    private void initListeners(){
+    private void initListeners() {
 
         Platform.runLater(() -> menuBar.getScene().getWindow().setOnCloseRequest(event -> {
 
@@ -233,7 +227,7 @@ public class MainController {
 
     }
 
-    private void initMenuBar(){
+    private void initMenuBar() {
 
         // MENU
         menuUser = new Menu("Пользователь");
@@ -323,7 +317,7 @@ public class MainController {
 
         boolean logout = WeatherAPIWorker.getInstance().logout();
 
-        if (logout){
+        if (logout) {
 
 //            timeline.pause();
 
@@ -349,7 +343,7 @@ public class MainController {
                 stage.show();
 
                 // Hide this current window (if this is what you want)
-                ((Stage)mainSplitPane.getScene().getWindow()).close();
+                ((Stage) mainSplitPane.getScene().getWindow()).close();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -366,14 +360,13 @@ public class MainController {
         populateStationsDetailedInformation(weatherDataStore.getStationInfo(currentSelectedStationsID.get()));
     }
 
-    private void populateStationsDetailedInformation(Station station){
+    private void populateStationsDetailedInformation(Station station) {
 
         stationInfoPane.addInfoRow(station);
 
         rightMenu_SplitPane_lowerAnchorPane.getChildren().clear();
         rightMenu_SplitPane_lowerAnchorPane.getChildren().add(stationInfoPane);
     }
-
 
 
     // ------------------------------- MENU BAR METHODS START ---------------------------------------------------------
@@ -397,8 +390,7 @@ public class MainController {
 
             stage.show();
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             System.err.println("An error while closing AddNewStation frame");
         }
@@ -449,11 +441,11 @@ public class MainController {
         allRecordsFromStationTable.setPrefWidth(mainSplitPane_rightAnchorPane.getWidth());
     }
 
-    private void rooPaneWidthChanged(){
+    private void rooPaneWidthChanged() {
 
     }
 
-    private void rooPaneHeightChanged(){
+    private void rooPaneHeightChanged() {
 
     }
     // -------------------------- Listeners' methods ------------------------------------------------------------------------------

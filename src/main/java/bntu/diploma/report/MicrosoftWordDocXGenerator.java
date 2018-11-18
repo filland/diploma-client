@@ -1,7 +1,7 @@
 package bntu.diploma.report;
 
-import bntu.diploma.model.Station;
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.Station;
+import bntu.diploma.domain.WeatherInfo;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

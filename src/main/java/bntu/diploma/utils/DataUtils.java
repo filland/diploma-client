@@ -2,8 +2,8 @@ package bntu.diploma.utils;
 
 import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.node.map.StationWeatherInfoNode;
-import bntu.diploma.model.Station;
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.Station;
+import bntu.diploma.domain.WeatherInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,6 +47,11 @@ public class DataUtils {
     public static WeatherInfo getWeatherInfoInstance(){
 
         return new WeatherInfo("14-03-2018 17:00",1.1, 2.2, 10.1, 10.1, 12, 50);
+    }
+
+    public static WeatherInfo getEmptyWeatherInfo(){
+
+        return new WeatherInfo("-//-",0, 0, 0, 0, 0, 0);
     }
 
     public static Station getStationInstance(){

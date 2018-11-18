@@ -3,6 +3,10 @@ package bntu.diploma.utils;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * This class should not exist
+ */
+@Deprecated
 public class OblastUtils {
 
     private static Map<Long, String> intOblastMap;
@@ -12,7 +16,7 @@ public class OblastUtils {
         intOblastMap = new HashMap<>();
 
         for (OblastEnum oblastEnum : OblastEnum.values()) {
-            intOblastMap.put(oblastEnum.getId(), oblastEnum.name());
+            intOblastMap.put(oblastEnum.getId(), oblastEnum.getOblastName());
         }
 
     }

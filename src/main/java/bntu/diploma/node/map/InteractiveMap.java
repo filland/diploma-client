@@ -2,7 +2,7 @@ package bntu.diploma.node.map;
 
 import bntu.diploma.classes.GlobalContext;
 import bntu.diploma.classes.WeatherAPIWorker;
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.WeatherInfo;
 import bntu.diploma.utils.ApplicationProperties;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.DoubleProperty;

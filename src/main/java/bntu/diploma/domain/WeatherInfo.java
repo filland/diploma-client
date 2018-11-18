@@ -1,24 +1,45 @@
-package bntu.diploma.model;
+package bntu.diploma.domain;
 
-import bntu.diploma.model.Station;
 import bntu.diploma.utils.Utils;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 public class WeatherInfo implements Comparable<WeatherInfo> {
 
+    @NotNull
     private Double temperature;
+
+    @NotNull
     private Double pressure;
+    @NotNull
     private Double humidity;
+
+    @NotNull
+    @Min(0)
     private Double windSpeed;
+
+    @NotNull
     private Integer windDirection;
+
+    @NotNull
+    @Min(0)
     private Integer batteryLevel;
 
+    @NotNull
     private Long weatherInfoId;
+
+    @NotNull
+    @Min(0)
     private String dateTime;
+
+    @NotNull
+    @Min(0)
     private Long station;
 
-    public WeatherInfo() {  }
+    public WeatherInfo() {
+    }
 
     public WeatherInfo(String dateTime, double temperature, double pressure, double humidity, double windSpeed, int windDirection, int batteryLevel) {
 
@@ -105,13 +126,9 @@ public class WeatherInfo implements Comparable<WeatherInfo> {
     }
 
 
-
     /**
-     *
      * Sorting weatherInfo like this (from 2010(o index) to 2017(last index))
-     *
-     *
-     * */
+     */
     @Override
     public int compareTo(WeatherInfo o) {
         return LocalDateTime.parse(o.getDateTime(), Utils.DATE_FORMATTER2).

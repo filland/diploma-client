@@ -2,25 +2,27 @@ package bntu.diploma.controller;
 
 import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.classes.WeatherDataStore;
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 import bntu.diploma.utils.OblastEnum;
-import bntu.diploma.utils.OblastUtils;
 import bntu.diploma.utils.SecureTokenGenerator;
-import bntu.diploma.utils.Utils;
 import com.google.gson.Gson;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Popup;
+import javafx.stage.WindowEvent;
 
-import javax.rmi.CORBA.Util;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class AddNewStationController {
+    @FXML
+    private AnchorPane rootAnchorePane;
+
     @FXML
     private TextField nearestTownField;
     @FXML
@@ -47,13 +49,13 @@ public class AddNewStationController {
     private Button addStationButton;
 
     @FXML
-    public void initialize(){
+    public void initialize() {
 
 
         List<String> oblasts = new ArrayList<>();
 
         for (OblastEnum oblastEnum : OblastEnum.values()) {
-            oblasts.add(oblastEnum.name());
+            oblasts.add(oblastEnum.getOblastName());
         }
 
         oblastComboBox.getItems().addAll(oblasts);
@@ -82,55 +84,144 @@ public class AddNewStationController {
         resultLabel.setText("");
         resultLabel.setTextFill(Color.BLACK);
 
+        final String defaultColor = "-fx-border-color:null";
+        final String errorColor = "-fx-border-color:red";
+
         Station station = new Station();
 
-        // TODO add check to all fields
-        station.setNearestTown(nearestTownField.getText());
+        boolean hasError = false;
+
+        if (!nearestTownField.getText().isEmpty()) {
+
+            nearestTownField.setStyle(defaultColor);
+            station.setNearestTown(nearestTownField.getText());
+
+        } else {
+
+            hasError = true;
+            nearestTownField.setStyle(errorColor);
+        }
 
         // should be 10 symbols in length
-        station.setStationUniqueKey(secretKeyField.getText());
+        if (!secretKeyField.getText().isEmpty()) {
 
-        station.setOblast(OblastEnum.valueOf(oblastComboBox.getSelectionModel().getSelectedItem()).getId());
+            secretKeyField.setStyle(defaultColor);
+            station.setStationUniqueKey(secretKeyField.getText());
 
-        station.setInstallationDate(installationDatePicker.getValue().toString());
+        } else {
 
-        station.setLastInspection(lastInspectionPicker.getValue().toString());
+            hasError = true;
+            secretKeyField.setStyle(errorColor);
+
+        }
+
+        if (!oblastComboBox.getSelectionModel().isEmpty()) {
+
+            oblastComboBox.setStyle(defaultColor);
+            station.setOblast(OblastEnum.getByName(oblastComboBox.getSelectionModel().getSelectedItem()).getId());
+
+        } else {
+
+            hasError = true;
+            oblastComboBox.setStyle(errorColor);
+        }
+
+        if (installationDatePicker.getValue() != null) {
+
+            installationDatePicker.setStyle(defaultColor);
+            station.setInstallationDate(installationDatePicker.getValue().toString());
+
+        } else {
+
+            hasError = true;
+            installationDatePicker.setStyle(errorColor);
+
+        }
+
+        if (lastInspectionPicker.getValue() != null){
+
+            station.setLastInspection(lastInspectionPicker.getValue().toString());
+
+        } else {
+
+            if (station.getInstallationDate() != null){
+
+                station.setLastInspection(station.getInstallationDate());
+            }
+        }
 
         try {
+
             station.setStationLongitude(Double.valueOf(longitudeField.getText()));
+            longitudeField.setStyle(defaultColor);
+
         } catch (NumberFormatException e) {
+
+            hasError = true;
+            longitudeField.setStyle(errorColor);
             System.out.println("Error while setting Longitude");
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         try {
+
             station.setStationLatitude(Double.valueOf(latitudeField.getText()));
+            latitudeField.setStyle(defaultColor);
+
         } catch (NumberFormatException e) {
+
+            hasError = true;
+            latitudeField.setStyle(errorColor);
+
             System.out.println("Error while setting Latitude");
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         try {
-            if (!batteryLevelField.getText().trim().isEmpty() &&
-                    Integer.parseInt(batteryLevelField.getText()) > 1 &&
-                    Integer.parseInt(batteryLevelField.getText()) <100)
+
+            if (!batteryLevelField.getText().trim().isEmpty()) {
+
+                batteryLevelField.setStyle(defaultColor);
                 station.setCurrentBatteryLevel(Integer.parseInt(batteryLevelField.getText()));
-            else
-                station.setCurrentBatteryLevel(-1);
+
+            } else {
+
+                hasError = true;
+                batteryLevelField.setStyle(errorColor);
+
+            }
+
         } catch (NumberFormatException e) {
+
+            hasError = true;
+            batteryLevelField.setStyle(errorColor);
             System.out.println("Error while setting current battery level");
-            e.printStackTrace();
+//            e.printStackTrace();
+        }
+
+        if (hasError){
+
+            resultLabel.setText("Заполните поля выделенные красным");
+            resultLabel.setVisible(true);
+            return;
+
+        } else {
+
+            resultLabel.setText("");
+            resultLabel.setVisible(false);
         }
 
         try {
+
             WeatherAPIWorker.getInstance().addNewStation(station);
             resultLabel.setText("Новая станция добавлена успешно");
             resultLabel.setVisible(true);
+
         } catch (Exception e) {
-            resultLabel.setTextFill(Color.RED);
-            resultLabel.setText("Новая станция НЕ добавлена");
+//            resultLabel.setTextFill(Color.RED);
+            resultLabel.setText("Новая станция нe добавлена");
             resultLabel.setVisible(true);
-            e.printStackTrace();
+//            e.printStackTrace();
         }
 
         //station.setCoordinateXOnInteractiveMap();

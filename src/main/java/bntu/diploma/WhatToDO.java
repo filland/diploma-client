@@ -16,11 +16,12 @@ package bntu.diploma;
  * - Center StationInfoPane
  * - Make encryption real AES implementation
  * - custom exceptions
+ * - BUG. app keeps getting all data info after logout
+ * - add button for manual weather info update
  *
  * Not so ASAP:
- * - move all text to a separate properties file
- * - Handle the exception which arises when you added a new station and it does not have
- * any weatherInfo
+ * - separate property files for GUI text messages and and for parameter used in code (like temperature, windspeed etc.)
+ * - Move all text in properties to make localization as simple as possible
  * - HTML report generation
  * - When user logged in and then server shut down in this case user cannot log off !!!
  * - Process dates in ChartBuilderController
@@ -32,9 +33,10 @@ package bntu.diploma;
  * - Add a logo above Id/secretKey fields in LoginForm
  * - Swap date and time in AllRecordsTable
  * - Replace local "current station's ids" with GlobalContext class
- * - Move all text in properties to make localization as simple as possible
  *
  * DONE:
+ * - Handle the exception which arises when you added a new station and it does not have
+ * any weatherInfo - now if a new station added one empty WeatherInfo record will be added until a real one exists
  * - Implement the "Разместить" button in AddNewStationController
  * - host and port should be moved to the prop file
  * - Implement Doc report generator

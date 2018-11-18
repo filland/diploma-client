@@ -1,8 +1,8 @@
 package bntu.diploma.controller;
 
 import bntu.diploma.classes.WeatherDataStore;
-import bntu.diploma.model.Station;
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.Station;
+import bntu.diploma.domain.WeatherInfo;
 import bntu.diploma.report.MicrosoftWordDocXGenerator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -71,26 +71,26 @@ public class DocXGeneratorController {
             document = generator.generateDocX(arrayList, map);
         }
 
-       if (document != null){
+        if (document != null) {
 
-           FileChooser fileChooser = new FileChooser();
-           fileChooser.setInitialFileName("report1.docx");
-           fileChooser.setTitle("Указание пути для сохранения отчета");
-           File file = fileChooser.showSaveDialog(generateDocButton.getScene().getWindow());
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName("report1.docx");
+            fileChooser.setTitle("Указание пути для сохранения отчета");
+            File file = fileChooser.showSaveDialog(generateDocButton.getScene().getWindow());
 
-           if (file != null) {
+            if (file != null) {
 
-               try {
-                   if (file.getAbsolutePath().toLowerCase().endsWith(".docx"))
-                       generator.saveDocX(file.getAbsolutePath(), document);
-                   else
-                       generator.saveDocX(file.getAbsolutePath() + ".docx", document);
-               } catch (IOException e) {
-                   System.err.println("Have not managed to save docx report");
-                   //e.printStackTrace();
-               }
-           }
-       }
+                try {
+                    if (file.getAbsolutePath().toLowerCase().endsWith(".docx"))
+                        generator.saveDocX(file.getAbsolutePath(), document);
+                    else
+                        generator.saveDocX(file.getAbsolutePath() + ".docx", document);
+                } catch (IOException e) {
+                    System.err.println("Have not managed to save docx report");
+                    //e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void allStationClicked(ActionEvent actionEvent) {

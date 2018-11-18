@@ -1,6 +1,6 @@
 package bntu.diploma.node;
 
-import bntu.diploma.model.WeatherInfo;
+import bntu.diploma.domain.WeatherInfo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;

@@ -4,14 +4,11 @@ package bntu.diploma.classes;
 import javafx.beans.property.SimpleLongProperty;
 
 /**
- *
  * This class storing all params which are necessary
  * for elements to talk to each other
- *
+ * <p>
  * This class makes it simple to access any necessary param from wherever
- *
- *
- * */
+ */
 public class GlobalContext {
 
     private static GlobalContext ourInstance = new GlobalContext();

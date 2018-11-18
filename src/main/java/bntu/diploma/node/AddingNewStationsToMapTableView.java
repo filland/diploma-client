@@ -3,7 +3,7 @@ package bntu.diploma.node;
 import bntu.diploma.classes.WeatherAPIWorker;
 import bntu.diploma.classes.WeatherDataStore;
 import bntu.diploma.node.map.InteractiveMap;
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 import bntu.diploma.utils.OblastUtils;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;

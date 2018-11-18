@@ -1,16 +1,12 @@
 package bntu.diploma.controller;
 
 import bntu.diploma.classes.WeatherDataStore;
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 import bntu.diploma.report.WeatherChartBuilder;
-import bntu.diploma.utils.OblastEnum;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -44,27 +40,26 @@ public class ChartBuilderController {
     private Button saveButton;
 
     @FXML
-    private  Label stationLabel;
+    private Label stationLabel;
     @FXML
-    private  Label paramLabel;
+    private Label paramLabel;
     @FXML
-    private  Label fromDateLabel;
+    private Label fromDateLabel;
     @FXML
-    private  Label toDateLabel;
+    private Label toDateLabel;
 
     private WeatherChartBuilder chartBuilder;
     private LineChart chart;
 
 
-
     @FXML
-    public void initialize(){
+    public void initialize() {
 
         chartBuilder = new WeatherChartBuilder();
 
         List<String> stationsNames = new ArrayList<>();
         for (Station station : WeatherDataStore.getInstance().getAllStations()) {
-            stationsNames.add(station.getNearestTown()+"_"+station.getStationsId());
+            stationsNames.add(station.getNearestTown() + "_" + station.getStationsId());
         }
         stationNameComboBox.getItems().addAll(stationsNames);
 
@@ -80,7 +75,7 @@ public class ChartBuilderController {
     }
 
     public void buildChartButtonClicked(ActionEvent actionEvent) {
-        if(!stationNameComboBox.getSelectionModel().isEmpty() && !parameterComboBox.getSelectionModel().isEmpty()){
+        if (!stationNameComboBox.getSelectionModel().isEmpty() && !parameterComboBox.getSelectionModel().isEmpty()) {
 
             // reset style of buttons to default
             stationLabel.setTextFill(Color.BLACK);
@@ -88,21 +83,21 @@ public class ChartBuilderController {
             paramLabel.setTextFill(Color.BLACK);
             paramLabel.setFont(Font.font("Verdana", FontWeight.NORMAL, 14));
 
-            if (toDatePicker.getValue() != null && fromDatePicker.getValue() !=null ){
+            if (toDatePicker.getValue() != null && fromDatePicker.getValue() != null) {
 
                 System.out.println(toDatePicker.getValue());
                 System.out.println(fromDatePicker.getValue());
 
-            } else{
+            } else {
 
-                String var [] = stationNameComboBox.getSelectionModel().getSelectedItem().split("_");
+                String var[] = stationNameComboBox.getSelectionModel().getSelectedItem().split("_");
                 int stationID = Integer.parseInt(var[1]);
 
                 System.out.println(toDatePicker.getValue());
 
                 chart = chartBuilder.buildChart(WeatherDataStore.getInstance().getAllWeatherInfoForStation(stationID),
                         WeatherChartBuilder.WeatherParameter.valueOf(parameterComboBox.getSelectionModel().getSelectedItem().toUpperCase()));
-                chart.setPadding(new Insets(15,15,15,15));
+                chart.setPadding(new Insets(15, 15, 15, 15));
 
                 mainBorderPane.setCenter(chart);
 
@@ -110,14 +105,14 @@ public class ChartBuilderController {
             }
 
 
-        } else{
+        } else {
 
-            if(stationNameComboBox.getSelectionModel().isEmpty()){
+            if (stationNameComboBox.getSelectionModel().isEmpty()) {
                 stationLabel.setTextFill(Color.RED);
                 stationLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
 
             }
-            if(parameterComboBox.getSelectionModel().isEmpty()){
+            if (parameterComboBox.getSelectionModel().isEmpty()) {
                 paramLabel.setTextFill(Color.RED);
                 paramLabel.setFont(Font.font("Verdana", FontWeight.BOLD, 14));
 
@@ -129,19 +124,19 @@ public class ChartBuilderController {
 
     public void saveButtonClicked(ActionEvent actionEvent) {
 
-        if (chart != null){
+        if (chart != null) {
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialFileName("image.png");
             fileChooser.setTitle("Указание пути для сохранения графика");
             File file = fileChooser.showSaveDialog(mainBorderPane.getScene().getWindow());
 
-            if (file != null){
+            if (file != null) {
 
                 if (file.getAbsolutePath().toLowerCase().endsWith(".png"))
-                  chartBuilder.saveAsImage(file.getAbsolutePath(), chart);
+                    chartBuilder.saveAsImage(file.getAbsolutePath(), chart);
                 else
-                    chartBuilder.saveAsImage(file.getAbsolutePath()+".png", chart);
+                    chartBuilder.saveAsImage(file.getAbsolutePath() + ".png", chart);
 
             }
 

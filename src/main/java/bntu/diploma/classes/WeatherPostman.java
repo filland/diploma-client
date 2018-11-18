@@ -3,7 +3,7 @@ package bntu.diploma.classes;
 import bntu.diploma.node.AllRecordsTableView;
 import bntu.diploma.node.StationInfoPane;
 import bntu.diploma.node.map.InteractiveMap;
-import bntu.diploma.model.Station;
+import bntu.diploma.domain.Station;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,6 @@ public class WeatherPostman {
     }
 
 
-
     public void subscribe(AllRecordsTableView allRecordsTableView) {
 
         subscribers.add(allRecordsTableView);
@@ -42,7 +41,7 @@ public class WeatherPostman {
 
     public boolean sendInfoToSubscribers() {
 
-        if (WeatherAPIWorker.getInstance().isServerAvailable()){
+        if (WeatherAPIWorker.getInstance().isServerAvailable()) {
 
             weatherDataStore.getRecentChanges();
 
